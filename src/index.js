@@ -22,7 +22,6 @@ const firebaseConfig = {
     measurementId: "G-FSKZFHKBND"
 }
  
-// const firebaseConfig = {} // from Firebase Console
 const rfConfig = {} // optional redux-firestore Config Options
  
 // Initialize firebase instance
@@ -44,17 +43,18 @@ const rootReducer = combineReducers({
  
 // Redux
 // Create store with reducers and initial state
-const initialState = {}
+const initialState = {
+    email: "your.email@example.com",
+    password: "6 characters minimum"
+}
 const store = createStoreWithFirebase(rootReducer, initialState)
-let reducer=function(state, action){
+let rootReducer = function(state, action){
     // 根據 action 的 type，來執行狀態更新的動作
     switch(action.type){
-        case "ChangeEmail":
-            return {email:action.email};
-        case "ChangePassword":
-            return {password:action.password};   
+        case "SignUp":
+            return { email:action.email, password:action.password }
         default:
-            return state;
+            return state
     }
 };
 console.log(store)
@@ -67,22 +67,32 @@ class App extends React.Component {
     }
 
     handleSubmit (event) {
-        console.log(this.state.text)
+        console.log(this.state)
         // 如果事件可以被取消，就取消事件（即取消事件的預設行為）。不會影響事件傳遞
         event.preventDefault()
         if (this.state.text.length === 0) {
           return
         }
-        const newItem = {
-          text: this.state.text,
-          id: Date.now(),
-          completed: false
-        }
-        console.log(newItem)
-        this.setState(state => ({
-          items: state.items.concat(newItem),
-          text: ''
-        }))
+        store.dispatch({
+            type:"SignUp",
+            email: this.state.email,
+            password: this.state.password
+        });
+    }
+
+    // 以下程式是用來連接 React 和 Redux
+    // 回應狀態變化：Redux 處理完成，返回 React 接收最新狀態，並觸發畫面的更新
+    refresh(){
+        // 串接 Redux 的狀態改變，並且觸發 React 組件的更新
+        this.setState(store.getState());
+    }
+    // 連結點建立：註冊狀態改變的通知處理函式，回應 Redux 中的狀態變化
+    componentDidMount(){
+        this.unsubscribe=store.subscribe(this.refresh.bind(this));
+    }
+    // 連結點斷開：若使用者介面被遺棄，則取消註冊函式
+    componetWillUnmount(){
+        this.unsubscribe();
     }
 
     render() {
