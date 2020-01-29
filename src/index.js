@@ -48,7 +48,8 @@ const initialState = {
     password: "6 characters minimum"
 }
 const store = createStoreWithFirebase(rootReducer, initialState)
-let rootReducer = function(state, action){
+// how to combine reducer w rootReducer
+let reducer = function(state, action){
     // 根據 action 的 type，來執行狀態更新的動作
     switch(action.type){
         case "SignUp":
