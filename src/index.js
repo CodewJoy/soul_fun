@@ -28,12 +28,40 @@ console.log(db)
 class App extends React.Component {
     constructor (props) {
         super(props)
-        // this.state=store.getState()
-        // this.handleSubmit = this.handleSubmit.bind(this)
+        this.state = { email: '', pwd: '' }
+        this.emailChange = this.emailChange.bind(this)
+        this.pwdChange = this.pwdChange.bind(this)
+        this.singInSubmit = this.singInSubmit.bind(this)
     }
 
-    handleSubmit (event) {
+    emailChange (event) {
+        this.setState({ email: event.target.value })
+    }
 
+    pwdChange (event) {
+        this.setState({ pwd: event.target.value })
+    }
+
+    singInSubmit (event) {
+        console.log(this.state.email)
+        console.log(this.state.pwd)
+        // // 如果事件可以被取消，就取消事件（即取消事件的預設行為）。不會影響事件傳遞
+        // event.preventDefault()
+        // if (this.state.email.length === 0) {
+        //   return
+        // } else {
+        //     if (this.state.pwd.length === 0) {
+        //         return
+        //     }
+        // }
+        this.setState(state => ({
+          email: state.email,
+          pwd: state.pwd
+        }))
+        db.collection("Users").doc().set({
+            email: this.state.email,
+            pwd: this.state.pwd
+        })
     }
 
     render() {
@@ -41,12 +69,18 @@ class App extends React.Component {
             <div className="sing-up">
                 <h3>Enter Email and Password</h3>
                 Email<br />
-                <input type="text" className="key-in"/>
+                <input type="text" className="key-in" 
+                    value={this.state.email}
+                    onChange = {this.emailChange} 
+                />
                 <br />
                 Password<br />
-                <input type="text" className="key-in"/>
+                <input type="text" className="key-in"
+                    value={this.state.pwd}
+                    onChange = {this.pwdChange} 
+                />
                 <br />
-                <button onClick={this.handleSubmit}>SIGN UP</button>
+                <button onClick={this.singInSubmit}>SIGN UP</button>
                 <br />
                 or
                 <button>SIGN UP WITH FACEBOOK</button>
