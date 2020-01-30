@@ -19,11 +19,34 @@ const firebaseConfig = {
     measurementId: "G-FSKZFHKBND"
 }
  
-// Initialize firebase instance
-firebase.initializeApp(firebaseConfig)
-// Initialize Cloud Firestore through Firebase
-let db = firebase.firestore()
-console.log(db)
+// // Initialize firebase instance
+// firebase.initializeApp(firebaseConfig)
+// // Initialize Cloud Firestore through Firebase
+// let db = firebase.firestore()
+class Firebase {
+    constructor() {
+        firebase.initializeApp(firebaseConfig);
+        this.auth = firebase.auth();
+        this.db = firebase.database();
+    }
+    doCreateUserWithEmailAndPassword (email, password) {
+        this.auth.createUserWithEmailAndPassword(email, password);
+    }
+
+    doSignInWithEmailAndPassword (email, password) {
+        this.auth.signInWithEmailAndPassword(email, password);
+    } 
+    // doSignOut = () => this.auth.signOut();
+    
+    // doPasswordReset = email => this.auth.sendPasswordResetEmail(email);
+    
+    // doPasswordUpdate = password =>
+    // this.auth.currentUser.updatePassword(password);
+}
+console.log(Firebase)
+
+const FirebaseContext = React.createContext(null);
+console.log(FirebaseContext)
 
 class App extends React.Component {
     constructor (props) {
@@ -43,6 +66,8 @@ class App extends React.Component {
     }
 
     singInSubmit (event) {
+        // static contextType = FirebaseContext
+        let db = this.context
         console.log(this.state.email)
         console.log(this.state.pwd)
         // // 如果事件可以被取消，就取消事件（即取消事件的預設行為）。不會影響事件傳遞
@@ -88,4 +113,7 @@ class App extends React.Component {
         )
     }
 }
-ReactDOM.render(<App/>, document.querySelector("#root"))
+ReactDOM.render(
+    <FirebaseContext.Provider value={new Firebase()}>
+        <App />
+    </FirebaseContext.Provider>, document.querySelector("#root"))
