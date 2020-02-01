@@ -26,19 +26,19 @@ class Firebase {
 
     // *** Auth API ***
     doCreateUserWithEmailAndPassword(email, password) {
-        this.auth.createUserWithEmailAndPassword(email, password);
+        return this.auth.createUserWithEmailAndPassword(email, password);
     }
     doSignInWithEmailAndPassword(email, password) {
-        this.auth.signInWithEmailAndPassword(email, password);
+        return this.auth.signInWithEmailAndPassword(email, password);
     } 
     doSignOut() {
-        this.auth.signOut();
+        return this.auth.signOut();
     }
     doPasswordReset(email) {
-        this.auth.sendPasswordResetEmail(email);
+        return this.auth.sendPasswordResetEmail(email);
     }
     doPasswordUpdate(password) {
-        this.auth.currentUser.updatePassword(password);
+        return this.auth.currentUser.updatePassword(password);
     }
 }
 console.log(Firebase);
@@ -50,7 +50,8 @@ ReactDOM.render(
     </FirebaseContext.Provider>, document.querySelector("#root")
 );
 
-export { FirebaseContext, Firebase };
+export { FirebaseContext };
+export default Firebase;
 
 // const FirebaseContext = React.createContext(null);
 // ReactDOM.render(

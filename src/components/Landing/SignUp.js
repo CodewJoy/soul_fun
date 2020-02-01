@@ -1,5 +1,13 @@
+/* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
+
+const INITIAL_STATE = {
+    email: '',
+    pwd: '',
+    error: null,
+}; 
+
 
 const SignUp = () => (
   <FirebaseContext.Consumer>
@@ -10,7 +18,7 @@ const SignUp = () => (
 class SignUpForm extends Component {
     constructor(props) {
         super(props);
-        this.state = { email: '', pwd: '', error: null };
+        this.state = { ...INITIAL_STATE };
         this.emailChange = this.emailChange.bind(this);
         this.pwdChange = this.pwdChange.bind(this);
         this.singInSubmit = this.singInSubmit.bind(this);
@@ -23,34 +31,29 @@ class SignUpForm extends Component {
         this.setState({ pwd: event.target.value })
     }
         
-    singInSubmit() {
-        this.setState(state => ({
-            email: state.email,
-            pwd: state.pwd
-        }));
-
-        let firebase = this.props.firebase;
-        console.log(firebase);
-        // firebase.db.collection("Users").doc().set({
-        //     email: this.state.email,
-        //     pwd: this.state.pwd
-        // });
-
-        firebase.doCreateUserWithEmailAndPassword(this.state.email, this.state.pwd)
-            .catch((error) => {
-                this.setState({ error });
-                return error;
-            })
-            .then((response) => {
+    singInSubmit(event) {
+        const { email, pwd } = this.state;
+        // const { firebase } = this.props;
+        console.log(email);
+        this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
+          .then((response) => {
                 console.log(response);
-                firebase.db.collection("Users").doc().set({
+                this.props.firebase.db.collection("Users").doc().set({
                     id: response.user.uid,
                     // name: DOM.name.value,
-                    email: this.state.email,
-                    pwd: this.state.pwd
+                    email: email,
+                    pwd: pwd
                 })
-                return response;
-            })
+            //return response;
+          })
+          .then(()=> {
+            console.log('YA');
+            this.setState({ ...INITIAL_STATE });
+          })
+          .catch(error => {
+            this.setState({ error });
+          });
+        event.preventDefault();
     }
 
     render() {
