@@ -44,12 +44,18 @@ class Firebase {
 console.log(Firebase);
 
 const FirebaseContext = React.createContext(null);
+
 ReactDOM.render(
     <FirebaseContext.Provider value={new Firebase()}>
         <App />
     </FirebaseContext.Provider>, document.querySelector("#root")
 );
 
+export const withFirebase = Component => props => (
+    <FirebaseContext.Consumer>
+      {firebase => <Component {...props} firebase={firebase} />}
+    </FirebaseContext.Consumer>
+);
 export { FirebaseContext };
 export default Firebase;
 
