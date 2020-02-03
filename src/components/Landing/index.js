@@ -6,6 +6,7 @@ import './landing.css';
 import Logo from '../img/logo.svg';
 import Soulfun from '../img/soulfun_v2.svg';
 // import Soulfun from '../img/animal_planet_2.svg';
+import Navigation from '../App/navigation.js';
 
 const LandingPage = () => (
   <div className="view">
@@ -17,6 +18,7 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
+        <Navigation />
         <div className="navbar">
           <div className="logo">
             <img className="logo-img" src={Logo} alt="Logo" />

@@ -1,7 +1,7 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
-import { Link, withRouter } from 'react-router-dom';
+import { Link, Redirect, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { compose } from 'recompose';
 import { withFirebase } from '../../index.js';
@@ -49,8 +49,10 @@ class LogInFormBase extends Component {
         this.props.firebase.doSignInWithEmailAndPassword(email, pwd)
             .then(() => {
                 console.log('YA');
-                this.setState({ ...INITIAL_STATE });
-                this.props.history.push(ROUTES.ACCOUNT);
+                this.setState({
+                    logedIn:true
+                });
+                // this.props.history.push(ROUTES.ACCOUNT);
             })
             .catch(error => {
                 this.setState({ error });
@@ -59,6 +61,10 @@ class LogInFormBase extends Component {
     }
 
     render() {
+        console.log("Test", this.state.logedIn);
+        if(this.state.logedIn){
+            return <Redirect to="/account" />;
+        }
         const {
             email,
             pwd,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { FirebaseContext, withFirebase } from '../../index.js';
+import { FirebaseContext} from '../../index.js';
 
 const SignOutButton = () => (
     <FirebaseContext.Consumer>
@@ -10,13 +10,13 @@ const SignOutButton = () => (
 class SignOutButtonBase extends Component {
     constructor(props) {
         super(props);
+        // console.log(props);
+        this.signOut = this.signOut.bind(this);
     }
     signOut() {
-        // console.log(this.props.firebase)
-        // this.props.firebase.doSignOut()
-        // .then((response) => {
-        //     console.log(response);
-        // })
+        // console.log(this.props);
+        // console.log(this.props.firebase);
+        this.props.firebase.doSignOut();
     }
     render() {
         return (

@@ -7,7 +7,6 @@ const Account = () => (
   <div className='main'>
       <Navigation />
       <h1>Account</h1>
-      <SignOutButton />
   </div>
 );
 
