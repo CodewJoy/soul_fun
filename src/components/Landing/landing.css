@@ -1,0 +1,60 @@
+.view {
+    width: 100%;
+    /* margin:0px auto; */
+}
+.landing {
+    width: 100%;
+    background: #63cdda;
+}
+.landing>.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+}
+
+.landing>.navbar>.logo, .landing>.navbar>.log-in{
+    margin: 2%;
+    display: inline-flex;   
+    align-items: center;
+}
+.landing>.navbar>.log-in{
+    margin: 2%;
+}
+.landing>.navbar>.logo>.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.landing>.main {
+    width: 100%;
+    margin: 3% 0%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.landing>.main>.web-intro {
+    padding: 3%; 
+    width: 37%;
+}
+.landing>.main>.graphics {
+    width: 47%;
+}
+.landing>.main>.graphics>.soulfun {
+    width: 100%;
+}
+.landing>.sign-up {
+    width: 35%;
+    margin : 3%; 
+    background-color: white;
+    border-radius: 5px;
+    padding: 3%;
+    /* text-align: center; */
+}
+.landing>.log-in {
+    width: 35%;
+    margin : 3%; 
+    background-color: white;
+    border-radius: 5px;
+    padding: 3%;
+    /* text-align: center; */
+}

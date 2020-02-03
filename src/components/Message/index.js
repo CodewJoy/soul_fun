@@ -1,7 +1,11 @@
 import React from 'react';
+import Navigation from '../App/navigation.js';
 
 const Message = () => (
-  <h1>Message</h1>
+  <>
+    <Navigation />
+    <h1>Message</h1>
+  </>
 );
 
 export default Message;

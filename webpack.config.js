@@ -20,6 +20,7 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
+        exclude: /node_modules/,
         use: [
           'babel-loader'
         ]
@@ -27,6 +28,12 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ['style-loader', 'css-loader'],
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        use: [
+          'file-loader'
+        ]
       }
     ]
   },

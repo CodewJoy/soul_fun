@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { Component } from 'react';
+import Navigation from '../App/navigation.js';
+import SignOutButton from '../LogOut';
+
 
 const Account = () => (
-  <h1>Account</h1>
+  <div className='main'>
+      <Navigation />
+      <h1>Account</h1>
+      <SignOutButton />
+  </div>
 );
 
 export default Account;

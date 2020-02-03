@@ -1,12 +1,4 @@
 
-/* .sing-up {
-    width: 96%;
-    margin: 2%;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-} */
-  
 .key-in {
     font-size: 16px;
     flex: auto;
@@ -21,13 +13,17 @@ button {
     font-size: 16px;
     border: none; /* Remove borders */
     color: white; /* Add a text color */
-    padding: 14px 25px; /* Add some padding */
+    padding: 12px 20px; /* Add some padding */
     cursor: pointer; /* Add a pointer cursor on mouse-over */
-    background-color: darkblue;
+    background-color: #546de5;
     margin: 2%;
     border-radius: 5px;
   }
   
-  button:hover {
-    background: #33A1C9;
-  }
+button:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.center-button{
+  text-align: center;
+}

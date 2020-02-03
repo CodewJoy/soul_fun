@@ -1,42 +1,37 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
-import { Link, Redirect, withRouter } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { compose } from 'recompose';
 import { withFirebase } from '../../index.js';
+import { SignUpLink } from './SignUp';
 
 // console.log(withFirebase);
 
 const INITIAL_STATE = {
-    username: '',
     email: '',
     pwd: '',
     error: null,
 };
 
-const SignUp = () => (
+const LogIn = () => (
     // <div>
     //     <h1>SignUp</h1>
     //     <SignUpForm />
     // </div>
     <FirebaseContext.Consumer>
-        {(firebase) => <SignUpForm firebase={firebase} />}
+        {(firebase) => <LogInForm firebase={firebase} />}
     </FirebaseContext.Consumer>
 );
 
-class SignUpFormBase extends Component {
+class LogInFormBase extends Component {
     constructor(props) {
         super(props);
         this.state = { ...INITIAL_STATE };
-        this.usernameChange = this.usernameChange.bind(this);
         this.emailChange = this.emailChange.bind(this);
         this.pwdChange = this.pwdChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
-    }
-
-    usernameChange(event) {
-        this.setState({ username: event.target.value })
     }
 
     emailChange(event) {
@@ -48,26 +43,14 @@ class SignUpFormBase extends Component {
     }
 
     onSubmit(event) {
-        const { username, email, pwd } = this.state;
+        const { email, pwd } = this.state;
         // const { firebase } = this.props;
         console.log(email);
-        this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
-            .then((authUser) => {
-                console.log(authUser);
-                this.props.firebase.db.collection("Users").doc(`${authUser.user.uid}`).set({
-                    username: username,
-                    id: authUser.user.uid,
-                    // name: DOM.name.value,
-                    email: email,
-                    pwd: pwd
-                })
-            })
+        this.props.firebase.doSignInWithEmailAndPassword(email, pwd)
             .then(() => {
                 console.log('YA');
-                this.setState({
-                    signedIn:true
-                });
-                //this.props.history.push(ROUTES.ACCOUNT);
+                this.setState({ ...INITIAL_STATE });
+                this.props.history.push(ROUTES.ACCOUNT);
             })
             .catch(error => {
                 this.setState({ error });
@@ -76,12 +59,7 @@ class SignUpFormBase extends Component {
     }
 
     render() {
-        console.log("Test", this.state.signedIn);
-        if(this.state.signedIn){
-            return <Redirect to="/account" />;
-        }
         const {
-            username,
             email,
             pwd,
             // error,
@@ -89,22 +67,11 @@ class SignUpFormBase extends Component {
 
         const isInvalid =
             pwd === '' ||
-            email === '' ||
-            username === '';
+            email === '';
 
         return (
-            <form onSubmit={this.onSubmit} className="sign-up">
-                <h3>Sign up</h3>
-                <br />
-                Username
-                <br />
-                <input className="key-in"
-                    // name="username"
-                    value={this.state.username}
-                    onChange={this.usernameChange}
-                    type="text"
-                    placeholder="Full Name"
-                />
+            <form onSubmit={this.onSubmit} className="log-in">
+                <h3>Log In</h3>
                 <br />
                 Email
                 <br />
@@ -136,19 +103,13 @@ class SignUpFormBase extends Component {
                 <button>SIGN UP WITH FACEBOOK</button> */}
 
                 {/* {error && <p>{error.message}</p>} */}
+                <SignUpLink />
             </form>
         )
     }
 }
 
-const SignUpLink = () => (
-    <p>
-        Don not have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-    </p>
-);
+const LogInForm = withRouter(LogInFormBase);
 
-const SignUpForm = withRouter(SignUpFormBase);
-// const SignUpForm = withRouter(SignUp);
-
-export default SignUp;
-export { SignUpForm, SignUpLink };
+export default LogIn;
+export { LogInForm };
