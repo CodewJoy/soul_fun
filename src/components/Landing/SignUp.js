@@ -3,27 +3,25 @@ import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-import { compose } from 'recompose';
-import { withFirebase } from '../../index.js';
-
-// console.log(withFirebase);
+// import { compose } from 'recompose';
+// import { withFirebase } from '../../index.js';
+import Close from '../img/close.svg';
 
 const INITIAL_STATE = {
     username: '',
     email: '',
     pwd: '',
     error: null,
+    signedUP: false
 };
 
-const SignUp = () => (
-    // <div>
-    //     <h1>SignUp</h1>
-    //     <SignUpForm />
-    // </div>
-    <FirebaseContext.Consumer>
-        {(firebase) => <SignUpForm firebase={firebase} />}
-    </FirebaseContext.Consumer>
-);
+const SignUp = (props) => {
+    return (
+        <FirebaseContext.Consumer>
+            {(firebase) => <SignUpForm {...props} firebase={firebase} />}
+        </FirebaseContext.Consumer>
+    )
+};
 
 class SignUpFormBase extends Component {
     constructor(props) {
@@ -33,6 +31,7 @@ class SignUpFormBase extends Component {
         this.emailChange = this.emailChange.bind(this);
         this.pwdChange = this.pwdChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.changeToClose = this.changeToClose.bind(this);
     }
 
     usernameChange(event) {
@@ -51,6 +50,24 @@ class SignUpFormBase extends Component {
         const { username, email, pwd } = this.state;
         // const { firebase } = this.props;
         console.log(email);
+        // console.log(username, email, pwd);
+        // if (username === '') {
+        //     alert("You haven't entered your username.");
+        //     return
+        // } else {
+        //     if (email === '') {
+        //         alert("You haven't entered your username.");
+        //         return
+        //     }
+        // } 
+        // if (username === '') {
+        //     alert("You haven't entered your username.");
+        //     return
+        // } else if (email === '') {
+        //     alert("You haven't entered your email.");
+        // } else if (pwd === '') {
+        //     alert("You haven't entered your password.");
+        // }
         this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
             .then((authUser) => {
                 console.log(authUser);
@@ -65,7 +82,7 @@ class SignUpFormBase extends Component {
             .then(() => {
                 console.log('YA');
                 this.setState({
-                    signedIn:true
+                    signedUP:true
                 });
                 //this.props.history.push(ROUTES.ACCOUNT);
             })
@@ -75,16 +92,21 @@ class SignUpFormBase extends Component {
         event.preventDefault();
     }
 
+    changeToClose() {
+        this.props.closeSignup(false);
+        console.log(this.props);
+    }
+
     render() {
-        console.log("Test", this.state.signedIn);
-        if(this.state.signedIn){
+        console.log("Test", this.state.signedUP);
+        if(this.state.signedUP){
             return <Redirect to="/account" />;
         }
         const {
             username,
             email,
             pwd,
-            // error,
+            error
         } = this.state;
 
         const isInvalid =
@@ -94,7 +116,12 @@ class SignUpFormBase extends Component {
 
         return (
             <form onSubmit={this.onSubmit} className="sign-up">
-                <h3>Sign up</h3>
+                <div className="line">
+                    <h3>Sign up</h3>
+                    <img className="close-button"  src={Close} alt="closebutton" 
+                        onClick={this.changeToClose} 
+                    />
+                </div>
                 <br />
                 Username
                 <br />
@@ -135,7 +162,7 @@ class SignUpFormBase extends Component {
                 or
                 <button>SIGN UP WITH FACEBOOK</button> */}
 
-                {/* {error && <p>{error.message}</p>} */}
+                {error && <p>{error.message}</p>}
             </form>
         )
     }

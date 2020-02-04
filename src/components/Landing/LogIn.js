@@ -1,29 +1,28 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
-import { Link, Redirect, withRouter } from 'react-router-dom';
-import * as ROUTES from '../../constants/routes';
-import { compose } from 'recompose';
-import { withFirebase } from '../../index.js';
+import { Redirect, withRouter } from 'react-router-dom';
+// import * as ROUTES from '../../constants/routes';
+// import { compose } from 'recompose';
+// import { withFirebase } from '../../index.js';
 import { SignUpLink } from './SignUp';
+import Close from '../img/close.svg';
 
 // console.log(withFirebase);
+const LogIn = (props) => {
+    return (
+        <FirebaseContext.Consumer>
+            {(firebase) => <LogInForm {...props} firebase={firebase} />}
+        </FirebaseContext.Consumer>
+    )
+};
 
 const INITIAL_STATE = {
     email: '',
     pwd: '',
     error: null,
+    logedIn: false
 };
-
-const LogIn = () => (
-    // <div>
-    //     <h1>SignUp</h1>
-    //     <SignUpForm />
-    // </div>
-    <FirebaseContext.Consumer>
-        {(firebase) => <LogInForm firebase={firebase} />}
-    </FirebaseContext.Consumer>
-);
 
 class LogInFormBase extends Component {
     constructor(props) {
@@ -32,6 +31,7 @@ class LogInFormBase extends Component {
         this.emailChange = this.emailChange.bind(this);
         this.pwdChange = this.pwdChange.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.changeToClose = this.changeToClose.bind(this);
     }
 
     emailChange(event) {
@@ -50,7 +50,7 @@ class LogInFormBase extends Component {
             .then(() => {
                 console.log('YA');
                 this.setState({
-                    logedIn:true
+                    logedIn: true
                 });
                 // this.props.history.push(ROUTES.ACCOUNT);
             })
@@ -60,15 +60,20 @@ class LogInFormBase extends Component {
         event.preventDefault();
     }
 
+    changeToClose() {
+        console.log(this.props);
+        this.props.closeLogin(false);
+    }
+
     render() {
         console.log("Test", this.state.logedIn);
-        if(this.state.logedIn){
+        if (this.state.logedIn) {
             return <Redirect to="/account" />;
         }
         const {
             email,
             pwd,
-            // error,
+            error,
         } = this.state;
 
         const isInvalid =
@@ -76,8 +81,14 @@ class LogInFormBase extends Component {
             email === '';
 
         return (
+
             <form onSubmit={this.onSubmit} className="log-in">
-                <h3>Log In</h3>
+                <div className="line">
+                    <h3>Log In</h3>
+                    <img className="close-button" src={Close} alt="closebutton"
+                        onClick={this.changeToClose}
+                    />
+                </div>
                 <br />
                 Email
                 <br />
@@ -108,14 +119,13 @@ class LogInFormBase extends Component {
                 or
                 <button>SIGN UP WITH FACEBOOK</button> */}
 
-                {/* {error && <p>{error.message}</p>} */}
+                {error && <p>{error.message}</p>}
                 <SignUpLink />
             </form>
         )
     }
 }
-
 const LogInForm = withRouter(LogInFormBase);
 
 export default LogIn;
-export { LogInForm };
+export { LogInForm, LogInFormBase };

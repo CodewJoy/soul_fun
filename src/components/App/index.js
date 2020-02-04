@@ -6,7 +6,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import MessagePage from '../Message';
 
-import { FirebaseContext, withFirebase } from '../../index.js';
+import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 
 const App = () => (
@@ -14,7 +14,6 @@ const App = () => (
     {(firebase) => <AppBase firebase={firebase} />}
   </FirebaseContext.Consumer>
 );
-
 // const App = () => (
 //   <div>
 //     <AppBase />

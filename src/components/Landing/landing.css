@@ -11,15 +11,16 @@
     justify-content: space-between;
     align-items: center;
     background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.landing>.navbar>.logo, .landing>.navbar>.log-in{
-    margin: 2%;
+.landing>.navbar>.logo {
+    margin: 1% 2%;
     display: inline-flex;   
     align-items: center;
 }
 .landing>.navbar>.log-in{
-    margin: 2%;
+    margin: 1% 2%;
 }
 .landing>.navbar>.logo>.logo-img {
     height: 40px;
@@ -27,22 +28,47 @@
 }
 .landing>.main {
     width: 100%;
-    margin: 3% 0%;
+    /* margin: 2% 0%; */
     display: flex;
     justify-content: center;
     align-items: center;
 }
 .landing>.main>.web-intro {
-    padding: 3%; 
-    width: 37%;
+    padding: 2%; 
+    width: 36%;
 }
 .landing>.main>.graphics {
-    width: 47%;
+    padding: 1%; 
+    width: 50%;
 }
 .landing>.main>.graphics>.soulfun {
     width: 100%;
 }
 .landing>.sign-up {
+    position: fixed;
+    top: 20%;
+    left: 27%;
+    width: 35%;
+    margin : 3%; 
+    background-color: white;
+    border-radius: 5px;
+    padding: 3%;
+    /* text-align: center; */
+
+}
+.landing>.sign-up>.line {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.landing>.sign-up>.line>.close-button {
+    width: 40px;
+}
+.landing>.log-in {
+    position: fixed;
+    top: 20%;
+    left: 27%;
     width: 35%;
     margin : 3%; 
     background-color: white;
@@ -50,11 +76,12 @@
     padding: 3%;
     /* text-align: center; */
 }
-.landing>.log-in {
-    width: 35%;
-    margin : 3%; 
-    background-color: white;
-    border-radius: 5px;
-    padding: 3%;
-    /* text-align: center; */
+.landing>.log-in>.line {
+    width: 100%;
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.landing>.log-in>.line>.close-button {
+    width: 40px;
 }
