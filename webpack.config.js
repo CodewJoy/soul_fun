@@ -10,6 +10,7 @@ module.exports = {
     filename: 'main.js',
     chunkFilename: 'main.bundle.js',
     path: path.resolve(__dirname, 'dist'),
+    publicPath: '/'
   },
   mode: 'development',
   // mode: 'production',
@@ -39,6 +40,7 @@ module.exports = {
     ]
   },
   devServer: {
-    contentBase: './dist'
+    contentBase: './dist',
+    historyApiFallback: true
   }
 };

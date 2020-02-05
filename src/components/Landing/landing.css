@@ -1,7 +1,3 @@
-.view {
-    width: 100%;
-    /* margin:0px auto; */
-}
 .landing {
     width: 100%;
     background: #63cdda;
@@ -84,4 +80,21 @@
 }
 .landing>.log-in>.line>.close-button {
     width: 40px;
+}
+
+@media (max-width: 500px) {
+    .landing>.main {
+        width: 100%;
+        display: block;
+        /* justify-content: center;
+        align-items: center; */
+    }
+    .landing>.main>.web-intro {
+        padding: 5%; 
+        width: 90%;
+    }
+    .landing>.main>.graphics {
+        padding: 2%; 
+        width: 96%;
+    }
 }

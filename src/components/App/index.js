@@ -47,12 +47,12 @@ class AppBase extends Component {
     return (
       <AuthUserContext.Provider value={this.state.authUser}>
         <Router>
-          <div className='main'>
+          <>
             <Route exact path={ROUTES.LANDING} component={LandingPage} />
             <Route path={ROUTES.HOME} component={HomePage} />
             <Route path={ROUTES.ACCOUNT} component={AccountPage} />
             <Route path={ROUTES.MESSAGE} component={MessagePage} />
-          </div>
+          </>
         </Router>
       </AuthUserContext.Provider>
     )

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SignUp from './SignUp';
 import LogIn from './LogIn';
-import { LogInForm, LogInFormBase } from './LogIn';
+// import { LogInForm, LogInFormBase } from './LogIn';
 import '../../common.css';
 import './landing.css';
 import Logo from '../img/logo.svg';
@@ -10,10 +10,9 @@ import Soulfun from '../img/soulfun_v2.svg';
 // import Soulfun from '../img/animal_planet_2.svg';
 
 const LandingPage = () => (
-  <div className="view">
-    {/* <Navigation /> */}
+  <>
     <Landing />
-  </div>
+  </>
 );
 
 class Landing extends Component {

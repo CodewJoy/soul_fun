@@ -1,0 +1,52 @@
+.account {
+    width: 100%;
+    /* background: #63cdda; */
+}
+.account>.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #63cdda;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.account>.navbar>.logo {
+    margin: 1% 2%;
+    display: inline-flex;   
+    align-items: center;
+}
+.account>.navbar>.log-in{
+    margin: 1% 2%;
+}
+.account>.navbar>.logo>.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.account>.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.account>.main>.profile {
+    padding: 4%; 
+    width: 27%;
+    /* display: inline-flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-wrap: wrap; */
+}
+.account>.main>.profile>.display {
+    text-align: center;
+}
+.account>.main>.setting {
+    padding: 3% 3% 0% 0%; 
+    width: 59%;
+}
+.account>.main>.profile>.display>.avatar {
+    width: 135px;
+}
+.account>.main>.profile>.line {
+    display: inline-flex;   
+    align-items: center;
+}
+

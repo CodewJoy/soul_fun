@@ -5,7 +5,7 @@ import { Redirect, withRouter } from 'react-router-dom';
 // import * as ROUTES from '../../constants/routes';
 // import { compose } from 'recompose';
 // import { withFirebase } from '../../index.js';
-import { SignUpLink } from './SignUp';
+// import { SignUpLink } from './SignUp';
 import Close from '../img/close.svg';
 
 // console.log(withFirebase);
@@ -81,7 +81,6 @@ class LogInFormBase extends Component {
             email === '';
 
         return (
-
             <form onSubmit={this.onSubmit} className="log-in">
                 <div className="line">
                     <h3>Log In</h3>
@@ -120,7 +119,7 @@ class LogInFormBase extends Component {
                 <button>SIGN UP WITH FACEBOOK</button> */}
 
                 {error && <p>{error.message}</p>}
-                <SignUpLink />
+                {/* <SignUpLink /> */}
             </form>
         )
     }

@@ -168,14 +168,15 @@ class SignUpFormBase extends Component {
     }
 }
 
-const SignUpLink = () => (
-    <p>
-        Don not have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-    </p>
-);
+// const SignUpLink = () => (
+//     <p>
+//         Don not have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
+//     </p>
+// );
 
 const SignUpForm = withRouter(SignUpFormBase);
 // const SignUpForm = withRouter(SignUp);
 
 export default SignUp;
-export { SignUpForm, SignUpLink };
+export { SignUpForm };
+// export { SignUpLink };
