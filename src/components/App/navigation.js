@@ -5,11 +5,12 @@ import * as ROUTES from '../../constants/routes';
 import SignOutButton from '../LogOut';
 import { AuthUserContext } from '../Session';
 
+// only member can see this nav
 const Navigation = () => (
-  <div>
+  <div className="member-navbar">
     <AuthUserContext.Consumer>
       {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth /> 
+        authUser ? <NavigationAuth /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
   </div>

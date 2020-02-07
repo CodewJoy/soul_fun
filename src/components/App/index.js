@@ -13,12 +13,7 @@ const App = () => (
   <FirebaseContext.Consumer>
     {(firebase) => <AppBase firebase={firebase} />}
   </FirebaseContext.Consumer>
-);
-// const App = () => (
-//   <div>
-//     <AppBase />
-//   <div/>
-// );
+); 
 
 class AppBase extends Component {
   constructor(props) {

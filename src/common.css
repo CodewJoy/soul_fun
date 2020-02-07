@@ -1,4 +1,23 @@
 
+html, body {
+	margin:0px;
+}
+body {
+	font-size:16px;
+	font-family:"Noto Sans TC", "微軟正黑體", "新細明體", arial, sans-serif;
+	color:#3f3a3a;
+}
+form {
+	margin:0px;padding:0px;
+}
+a {
+	text-decoration:none;color:inherit;
+}
+input,select,img {
+	vertical-align:middle;
+}
+
+
 .key-in {
     font-size: 16px;
     flex: auto;

@@ -56,7 +56,7 @@ class AccountBase extends Component {
     console.log(this.props);
     console.log(this.props.authUser.uid);
     console.log(this.props.firebase.db);
-    this.props.firebase.db.collection("Users").doc(`${this.props.authUser.uid}`).set(
+    this.props.firebase.db.collection("Users").doc(`${this.props.authUser.uid}`).update(
       this.state
     )
     // .then() {
@@ -161,13 +161,30 @@ class Setting extends Component {
           {/* <input type="submit" value="Save"/> */}
         </form>
 
+        <div className="location-born">
+          <p>Where are you from?</p>
+          <form>
+            <select name="country" onChange={this.onChange}>
+              <option value="Taiwan">Taiwan</option>
+              <option value="U.S.">U.S.</option>
+              <option value="France">France</option>
+              <option value="Japan">Japan</option>
+            </select>
+          </form>
+          {/* <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/> */}
+        </div>
+
         <div className="location-live">
           <p>Where do you primarily live?</p>
-          <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/>
-        </div>
-        <div className="location-born">
-          <p>Where do you come from?</p>
-          <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/>
+          <form>
+            <select name="location" onChange={this.onChange}>
+              <option value="Taiwan">Taiwan</option>
+              <option value="U.S.">U.S.</option>
+              <option value="France">France</option>
+              <option value="Japan">Japan</option>
+            </select>
+          </form>
+          {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/> */}
         </div>
         <div className="language">
           <p>what kind of language do you speak?</p>
