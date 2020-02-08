@@ -46,3 +46,11 @@ button:hover {
 .center-button{
   text-align: center;
 }
+
+.loading {
+  position: fixed;
+  top: 20%;
+  left: 35%;
+  width: 30%;
+  text-align: center;
+}

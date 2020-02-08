@@ -1,18 +1,18 @@
 import React, { Component } from 'react';
+// import Navigation from '../App/navigation.js';
 import { Redirect } from 'react-router-dom';
 import Select from 'react-select'
 import './account.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import Logo from '../img/logo.svg';
-// import AvatarImage from '../img/bear.svg';
 import AvatarImage from '../img/008-programmer.svg';
 
 const Account = () => (
   <>
     {/* <Navigation /> */}
     <AuthUserContext.Consumer>
-      {UserData => (
+      {(UserData) => (
         <FirebaseContext.Consumer>
           {(firebase) => <AccountBase
             UserData={UserData} firebase={firebase} />}
@@ -24,14 +24,15 @@ const Account = () => (
 
 const INITIAL_STATE = {
   // username: 
-  gender: '',
+  gender: 'male',
   birthday: '',
-  location: '',
-  country: '',
+  location: 'taiwan',
+  country: 'taiwan',
   language: '',
   avatar: '',
   bio: '',
   interest: [],
+  isLoaded: false,
   fin_acc: false
 };
 const options = [
@@ -53,6 +54,8 @@ class AccountBase extends Component {
     this.setState(value, () => {
       console.log(this.state)
     });
+    console.log(this.props)
+    // this.props.UserData.updateUserDate(value)
   }
   addToInterest(value) {
     this.setState(state => {
@@ -68,6 +71,14 @@ class AccountBase extends Component {
     console.log(this.props.firebase.db);
     this.props.firebase.db.collection("Users").doc(`${this.props.UserData.authUser.uid}`).update(
       this.state
+      // gender: '',
+      // birthday: '',
+      // location: '',
+      // country: '',
+      // language: '',
+      // avatar: '',
+      // bio: '',
+      // interest: [],
     )
     .then(() => {
       console.log('fin_acc');
@@ -76,27 +87,32 @@ class AccountBase extends Component {
       });
       //this.props.history.push(ROUTES.ACCOUNT);
     })
-    // this.props.authUser.toggleTheme(this.state)
-
   }
   render() {
     console.log("fin_acc", this.state.fin_acc);
     if(this.state.fin_acc){
         return <Redirect to="/home" />;
     }
-    return (
-      <div className="account">
-        <Navbar />
-        <div className="main">
-          <Display changeProfile={this.changeProfile.bind(this)} />
-          <Setting changeProfile={this.changeProfile.bind(this)}
-            addToInterest={this.addToInterest.bind(this)} />
+    // const { isLoaded } = this.state
+    // if (!isLoaded) {
+    //   return <div>Loading...</div>
+    // } else {
+      console.log(this.props)
+      return (
+        <div className="account">
+          <Navbar />
+          <div className="main">
+            {/* <Display changeProfile={this.changeProfile.bind(this)}  /> */}
+            <Display changeProfile={this.changeProfile.bind(this)} username={this.props.UserData.userInfo.username} />
+            <Setting changeProfile={this.changeProfile.bind(this)}
+              addToInterest={this.addToInterest.bind(this)} userInfo={this.state}/>
+          </div>
+          <div className="center-button">
+            <button onClick={this.saveToDB} >Save</button>
+          </div>
         </div>
-        <div className="center-button">
-          <button onClick={this.saveToDB} >Save</button>
-        </div>
-      </div>
-    );
+      );
+    // }
   }
 }
 class Navbar extends Component {
@@ -124,8 +140,7 @@ class Display extends Component {
     return (
       <div className="display">
         <img className="avatar" src={AvatarImage} alt="avatar" />
-        <h5>Joy</h5>
-        <p>Joy@gmail.com</p>
+        <h5>Hey {this.props.username}!</h5>
       </div>
     )
   }
@@ -146,26 +161,28 @@ class Setting extends Component {
     this.props.addToInterest(event.target.value);
   }
   render() {
+    console.log(this.props)
     return (
       <div className="setting">
         <p>Please select your gender:</p>
-        <form className="gender line" onChange={this.onChange}>
-          <input type="radio" name="gender" value="male" /> Male<br />
-          <input type="radio" name="gender" value="female" /> Female<br />
-          <input type="radio" name="gender" value="non-binary" /> Non-binary<br />
+        <form className="gender line">
+          <input type="radio" name="gender" value="male" checked={this.props.userInfo.gender === "male"} onChange={this.onChange}/> Male<br />
+          <input type="radio" name="gender" value="female" checked={this.props.userInfo.gender === "female"} onChange={this.onChange}/> Female<br />
+          <input type="radio" name="gender" value="non-binary" checked={this.props.userInfo.gender === "non-binary"} onChange={this.onChange}/> Non-binary<br />
           {/* <input type="submit" value="Save" /> */}
         </form>
 
         <form className="birthday" onChange={this.onChange}>
-          <p>When were you born?</p>
+          <p>When is your birthday?</p>
           <input type="date" name="birthday" />
+          <p>You must be at least 18 years old to use SOULFUN.</p>
           {/* <input type="submit" value="Save"/> */}
         </form>
 
         <div className="location-born">
           <p>Where are you from?</p>
-          <form>
-            <select value={this.props.country} name="country" onChange={this.onChange}>
+          <form> 
+            <select value={this.props.userInfo.country} name="country" onChange={this.onChange}>
               <option value="Taiwan">Taiwan</option>
               <option value="U.S.">U.S.</option>
               <option value="France">France</option>
@@ -178,7 +195,7 @@ class Setting extends Component {
         <div className="location-live">
           <p>Where do you primarily live?</p>
           <form>
-            <select name="location" onChange={this.onChange}>
+            <select value={this.props.userInfo.location} name="location" onChange={this.onChange}>
               <option value="Taiwan">Taiwan</option>
               <option value="U.S.">U.S.</option>
               <option value="France">France</option>

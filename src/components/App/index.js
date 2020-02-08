@@ -54,9 +54,9 @@ class AppBase extends Component {
               console.log("Error getting document:", error);
             });
         }
-        authUser
-          ? console.log('islogin')
-          : console.log('nologin')
+        // authUser
+        //   ? console.log('islogin')
+        //   : console.log('nologin')
         authUser
           ? this.setState({ authUser: authUser })
           : this.setState({ authUser: null });

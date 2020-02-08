@@ -5,13 +5,15 @@ import './home.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import Logo from '../img/logo.svg';
+import Loading from '../img/loading.gif';
 
 const Home = () => (
   <>
     <AuthUserContext.Consumer>
-      {authUser => (
+      {UserData => (
         <FirebaseContext.Consumer>
-          {(firebase) => <HomeBase authUser={authUser} firebase={firebase} />}
+          {(firebase) => <HomeBase 
+            UserData={UserData} firebase={firebase} />}
         </FirebaseContext.Consumer>
       )}
     </AuthUserContext.Consumer>
@@ -61,14 +63,15 @@ class HomeBase extends Component {
   )}
 
   addFriend(id, name, avatar) {
-    console.log(this.props.authUser);
+    const { firebase, UserData } = this.props
+    console.log(UserData);
     // console.log(this.props.authUser.authUser.uid);
     // console.log(id);
     // console.log(this.props.authUser.authInfo.name);
     // console.log(this.props.authUser.authInfo.avatar);
 
     // modify my list
-    this.props.firebase.db.collection("Users").doc(this.props.authUser.authUser.uid).collection("friends").doc(id)
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
     .set(
       {
         id: id,
@@ -77,16 +80,17 @@ class HomeBase extends Component {
         status: "waitHisConfirm"
       }
     );
-    // modify my friend's list
-    // this.props.firebase.db.collection("Users").doc(id).collection("friends").doc(this.props.authUser.authUser.uid)
-    // .set(
-    //   {
-    //     id: this.props.authUser.authUser.uid,
-    //     name: "this.props.authUser.authInfo.name",
-    //     avatar: this.props.authUser.authInfo.avatar,
-    //     status: "askUrConfirm"
-    //   }
-    // )
+    // modify invited friend's list
+    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+    .set(
+      {
+        id: UserData.authUser.uid,
+        name: UserData.userInfo.username,
+        avatar: UserData.userInfo.avatar,
+        status: "askUrConfirm"
+      }
+    )
+    // 顯示已加對方好友功能
   }
 
   render() {
@@ -94,7 +98,8 @@ class HomeBase extends Component {
     if (error) {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
-      return <div>Loading...</div>
+      return <div className="loading"><img src={Loading} alt="Loading" /></div>
+      
     } else {
       return (
         <div className="home">
