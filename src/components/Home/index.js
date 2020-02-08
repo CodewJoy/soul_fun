@@ -62,29 +62,31 @@ class HomeBase extends Component {
 
   addFriend(id, name, avatar) {
     console.log(this.props.authUser);
-    // console.log(this.props.authUser.uid);
+    // console.log(this.props.authUser.authUser.uid);
     // console.log(id);
+    // console.log(this.props.authUser.authInfo.name);
+    // console.log(this.props.authUser.authInfo.avatar);
 
     // modify my list
-    this.props.firebase.db.collection("Users").doc(this.props.authUser.uid).collection("friends").doc(id)
+    this.props.firebase.db.collection("Users").doc(this.props.authUser.authUser.uid).collection("friends").doc(id)
     .set(
       {
         id: id,
         name: name,
         avatar: avatar,
-        status: "askUrConfirm"
+        status: "waitHisConfirm"
       }
     );
     // modify my friend's list
-    this.props.firebase.db.collection("Users").doc(id).collection("friends").doc(this.props.authUser.uid)
-    .set(
-      {
-        id: this.props.authUser.uid,
-        // name: name,
-        // avatar: avatar,
-        status: "waitHisConfirm"
-      }
-    )
+    // this.props.firebase.db.collection("Users").doc(id).collection("friends").doc(this.props.authUser.authUser.uid)
+    // .set(
+    //   {
+    //     id: this.props.authUser.authUser.uid,
+    //     name: "this.props.authUser.authInfo.name",
+    //     avatar: this.props.authUser.authInfo.avatar,
+    //     status: "askUrConfirm"
+    //   }
+    // )
   }
 
   render() {

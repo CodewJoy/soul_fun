@@ -25,27 +25,23 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* flex-wrap: wrap; */
+    /* align-items: center; */
 }
-.account>.main>.profile {
+.account>.main>.display {
     padding: 4%; 
-    width: 27%;
-    /* display: inline-flex;
-    justify-content: center;
-    align-items: flex-start;
-    flex-wrap: wrap; */
-}
-.account>.main>.profile>.display {
+    width: 22%;
     text-align: center;
 }
+
 .account>.main>.setting {
-    padding: 3% 3% 0% 0%; 
-    width: 59%;
+    padding: 4%;
+    width: 62%;
 }
-.account>.main>.profile>.display>.avatar {
+.account>.main>.display>.avatar {
     width: 135px;
 }
-.account>.main>.profile>.line {
+.account>.main>.setting>.line {
     display: inline-flex;   
     align-items: center;
 }
