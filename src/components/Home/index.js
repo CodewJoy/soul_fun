@@ -30,37 +30,42 @@ class HomeBase extends Component {
     }
     this.addFriend = this.addFriend.bind(this)
   }
-  componentDidMount() {
-    console.log(this.props);
-    this.props.firebase.db.collection("Users")
-    .get()
-    // .then(res => res.json())
-    .then(
-      (querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          // doc.data() is never undefined for query doc snapshots
-          // console.log(doc.id, " => ", doc.data());
-          this.setState((state) => {
-            let friendlist = state.friendlist.concat(doc.data());
-            return { friendlist };
-          }
-          // , () => {
-          //   console.log(this.state);
-          // }
-          );
-        });
-        this.setState({
-          isLoaded: true,
-        })
-        console.log(this.state)
-      },
-      (error) => {
-        this.setState({
-          isLoaded: true,
-          error
-        })
-      }
-  )}
+
+  // 要用到 user id 拿值，改用componentDidMount() {
+  componentDidUpdate() {
+    console.log('home',this.props);
+    if (!this.state.isLoaded) {
+      this.props.firebase.db.collection("Users")
+      .get()
+      // .then(res => res.json())
+      .then(
+        (querySnapshot) => {
+          let friendlist = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            // console.log(doc.id, " => ", doc.data());
+            if (doc.data().avatar) {
+              // cant see self as a friend
+              if (doc.id !== this.props.UserData.authUser.uid) {
+                // console.log(doc.id, " => ", doc.data());
+                friendlist.push(doc.data());
+              }
+            }
+          });
+          this.setState({
+            isLoaded: true, friendlist
+          })
+          console.log(this.state)
+        },
+        (error) => {
+          this.setState({
+            isLoaded: true,
+            error
+          })
+        }
+    )
+     }
+  }
 
   addFriend(id, name, avatar) {
     const { firebase, UserData } = this.props

@@ -160,7 +160,7 @@ class Display extends Component {
       <div className="display">
         {/* <img className="avatar" src={AvatarImage} alt="avatar" /> */}
         <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
-        <h5>Hey {this.props.username}!</h5>
+        <h4>Hey {this.props.username}!</h4>
       </div>
     )
   }

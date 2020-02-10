@@ -37,10 +37,11 @@ class AppBase extends Component {
       authUser => {
         console.log(authUser);
         if (authUser) {
+          // snpashot method
           this.props.firebase.db.collection("Users").doc(authUser.uid)
-            .get()
-            .then(
+            .onSnapshot(
               (doc) => {
+                // console.log("Current data: ", doc.data())
                 if (doc.exists) {
                   console.log("Document data:", doc.data());
                   this.setState({ userInfo: doc.data() })
@@ -48,15 +49,31 @@ class AppBase extends Component {
                   // doc.data() will be undefined in this case
                   console.log("No such document!");
                 }
+              },
+              (error) => {
+                console.log(error)
               }
             )
-            .catch(function (error) {
-              console.log("Error getting document:", error);
-            });
+
+        //// get method
+        //   this.props.firebase.db.collection("Users").doc(authUser.uid)
+        //     .get()
+        //     .then(
+        //       (doc) => {
+        //         if (doc.exists) {
+        //           console.log("Document data:", doc.data());
+        //           this.setState({ userInfo: doc.data() })
+        //         } else {
+        //           // doc.data() will be undefined in this case
+        //           console.log("No such document!");
+        //         }
+        //       }
+        //     )
+        //     .catch(function (error) {
+        //       console.log("Error getting document:", error);
+        //     });
+        // }
         }
-        // authUser
-        //   ? console.log('islogin')
-        //   : console.log('nologin')
         authUser
           ? this.setState({ authUser: authUser })
           : this.setState({ authUser: null });
