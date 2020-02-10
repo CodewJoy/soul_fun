@@ -65,7 +65,7 @@ class LogInFormBase extends Component {
     render() {
         console.log("Test", this.state.logedIn);
         if (this.state.logedIn) {
-            return <Redirect to="/account" />;
+            return <Redirect to="/home" />;
         }
         const {
             email,

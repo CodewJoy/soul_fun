@@ -1,0 +1,74 @@
+.profile {
+    width: 100%;
+    /* background: #63cdda; */
+}
+.profile>.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #63cdda;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.profile>.navbar>.logo {
+    margin: 1% 2%;
+    display: inline-flex;   
+    align-items: center;
+}
+.profile>.navbar>.log-in{
+    margin: 1% 2%;
+}
+.profile>.navbar>.logo>.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.profile>.navbar>.member-navbar {
+    width: 35%;
+    /* margin: 1% 2%; */
+}
+.profile>.navbar>.member-navbar>ul {
+    display: flex;   
+    align-items: center;
+    justify-content:space-around;
+    list-style: none;
+}
+.profile>.navbar>.member-navbar>ul>li>button{
+    min-width: 110px;
+}
+.profile>.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    /* flex-wrap: wrap; */
+    /* align-items: center; */
+}
+.profile>.main>.display {
+    padding: 4%; 
+    width: 22%;
+    text-align: center;
+}
+.profile>.main>.setting {
+    padding: 4%;
+    width: 32%;
+    font-size: 18px;
+}
+.profile>.main>.confirm-friend {
+    padding: 4%; 
+    width: 22%;
+    text-align: center;
+}
+.profile>.main>.display>.avatar {
+    width: 135px;
+}
+
+.profile>.main>.confirm-friend>.confirm-box {
+    display: inline-flex;
+    margin: 2%;
+}
+.profile>.main>.confirm-friend>.confirm-box>.center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.profile>.main>.confirm-friend>.confirm-box>.avatar {
+    width: 90px;
+}

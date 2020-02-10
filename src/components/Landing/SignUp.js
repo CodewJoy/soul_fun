@@ -74,9 +74,8 @@ class SignUpFormBase extends Component {
                 this.props.firebase.db.collection("Users").doc(`${authUser.user.uid}`).set({
                     username: username,
                     id: authUser.user.uid,
-                    // name: DOM.name.value,
                     email: email,
-                    pwd: pwd
+                    // pwd: pwd
                 })
             })
             .then(() => {

@@ -6,7 +6,7 @@ import '../../common.css';
 import './landing.css';
 import Logo from '../img/logo.svg';
 // import Navigation from '../App/navigation.js';
-import Soulfun from '../img/soulfun_v2.svg';
+import Soulfun from '../img/funsoul_logo.svg';
 
 const LandingPage = () => (
   <>

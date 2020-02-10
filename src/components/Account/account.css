@@ -35,8 +35,8 @@
 }
 
 .account>.main>.setting {
-    padding: 4%;
-    width: 62%;
+    padding: 4% 4% 4% 0%;
+    width: 57%;
 }
 .account>.main>.display>.avatar {
     width: 135px;

@@ -1,6 +1,6 @@
 .home {
     width: 100%;
-    /* background: #63cdda; */
+    /* background: whitesmoke; */
 }
 .home>.navbar {
     width: 100%;
@@ -34,4 +34,42 @@
 }
 .home>.navbar>.member-navbar>ul>li>button{
     min-width: 110px;
+}
+.home>.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.home>.main>.container{
+    width: 84%;
+    margin: 3%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.home>.main>.container>.friend-box{
+    margin: 1%;
+    padding: 1%;
+    width: 20%;
+    text-align: center;
+    /* background: white; */
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+}
+.home>.main>.container>.friend-box>.avatar{
+    margin: 2%;
+    width: 70%;
+    text-align: center;
+}
+
+@media (max-width: 500px) {
+    .home>.main>.container{
+        width: 98%;
+        margin: 1%;
+    }
+    .home>.main>.container>.friend-box{
+        margin: 2%;
+        padding: 1%;
+        width: 44%;
+    }
 }

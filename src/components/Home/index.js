@@ -129,31 +129,22 @@ class Main extends Component {
   render() {
     return (
       <div className="main">
-        {this.props.friendlist.map(item => (
+        <div className="container">
+          {this.props.friendlist.map(item => (
             <div key={item.id} className="friend-box">
-              <p>{item.avatar}</p>
-              <p>Name: {item.username}</p>
+              <img className="avatar" src={item.avatar} alt="avatar" />
+              <h3>{item.username}</h3>
               <p>Country: {item.country}</p>
               <hr/>
               <p>Language: {item.language}</p>
-              <p>Interest: {item.interest}</p>
+              <h4>Interest: {item.interest}</h4>
               <button key={item.id} onClick={this.handleSubmit.bind(this,item.id,item.username,item.avatar)}>Add Friend</button>
             </div>
-        ))}
+          ))}
+        </div>
       </div>
     )
   }
 }
-// class Friend extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//     return (
-//       <>
-//       </>
-//     )
-//   }
-// }
 
 export default Home;
