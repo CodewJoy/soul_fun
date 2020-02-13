@@ -20,10 +20,14 @@ class AppBase extends Component {
   constructor(props) {
     super(props);
 
-    this.updateUserData = (authInfo) => {
-      this.setState(({
-        authInfo: authInfo
-      }))
+    // this.updateUserData = (authInfo) => {
+    //   this.setState(({
+    //     authInfo: authInfo
+    //   }))
+    // };
+
+    this.updateUserData = (updateObject) => {
+      this.setState(updateObject);
     };
 
     this.state = {
@@ -44,7 +48,7 @@ class AppBase extends Component {
                 // console.log("Current data: ", doc.data())
                 if (doc.exists) {
                   console.log("Document data:", doc.data());
-                  this.setState({ userInfo: doc.data() })
+                  this.setState({ authUser: authUser, userInfo: doc.data() })
                 } else {
                   // doc.data() will be undefined in this case
                   console.log("No such document!");
@@ -54,7 +58,6 @@ class AppBase extends Component {
                 console.log(error)
               }
             )
-
         //// get method
         //   this.props.firebase.db.collection("Users").doc(authUser.uid)
         //     .get()
@@ -74,9 +77,12 @@ class AppBase extends Component {
         //     });
         // }
         }
-        authUser
-          ? this.setState({ authUser: authUser })
-          : this.setState({ authUser: null });
+        else {
+          this.setState({ authUser: null });
+        }
+        // authUser
+        //   ? this.setState({ authUser: authUser })
+        //   : this.setState({ authUser: null });
       },
     );
   }

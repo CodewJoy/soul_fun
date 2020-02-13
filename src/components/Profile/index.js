@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
 // import Select from 'react-select'
-import './profile.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import './profile.css';
 import Logo from '../img/logo.svg';
 import Navigation from '../App/navigation.js';
 import Loading from '../img/loading.gif';
@@ -37,6 +37,34 @@ class ProfileBase extends Component {
     }
     // this.confirmFriendFriend = this.confirmFriendFriend.bind(this)
   }
+  componentDidMount() {
+    if (this.props.UserData.authUser) {
+      console.log("Updated", this.state.isLoaded_friend);
+      // if (!this.state.isLoaded_friend) {
+      const { UserData } = this.props;
+      this.props.firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+        // .get()
+        // .then(
+        // use .onSnapshot() instead of .get() to get notice immediately
+        .onSnapshot(
+          (querySnapshot) => {
+            let confirmfriend = [];
+            querySnapshot.forEach((doc) => {
+              // doc.data() is never undefined for query doc snapshots
+              if (doc.data().status === "askUrConfirm") {
+                console.log(doc.id, " => ", doc.data());
+                confirmfriend.push(doc.data());
+              }
+            })
+            this.setState({ isLoaded_friend: true, confirmfriend });
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+      // )
+    }
+  }
   componentDidUpdate() {
     console.log("Updated", this.state.isLoaded_friend);
     if (!this.state.isLoaded_friend) {
@@ -64,6 +92,7 @@ class ProfileBase extends Component {
       // )
     }
   }
+
   confirmFriend(id) {
     const { firebase, UserData } = this.props
     console.log(UserData);
@@ -85,33 +114,41 @@ class ProfileBase extends Component {
           status: "confirm"
         }
       )
-    // 顯示已加對方好友功能
+    
+    // 建立聊天室
+    firebase.db.collection("Room").doc(UserData.authUser.uid).collection("friends").doc(UserData.authUser.uid)
+    .update(
+      {
+        status: "confirm"
+      }
+    )
   }
 
   render() {
-    const { isLoaded_friend, confirmfriend } = this.state
-    if (!isLoaded_friend) {
-      return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    } else {
-      console.log(this.props)
-      return (
-        <div className="profile">
-          <Navbar />
-          <div className="main">
-            <Display userInfo={this.props.UserData.userInfo} />
-            <Setting userInfo={this.props.UserData.userInfo} />
-            {/* <ConfirmFriend /> */}
-            <ConfirmFriend confirmfriend={confirmfriend}
-              confirmFriend={this.confirmFriend.bind(this)}
-            />
-          </div>
-          {/* <div className="center-button">
-            <button onClick={this.saveToDB} >Save</button>
-          </div> */}
+    const { confirmfriend } = this.state
+    // const { isLoaded_friend, confirmfriend } = this.state
+    // if (!isLoaded_friend) {
+    //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
+    // } else {
+    console.log(this.props)
+    return (
+      <div className="profile">
+        <Navbar />
+        <div className="main">
+          <Display userInfo={this.props.UserData.userInfo} />
+          <Setting userInfo={this.props.UserData.userInfo} />
+          {/* <ConfirmFriend /> */}
+          <ConfirmFriend confirmfriend={confirmfriend}
+            confirmFriend={this.confirmFriend.bind(this)}
+          />
         </div>
-      );
-    }
+        <div className="center-button">
+          <button>Change your profile</button>
+        </div>
+      </div>
+    );
   }
+  // }
   // }
 }
 class ConfirmFriend extends Component {
@@ -128,12 +165,12 @@ class ConfirmFriend extends Component {
     return (
       <div className="confirm-friend">
         <h3>Friend Invitation</h3>
-        {this.props.confirmfriend.map(item => (
+        {confirmfriend.map(item => (
           <div className="confirm-box" key={item.id}>
             <img className="avatar" src={item.avatar} alt="avatar" />
             <div className="center">
               <h4>{item.name}</h4>
-              <button onClick={this.handleSubmit.bind(this, item.id)}>Confirm </button>
+              <button onClick={this.handleSubmit.bind(this, item.id)}>Chat</button>
             </div>
           </div>
         ))}
@@ -169,6 +206,8 @@ class Display extends Component {
         {/* <img className="avatar" src={AvatarImage} alt="avatar" /> */}
         <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
         <h4>Hey {this.props.userInfo.username}!</h4>
+        <p className="age">age</p>
+        <p className="star-sign">star-sign</p>
       </div>
     )
   }

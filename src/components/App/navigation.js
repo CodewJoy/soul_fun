@@ -18,12 +18,15 @@ const Navigation = () => (
 
 const NavigationAuth = () => (
   <ul>
-    {/* <li>
-      <Link to={ROUTES.LANDING}>Landing</Link>
-    </li> */}
     <li>
-      <Link to={ROUTES.HOME}>Home</Link>
+      <Link to={ROUTES.HOME}>Friends</Link>
     </li>
+    {/* <li>
+      <Link to={{
+        pathname: ROUTES.HOME,
+        state: { fromDashboard: true }
+      }}>Home</Link>
+    </li> */}
     <li>
       <Link to={ROUTES.PROFILE}>Profile</Link>
     </li>

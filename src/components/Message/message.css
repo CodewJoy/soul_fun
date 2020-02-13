@@ -1,0 +1,122 @@
+.message {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    /* background: #63cdda; */
+}
+.message>.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #63cdda;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.message>.navbar>.logo {
+    margin: 10px 25px;
+    display: inline-flex;   
+    align-items: center;
+}
+.message>.navbar>.logo>.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.message>.navbar>.member-navbar {
+    width: 35%;
+    /* margin: 1% 2%; */
+}
+.message>.navbar>.member-navbar>ul {
+    display: flex;   
+    align-items: center;
+    justify-content:space-around;
+    list-style: none;
+}
+.message>.navbar>.member-navbar>ul>li>button{
+    min-width: 110px;
+}
+.message>.main {
+    width: 100%;
+    /* height: 90%; */
+    height: calc(100% - 80px);
+    display: flex;
+    justify-content: center;
+    /* flex-wrap: wrap; */
+    /* align-items: center; */
+}
+.message>.main>.chat-room {
+    padding: 1%; 
+    width: 25%;
+    height: 100%;
+    /* display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-items: flex-start; */
+    /* border: 1px solid gray; */
+    height: 100%;
+}
+.message>.main>.chat-room>.chat-box {
+    width: 98%;
+    margin: 1%;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.message>.main>.chat-room>.chat-box>.avatar {
+    margin: 1%;
+    /* width: 100px; */
+    /* flex: none; */
+}
+.message>.main>.chat-room>.chat-box>.container {
+    width: 75%;
+    /* flex: auto; */
+}
+.message>.main>.conversation {
+    height: 100%;
+    padding: 1%;
+    width: 70%;
+    font-size: 18px;
+    /* display: flex;
+    justify-content: center; */
+    padding-bottom: 100px;
+}
+.message>.main>.conversation>.talks { 
+    height: 83%;
+    width: 100%;
+} 
+.message>.main>.conversation>.input-box {
+    height: 10%;
+    width: 100%;
+}
+.message>.main>.conversation>.input-box>.input-message { 
+    height: 100%;
+    width: 85%;
+    /* margin: 1%; */
+} 
+.message>.main>.conversation>.input-box>.input-click{ 
+    height: 100%;
+    width: 10%;
+    /* margin: 1%; */
+} 
+.message>.main>.headerDivider { 
+    border-left:1px solid #38546d; 
+    /* border-right:1px solid #16222c;  */
+    height: 100%;
+} 
+
+/* .message>.main>.pick-friend {
+    padding: 1%; 
+    width: 20%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 1px solid gray;
+    height: 100%;
+}
+.message>.main>.pick-friend>.pick-box {
+    display: inline-flex;  
+    height: 80px;
+}
+.message>.main>.pick-friend>.pick-box>.avatar {
+    width: 60px;
+} */
