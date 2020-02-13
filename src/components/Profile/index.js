@@ -92,14 +92,9 @@ class ProfileBase extends Component {
       // )
     }
   }
-
   confirmFriend(id) {
     const { firebase, UserData } = this.props
     console.log(UserData);
-    // console.log(this.props.authUser.authUser.uid);
-    // console.log(id);
-    // console.log(this.props.authUser.authInfo.name);
-
     // modify my list
     firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
       .update(
@@ -123,7 +118,6 @@ class ProfileBase extends Component {
       }
     )
   }
-
   render() {
     const { confirmfriend } = this.state
     // const { isLoaded_friend, confirmfriend } = this.state

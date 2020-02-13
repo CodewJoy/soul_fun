@@ -51,13 +51,15 @@ class HomeBase extends Component {
           (querySnapshot) => {
             let friendlist = [];
             querySnapshot.forEach((doc) => {
-              if (doc.data().avatar) {
-                // cant see self as a friend
-                if (doc.id !== UserData.authUser.uid) {
-                  // console.log(doc.id, " => ", doc.data());
-                  friendlist.push(doc.data());
+              // if (!doc.data().status) {
+                if (doc.data().avatar) {
+                  // cant see self as a friend
+                  if (doc.id !== UserData.authUser.uid) {
+                    console.log(doc.id, " => ", doc.data());
+                    friendlist.push(doc.data());
+                  }
                 }
-              }
+              // }
             });
             this.setState({
               isLoaded: true, friendlist

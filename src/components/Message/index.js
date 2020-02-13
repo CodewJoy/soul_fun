@@ -28,7 +28,8 @@ class MessageBase extends Component {
       isLoaded: false,
       // friend: [],
       document: [],
-      chat: []
+      chat: [],
+      // room: []
     }
     this.loadProfileName = this.loadProfileName.bind(this);
   }
@@ -53,7 +54,6 @@ class MessageBase extends Component {
     }
   }
   loadProfileName(firebase, UserData) {
-    // if (!isLoaded) {
     let document = [];
     // firebase.db.collection("Room").doc().collection("message").doc()
     firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
@@ -62,28 +62,31 @@ class MessageBase extends Component {
           // console.log(doc.id, " => ", doc.data());
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
-            document.push([doc.id, doc.data().timestamp],);
+            if (doc.data().user1.uid !== UserData.authUser.uid) {
+              document.push([doc.id, doc.data().timestamp, doc.data().user1]);
+            } else if (doc.data().user2.uid !== UserData.authUser.uid) {
+              document.push([doc.id, doc.data().timestamp, doc.data().user2]);
+            }
           })
           this.setState({ document });
           console.log('document', document);
           console.log('document', document[0]);
           console.log('document', document[0][0]);
-
           // load message
-          firebase.db.collection("Room").doc(this.state.document[0][0]).collection("message").orderBy("timestamp")
-            .onSnapshot(
-              (querySnapshot) => {
-                let chat = [];
-                querySnapshot.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  chat.push(doc.data());
-                })
-                this.setState({ chat });
-              },
-              (error) => {
-                console.log(error)
-              }
-            )
+          // firebase.db.collection("Room").doc(this.state.document[0][0]).collection("message").orderBy("timestamp")
+          //   .onSnapshot(
+          //     (querySnapshot) => {
+          //       let chat = [];
+          //       querySnapshot.forEach((doc) => {
+          //         console.log(doc.id, " => ", doc.data());
+          //         chat.push(doc.data());
+          //       })
+          //       this.setState({ chat });
+          //     },
+          //     (error) => {
+          //       console.log(error)
+          //     }
+          //   )
         },
         (error) => {
           console.log(error)
@@ -103,22 +106,17 @@ class MessageBase extends Component {
           <Navbar />
           <div className="main">
             <div className='chat-room'>
-              <div className="chat-box">
-                <div className="avatar">avatar</div>
-                <div className="container">
-                  <div className="name">name</div>
-                  <div className="word">word</div>
+              {this.state.document.map(item => (
+                <div className="chat-box" key={item[2].uid}>
+                  <img className="avatar" src={item[2].avatar} alt="avatar" />
+                  <div className="container">
+                    <h4 className="name">{item[2].name}</h4>
+                    <p className="word">word</p>
+                  </div>
                 </div>
-              </div>
-              <div className="chat-box">
-                <div className="avatar">avatar</div>
-                <div className="container">
-                  <div className="name">name</div>
-                  <div className="word">word</div>
-                </div>
-              </div> 
+              ))}
             </div>
-            <div className="headerDivider"></div> 
+            <div className="headerDivider"></div>
             <div className='conversation'>
               <div className="talks">
                 <h1>talk content</h1>
@@ -127,7 +125,7 @@ class MessageBase extends Component {
                 <input className='input-message' type="text" />
                 <button className='input-click'>Enter</button>
               </div>
-            
+
             </div>
             {/* <div className="headerDivider"></div>  */}
             {/* <ChatRoom friend={this.state.friend} /> */}

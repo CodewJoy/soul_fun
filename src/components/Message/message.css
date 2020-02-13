@@ -47,24 +47,23 @@
     padding: 1%; 
     width: 25%;
     height: 100%;
-    /* display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    align-items: flex-start; */
+    /* display: flex; */
+    /* justify-content: flex-start; */
+    /* flex-wrap: wrap; */
+    /* align-items: flex-start; */
     /* border: 1px solid gray; */
     height: 100%;
 }
 .message>.main>.chat-room>.chat-box {
     width: 98%;
-    margin: 1%;
-    height: 40px;
-    display: flex;
+    min-height: 60px;
+    display: inline-flex;
     justify-content: center;
     flex-wrap: wrap;
 }
 .message>.main>.chat-room>.chat-box>.avatar {
-    margin: 1%;
-    /* width: 100px; */
+    margin: 0% 1%;
+    width: 60px;
     /* flex: none; */
 }
 .message>.main>.chat-room>.chat-box>.container {
