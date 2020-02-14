@@ -67,7 +67,7 @@ class MessageBase extends Component {
     firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
-          let document=[];
+          let document = [];
           // console.log(doc.id, " => ", doc.data());
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
@@ -82,23 +82,22 @@ class MessageBase extends Component {
           // console.log('document', document[0]);
           // console.log('document', document[0][0]);
           // load message
-          let loaded=0;
-          for (let i=0; i < document.length; i++ ) {
+          let loaded = 0;
+          for (let i = 0; i < document.length; i++ ) {
+            // 每個 message 都取最近的值
             firebase.db.collection("Room").doc(document[i][0]).collection("message").orderBy("timestamp")
             .onSnapshot(
               (querySnapshot) => {
-                let chat = [];
                 querySnapshot.forEach((doc) => {
                   console.log(doc.id, " => ", doc.data());
                   document[i][2].chat = (doc.data());
                 })
                 loaded++;
                 console.log("loaded", loaded);
-                if(loaded===document.length){
+                if (loaded === document.length) {
                   console.log("document_peng", document);
                   this.setState({ document });
                 }
-                // this.setState({ chat });
               },
               (error) => {
                 console.log(error)
@@ -157,7 +156,6 @@ class MessageBase extends Component {
   }
   render() {
     console.log("render", this.state.document);
-    // const { isLoaded_friend, confirmfriend } = this.state
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
     } else {
@@ -165,7 +163,8 @@ class MessageBase extends Component {
       console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
       // console.log("render", this.state.document[0][2].chat)
-      if(this.state.document.length>0) {
+      // state 更新後 document 有值再進來
+      if(this.state.document.length > 0) {
         return (
           <div className="message">
             <Navbar />
@@ -194,7 +193,6 @@ class MessageBase extends Component {
                     <input className='input-click' type="submit" value="Enter" />
                   </form>
                 </div>
-  
               </div>
               {/* <div className="headerDivider"></div>  */}
               {/* <ChatRoom friend={this.state.friend} /> */}
@@ -203,8 +201,8 @@ class MessageBase extends Component {
             </div>
           </div>
         );
-      }else{
-        return <div>Loading</div>;
+      } else {
+        return <div className="loading"><img src={Loading} alt="Loading" /></div>
       }
     }
   }
