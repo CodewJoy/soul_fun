@@ -62,11 +62,12 @@ class MessageBase extends Component {
     }
   }
   loadRoom(firebase, UserData) {
-    let document = [];
+    //let document = [];
     // firebase.db.collection("Room").doc().collection("message").doc()
     firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
+          let document=[];
           // console.log(doc.id, " => ", doc.data());
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
@@ -76,13 +77,14 @@ class MessageBase extends Component {
               document.push([doc.id, doc.data().timestamp, doc.data().user2]);
             }
           })
-          this.setState({ document });
+          //this.setState({ document });
           console.log('document', document);
           // console.log('document', document[0]);
           // console.log('document', document[0][0]);
           // load message
+          let loaded=0;
           for (let i=0; i < document.length; i++ ) {
-            firebase.db.collection("Room").doc(this.state.document[i][0]).collection("message").orderBy("timestamp")
+            firebase.db.collection("Room").doc(document[i][0]).collection("message").orderBy("timestamp")
             .onSnapshot(
               (querySnapshot) => {
                 let chat = [];
@@ -90,7 +92,13 @@ class MessageBase extends Component {
                   console.log(doc.id, " => ", doc.data());
                   document[i][2].chat = (doc.data());
                 })
-                this.setState({ chat });
+                loaded++;
+                console.log("loaded", loaded);
+                if(loaded===document.length){
+                  console.log("document_peng", document);
+                  this.setState({ document });
+                }
+                // this.setState({ chat });
               },
               (error) => {
                 console.log(error)
@@ -148,6 +156,7 @@ class MessageBase extends Component {
 
   }
   render() {
+    console.log("render", this.state.document);
     // const { isLoaded_friend, confirmfriend } = this.state
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
@@ -155,7 +164,8 @@ class MessageBase extends Component {
       console.log("chat", this.state)
       console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
-      // if(this.state.document[0][2].chat) {
+      // console.log("render", this.state.document[0][2].chat)
+      if(this.state.document.length>0) {
         return (
           <div className="message">
             <Navbar />
@@ -166,7 +176,7 @@ class MessageBase extends Component {
                     <img className="avatar" src={item[2].avatar} alt="avatar" />
                     <div className="container">
                       <h4 className="name">{item[2].name}</h4>
-                      {/* <p className="word">{item[2].chat.content ? item[2].chat.content : ""}</p> */}
+                      <p className="word">{item[2].chat.content ? item[2].chat.content : ""}</p>
                     </div>
                   </div>
                 ))}
@@ -193,7 +203,9 @@ class MessageBase extends Component {
             </div>
           </div>
         );
-      // }
+      }else{
+        return <div>Loading</div>;
+      }
     }
   }
 }
