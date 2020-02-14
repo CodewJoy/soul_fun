@@ -109,9 +109,8 @@ class HomeBase extends Component {
     let roomID = createRoomID(id, UserData.authUser.uid);
     console.log(roomID);
  
-    // 怎麼同時設定文件欄位又設定他的子集合
-    // 目前嘗試用 callback 
-    (() => firebase.db.collection("Room").doc(roomID)
+    // 同時設定文件欄位又設定他的子集合兩件事並不衝突
+    firebase.db.collection("Room").doc(roomID)
     .set(
       {
         uid: [UserData.authUser.uid, id],
@@ -119,14 +118,16 @@ class HomeBase extends Component {
         user2: { uid: id, avatar: avatar, name: name}, 
         timestamp: Date.now()
       }
-    ))(firebase.db.collection("Room").doc(roomID).collection("message").doc()
+    )
+
+    firebase.db.collection("Room").doc(roomID).collection("message").doc()
     .set(
       {
         sender: "admin",
         content: "Say hi to your new friend. :)",
         timestamp: Date.now()
       }
-    ));
+    );
     
     // update context
     UserData.updateUserData({friendID: id})

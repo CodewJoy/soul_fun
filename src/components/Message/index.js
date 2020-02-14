@@ -26,27 +26,26 @@ class MessageBase extends Component {
     console.log(props);
     this.state = {
       isLoaded: false,
-      isLoaded_update: false,
       // friend: [],
       document: [],
-      // chat: [],
+      chat: [],
       // room: []
       value: '',
       message: []
-      
+
     }
     this.loadRoom = this.loadRoom.bind(this);
+    this.loadMessage = this.loadMessage.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
     const { firebase, UserData } = this.props;
     const { isLoaded } = this.state;
-    // load room list
     if (UserData.authUser) {
       if (!isLoaded) {
         this.loadRoom(firebase, UserData, isLoaded);
-        this.loadMessage(firebase, UserData);
+        // this.loadMessage(firebase, UserData);
         this.setState({ isLoaded: true });
       }
     }
@@ -54,10 +53,9 @@ class MessageBase extends Component {
   componentDidUpdate() {
     const { firebase, UserData } = this.props;
     const { isLoaded } = this.state;
-    // load room list
     if (!isLoaded) {
       this.loadRoom(firebase, UserData);
-      this.loadMessage(firebase, UserData);
+      // this.loadMessage(firebase, UserData);
       this.setState({ isLoaded: true });
     }
   }
@@ -67,42 +65,54 @@ class MessageBase extends Component {
     firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
-          let document = [];
           // console.log(doc.id, " => ", doc.data());
+          // load chat room info
+          let document = [];
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
             if (doc.data().user1.uid !== UserData.authUser.uid) {
-              document.push([doc.id, doc.data().timestamp, doc.data().user1]);
+              document.push({
+                roomDoc: doc.id,
+                timestamp: doc.data().timestamp,
+                friendInfo: doc.data().user1
+              });
             } else if (doc.data().user2.uid !== UserData.authUser.uid) {
-              document.push([doc.id, doc.data().timestamp, doc.data().user2]);
+              document.push({
+                roomDoc: doc.id,
+                timestamp: doc.data().timestamp,
+                friendInfo: doc.data().user2
+              });
             }
           })
-          //this.setState({ document });
+          // sort the chat room with timestamp
+          document.sort(function (a, b) {
+            return a.timestamp < b.timestamp ? 1 : -1;
+          })
           console.log('document', document);
-          // console.log('document', document[0]);
-          // console.log('document', document[0][0]);
           // load message
           let loaded = 0;
-          for (let i = 0; i < document.length; i++ ) {
+          for (let i = 0; i < document.length; i++) {
             // 每個 message 都取最近的值
-            firebase.db.collection("Room").doc(document[i][0]).collection("message").orderBy("timestamp")
-            .onSnapshot(
-              (querySnapshot) => {
-                querySnapshot.forEach((doc) => {
-                  console.log(doc.id, " => ", doc.data());
-                  document[i][2].chat = (doc.data());
-                })
-                loaded++;
-                console.log("loaded", loaded);
-                if (loaded === document.length) {
-                  console.log("document_peng", document);
-                  this.setState({ document });
+            // firebase.db.collection("Room").doc(document[i].roomDoc).collection("message").orderBy("timestamp")
+            firebase.db.collection("Room").doc(document[i].roomDoc).collection("message").orderBy("timestamp", "desc").limit(1)
+              .onSnapshot(
+                (querySnapshot) => {
+                  querySnapshot.forEach((doc) => {
+                    console.log(doc.id, " => ", doc.data());
+                    document[i].friendInfo.chat = (doc.data());
+                  })
+                  loaded++;
+                  console.log("loaded", loaded);
+                  if (loaded === document.length) {
+                    console.log("document_peng", document);
+                    this.loadMessage(0, document, firebase, UserData)
+                    this.setState({ document });
+                  }
+                },
+                (error) => {
+                  console.log(error)
                 }
-              },
-              (error) => {
-                console.log(error)
-              }
-            )
+              )
           }
         },
         (error) => {
@@ -110,30 +120,34 @@ class MessageBase extends Component {
         }
       )
   }
-  loadMessage(firebase, UserData) {
+  loadMessage(i, document, firebase, UserData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message snapShot
-    // 可以先抓最近的 user?
+    // 先抓最近的 user
     // this.state.document 抓到是空值
-    console.log('dialogue', this.state.document);
-    // let roomID = createRoomID(UserData.authUser.uid, this.state.document[0][2].uid) 
-    // firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
-    //   .onSnapshot(
-    //     (querySnapshot) => {
-    //       let chat = [];
-    //       querySnapshot.forEach((doc) => {
-    //         console.log(doc.id, " => ", doc.data());
-    //         document[i][2].chat = (doc.data());
-    //       })
-    //       this.setState({ chat });
-    //     },
-    //     (error) => {
-    //       console.log(error)
-    //     }
-    //   )
+    console.log('dialogue1', document);
+    if (document.length > 0) {
+      console.log('dialogue2', document);
+      let roomID = createRoomID(UserData.authUser.uid, document[i].friendInfo.uid)
+      firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
+        .onSnapshot(
+          (querySnapshot) => {
+            let chat = [];
+            querySnapshot.forEach((doc) => {
+              console.log(doc.id, " => ", doc.data());
+              chat.push(doc.data());
+            })
+            this.setState({ chat });
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+    }
+
   }
   handleChange(event) {
     // this.setState({value: event.target.value});
-    (() => this.setState({value: event.target.value}))(console.log(this.state.value));
+    (() => this.setState({ value: event.target.value }))(console.log(this.state.value));
   }
   handleSubmit(event) {
     // console.log(this.state.value);
@@ -142,8 +156,8 @@ class MessageBase extends Component {
     // 要有資料防護機制 在還沒 load 完之前不能按？
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
     // 可以先抓最近的 user
-    console.log('input',this.state.document[0][2].uid);
-    let roomID = createRoomID(UserData.authUser.uid, this.state.document[0][2].uid) 
+    console.log('input', this.state.document[0].friendInfo.uid);
+    let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
@@ -152,55 +166,62 @@ class MessageBase extends Component {
           timestamp: Date.now()
         }
       )
-
   }
   render() {
-    console.log("render", this.state.document);
+    // console.log("render", this.state.document);
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
     } else {
       console.log("chat", this.state)
-      console.log("chat", this.props)
+      console.log("chat", this.state.chat)
+      // console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
-      // console.log("render", this.state.document[0][2].chat)
+
       // state 更新後 document 有值再進來
-      if(this.state.document.length > 0) {
-        return (
-          <div className="message">
-            <Navbar />
-            <div className="main">
-              <div className='chat-room'>
-                {this.state.document.map(item => (
-                  <div className="chat-box" key={item[2].uid}>
-                    <img className="avatar" src={item[2].avatar} alt="avatar" />
-                    <div className="container">
-                      <h4 className="name">{item[2].name}</h4>
-                      <p className="word">{item[2].chat.content ? item[2].chat.content : ""}</p>
+      if (this.state.document.length > 0) {
+        if (this.state.chat.length > 0) {
+          return (
+            <div className="message">
+              <Navbar />
+              <div className="main">
+                <div className='chat-room'>
+                  {this.state.document.map(item => (
+                    <div className="chat-box" key={item.friendInfo.uid}>
+                      <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
+                      <div className="container">
+                        <h4 className="name">{item.friendInfo.name}</h4>
+                        <p className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</p>
+                      </div>
                     </div>
+                  ))}
+                </div>
+                <div className="headerDivider"></div>
+                <div className='conversation'>
+                  <div className="talks">
+                    {/* {console.log('renderchat',this.state.chat.map)} */}
+                    {this.state.chat.map((item, index) => (
+                      <div className="dialogue" key={index}>
+                        <p className="dialogue-word">{item.content}</p>
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              <div className="headerDivider"></div>
-              <div className='conversation'>
-                <div className="talks">
-                  <h1>talk content</h1>
-                  {/* 放入 loadMessage 的資料*/}
-                  <p>動態 div</p>
+                  <div className="input-box">
+                    <form onSubmit={this.handleSubmit}>
+                      <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
+                      <input className='input-click' type="submit" value="Enter" />
+                    </form>
+                  </div>
                 </div>
-                <div className="input-box">
-                  <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
-                    <input className='input-click' type="submit" value="Enter" />
-                  </form>
-                </div>
+                {/* <div className="headerDivider"></div>  */}
+                {/* <ChatRoom friend={this.state.friend} /> */}
+                {/* <Conversation /> */}
+                {/* <friendProfile friendList={this.state.friendList}/> */}
               </div>
-              {/* <div className="headerDivider"></div>  */}
-              {/* <ChatRoom friend={this.state.friend} /> */}
-              {/* <Conversation /> */}
-              {/* <friendProfile friendList={this.state.friendList}/> */}
             </div>
-          </div>
-        );
+          );
+        } else {
+          return <div className="loading"><img src={Loading} alt="Loading" /></div>
+        }
       } else {
         return <div className="loading"><img src={Loading} alt="Loading" /></div>
       }
@@ -209,10 +230,10 @@ class MessageBase extends Component {
 }
 function createRoomID(uid1, uid2) {
   if (uid1 < uid2) {
-    return uid1+uid2;  
-    }
+    return uid1 + uid2;
+  }
   else {
-    return uid2+uid1;
+    return uid2 + uid1;
   }
 }
 // class ChatRoom extends Component {
