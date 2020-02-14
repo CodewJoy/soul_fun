@@ -104,17 +104,30 @@ class HomeBase extends Component {
           status: "askUrConfirm"
         }
       )
-      
-    firebase.db.collection("Room").doc()
-    // firebase.db.collection("Room").doc().collection("message").doc()
-      .set(
-        {
-          uid: [UserData.authUser.uid, id],
-          user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username},
-          user2: { uid: id, avatar: avatar, name: name}, 
-          timestamp: Date.now()
-        }
-      );
+    
+    // createRoomID(uid1, uid2)
+    let roomID = createRoomID(id, UserData.authUser.uid);
+    console.log(roomID);
+ 
+    // 怎麼同時設定文件欄位又設定他的子集合
+    // 目前嘗試用 callback 
+    (() => firebase.db.collection("Room").doc(roomID)
+    .set(
+      {
+        uid: [UserData.authUser.uid, id],
+        user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username},
+        user2: { uid: id, avatar: avatar, name: name}, 
+        timestamp: Date.now()
+      }
+    ))(firebase.db.collection("Room").doc(roomID).collection("message").doc()
+    .set(
+      {
+        sender: "admin",
+        content: "Say hi to your new friend. :)",
+        timestamp: Date.now()
+      }
+    ));
+    
     // update context
     UserData.updateUserData({friendID: id})
     this.setState({ goToChat: true, friendID: id });
@@ -130,7 +143,6 @@ class HomeBase extends Component {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
-
     } else {
       return (
         <div className="home">
@@ -145,6 +157,14 @@ class HomeBase extends Component {
         </div>
       )
     }
+  }
+}
+function createRoomID(uid1, uid2) {
+  if (uid1 < uid2) {
+    return uid1+uid2;  
+    }
+  else {
+    return uid2+uid1;
   }
 }
 
