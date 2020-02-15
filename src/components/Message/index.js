@@ -105,7 +105,7 @@ class MessageBase extends Component {
                   console.log("loaded", loaded);
                   if (loaded === document.length) {
                     console.log("document_peng", document);
-                    this.loadMessage(0, document, firebase, UserData)
+                    this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
                     this.setState({ document });
                   }
                 },
@@ -120,14 +120,10 @@ class MessageBase extends Component {
         }
       )
   }
-  loadMessage(i, document, firebase, UserData) {
-    // 需要兩個人的 uid 找到檔案名 再往下找 message snapShot
-    // 先抓最近的 user
-    // this.state.document 抓到是空值
-    console.log('dialogue1', document);
-    if (document.length > 0) {
-      console.log('dialogue2', document);
-      let roomID = createRoomID(UserData.authUser.uid, document[i].friendInfo.uid)
+  loadMessage(frinendID, firebase, UserData) {
+    // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
+    console.log('dialogue', document);
+      let roomID = createRoomID(UserData.authUser.uid, frinendID)
       firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
         .onSnapshot(
           (querySnapshot) => {
@@ -142,8 +138,10 @@ class MessageBase extends Component {
             console.log(error)
           }
         )
-    }
-
+  }
+  clickRoom(frinendID) {
+    const { firebase, UserData } = this.props;
+    this.loadMessage(frinendID, firebase, UserData);
   }
   handleChange(event) {
     // this.setState({value: event.target.value});
@@ -186,7 +184,7 @@ class MessageBase extends Component {
               <div className="main">
                 <div className='chat-room'>
                   {this.state.document.map(item => (
-                    <div className="chat-box" key={item.friendInfo.uid}>
+                    <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
                       <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
                       <div className="container">
                         <h4 className="name">{item.friendInfo.name}</h4>
