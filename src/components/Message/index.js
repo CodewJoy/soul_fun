@@ -26,7 +26,7 @@ class MessageBase extends Component {
     console.log(props);
     this.state = {
       isLoaded: false,
-      // friend: [],
+      talkToWhom: '',
       document: [],
       chat: [],
       // room: []
@@ -106,7 +106,7 @@ class MessageBase extends Component {
                   if (loaded === document.length) {
                     console.log("document_peng", document);
                     this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
-                    this.setState({ document });
+                    this.setState({ document: document, talkToWhom: document[0].friendInfo.uid });
                   }
                 },
                 (error) => {
@@ -122,25 +122,26 @@ class MessageBase extends Component {
   }
   loadMessage(frinendID, firebase, UserData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
-    console.log('dialogue', document);
-      let roomID = createRoomID(UserData.authUser.uid, frinendID)
-      firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
-        .onSnapshot(
-          (querySnapshot) => {
-            let chat = [];
-            querySnapshot.forEach((doc) => {
-              console.log(doc.id, " => ", doc.data());
-              chat.push(doc.data());
-            })
-            this.setState({ chat });
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
+    console.log('dialogue', this.state.document);
+    let roomID = createRoomID(UserData.authUser.uid, frinendID)
+    firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
+      .onSnapshot(
+        (querySnapshot) => {
+          let chat = [];
+          querySnapshot.forEach((doc) => {
+            console.log(doc.id, " => ", doc.data());
+            chat.push(doc.data());
+          })
+          this.setState({ chat });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
   }
   clickRoom(frinendID) {
     const { firebase, UserData } = this.props;
+    this.setState({ talkToWhom: frinendID });
     this.loadMessage(frinendID, firebase, UserData);
   }
   handleChange(event) {
@@ -149,18 +150,25 @@ class MessageBase extends Component {
   }
   handleSubmit(event) {
     // console.log(this.state.value);
+    // console.log('talktowhom', this.state.talkToWhom);
     event.preventDefault();
     const { firebase, UserData } = this.props;
     // 要有資料防護機制 在還沒 load 完之前不能按？
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
-    // 可以先抓最近的 user
     console.log('input', this.state.document[0].friendInfo.uid);
-    let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
+    let roomID = createRoomID(UserData.authUser.uid, this.state.talkToWhom)
+    // let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
           sender: UserData.userInfo.username,
           content: this.state.value,
+          timestamp: Date.now()
+        }
+      )
+    firebase.db.collection("Room").doc(roomID)
+      .update(
+        {
           timestamp: Date.now()
         }
       )
@@ -194,15 +202,9 @@ class MessageBase extends Component {
                   ))}
                 </div>
                 <div className="headerDivider"></div>
+
                 <div className='conversation'>
-                  <div className="talks">
-                    {/* {console.log('renderchat',this.state.chat.map)} */}
-                    {this.state.chat.map((item, index) => (
-                      <div className="dialogue" key={index}>
-                        <p className="dialogue-word">{item.content}</p>
-                      </div>
-                    ))}
-                  </div>
+                  <Conversation chat={this.state.chat}/>
                   <div className="input-box">
                     <form onSubmit={this.handleSubmit}>
                       <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
@@ -212,7 +214,7 @@ class MessageBase extends Component {
                 </div>
                 {/* <div className="headerDivider"></div>  */}
                 {/* <ChatRoom friend={this.state.friend} /> */}
-                {/* <Conversation /> */}
+
                 {/* <friendProfile friendList={this.state.friendList}/> */}
               </div>
             </div>
@@ -253,15 +255,55 @@ function createRoomID(uid1, uid2) {
 //   }
 // }
 
-// class Conversation extends Component {
-//   render() {
-//     return (
-//       <div className='conversation'>
-//         <h1>TalkContent</h1>
-//       </div>
-//     )
-//   }
-// }
+class Conversation extends Component {
+  render() {
+    // console.log('conversation', this.props.chat);
+    // console.log('conversation', this.props.chat[0].sender);
+    return (
+      <div className="talks">
+        <div className="adm-dialog">
+          <p>You both are friends now</p>
+        </div>
+        <div className="fri-dialog">
+          <span>Hello</span>
+        </div>
+        <div className="my-dialog">
+          <span>YOYO</span>
+        </div>
+       
+        {this.props.chat.map((item, index) => {
+            console.log(item.sender);
+            if (item.sender === "admin") {
+              return (
+                <div className="adm-dialog" key={index}>
+                  <p>{item.content}</p>
+                </div>
+              )
+            } else if (item.sender === "Joy") {
+              return (
+                <div className="my-dialog" key={index}>
+                  <span>{item.content}</span>
+                </div>
+              )
+            } else {
+              return (
+                <div className="fri-dialog" key={index}>
+                  <span>{item.content}</span>
+                </div>
+              )
+            }
+          } 
+        )}
+        
+        {/* {this.state.chat.map((item, index) => (
+        <div className="dialog" key={index}>
+          <p className="fri-dialog">{item.content}</p>
+        </div>
+      ))} */}
+      </div>
+    )
+  }
+}
 
 // class friendProfile extends Component {
 //   render() {

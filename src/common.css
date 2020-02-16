@@ -34,6 +34,7 @@ button {
     color: white; /* Add a text color */
     padding: 12px 20px; /* Add some padding */
     cursor: pointer; /* Add a pointer cursor on mouse-over */
+    /* background-color: #ffd32a; */
     background-color: #546de5;
     margin: 2%;
     border-radius: 20px;

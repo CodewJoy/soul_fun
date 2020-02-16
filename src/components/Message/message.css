@@ -39,19 +39,11 @@
     /* height: 90%; */
     height: calc(100% - 80px);
     display: flex;
-    justify-content: center;
-    /* flex-wrap: wrap; */
-    /* align-items: center; */
 }
 .message>.main>.chat-room {
-    padding: 1%; 
-    width: 25%;
+    width: 21%;
     height: 100%;
-    /* display: flex; */
-    /* justify-content: flex-start; */
-    /* flex-wrap: wrap; */
-    /* align-items: flex-start; */
-    /* border: 1px solid gray; */
+    margin: 0 0 0 1%;
     height: 100%;
 }
 .message>.main>.chat-room>.chat-box {
@@ -62,21 +54,25 @@
     flex-wrap: wrap;
 }
 .message>.main>.chat-room>.chat-box>.avatar {
-    margin: 0% 1%;
     width: 60px;
+    margin: 0 5px 0 0;
     /* flex: none; */
 }
 .message>.main>.chat-room>.chat-box>.container {
-    width: 75%;
+    width: 77%;
     /* flex: auto; */
+}
+.message>.main>.chat-room>.chat-box>.container>.word {
+    width: 100%;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
 }
 .message>.main>.conversation {
     height: 100%;
     padding: 1%;
     width: 70%;
     font-size: 18px;
-    /* display: flex;
-    justify-content: center; */
     padding-bottom: 100px;
 }
 .message>.main>.conversation>.talks { 
@@ -98,11 +94,37 @@
     /* margin: 1%; */
 } 
 .message>.main>.headerDivider { 
-    border-left:1px solid #38546d; 
-    /* border-right:1px solid #16222c;  */
+    border-left:1px solid lightgray; 
     height: 100%;
 } 
-
+.message>.main>.conversation>.talks>.adm-dialog {
+    font-size: 14px;
+    color: gray;
+    text-align: center;
+}
+.message>.main>.conversation>.talks>.fri-dialog {
+    text-align: left;
+    margin: 2% 0%;
+}
+.message>.main>.conversation>.talks>.fri-dialog>span {
+    background-color: #ffd32a;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 1% 2%;
+}
+.message>.main>.conversation>.talks>.my-dialog {
+    text-align: right;
+    margin: 2% 0%;
+    height: auto;
+}
+.message>.main>.conversation>.talks>.my-dialog>span {
+    width:auto;
+    height: auto;
+	background-color:#f1f2f6;
+    border-radius: 20px;
+    font-size: 16px;
+    padding: 1% 2%;
+}
 /* .message>.main>.pick-friend {
     padding: 1%; 
     width: 20%;
