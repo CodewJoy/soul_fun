@@ -123,6 +123,7 @@ class MessageBase extends Component {
   loadMessage(frinendID, firebase, UserData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
     console.log('dialogue', this.state.document);
+    console.log('dialogue', UserData.userInfo);
     let roomID = createRoomID(UserData.authUser.uid, frinendID)
     firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
       .onSnapshot(
@@ -161,7 +162,7 @@ class MessageBase extends Component {
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
-          sender: UserData.userInfo.username,
+          sender: UserData.userInfo.id,
           content: this.state.value,
           timestamp: Date.now()
         }
@@ -204,7 +205,7 @@ class MessageBase extends Component {
                 <div className="headerDivider"></div>
 
                 <div className='conversation'>
-                  <Conversation chat={this.state.chat} />
+                  <Conversation chat={this.state.chat} talkToWhom={this.state.talkToWhom} />
                   <div className="input-box">
                     <form onSubmit={this.handleSubmit}>
                       <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
@@ -257,6 +258,7 @@ function createRoomID(uid1, uid2) {
 
 class Conversation extends Component {
   render() {
+    console.log('conversation', this.props.talkToWhom);
     // console.log('conversation', this.props.chat);
     // console.log('conversation', this.props.chat[0].sender);
     return (
@@ -282,15 +284,15 @@ class Conversation extends Component {
                 <p>{item.content}</p>
               </div>
             )
-          } else if (item.sender === "Joy") {
+          } else if (item.sender === this.props.talkToWhom) {
             return (
-              <div className="my-dialog" key={index}>
+              <div className="fri-dialog" key={index}>
                 <div>{item.content}</div>
               </div>
             )
           } else {
             return (
-              <div className="fri-dialog" key={index}>
+              <div className="my-dialog" key={index}>
                 <div>{item.content}</div>
               </div>
             )

@@ -124,7 +124,7 @@ class HomeBase extends Component {
     .set(
       {
         sender: "admin",
-        content: "Say hi to your new friend. :)",
+        content: "You both are friends now. Let's message your friend.",
         timestamp: Date.now()
       }
     );
