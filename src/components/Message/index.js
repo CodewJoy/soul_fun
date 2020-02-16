@@ -102,7 +102,7 @@ class MessageBase extends Component {
                     document[i].friendInfo.chat = (doc.data());
                   })
                   loaded++;
-                  console.log("loaded", loaded);
+                  // console.log("loaded", loaded);
                   if (loaded === document.length) {
                     console.log("document_peng", document);
                     this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
@@ -204,7 +204,7 @@ class MessageBase extends Component {
                 <div className="headerDivider"></div>
 
                 <div className='conversation'>
-                  <Conversation chat={this.state.chat}/>
+                  <Conversation chat={this.state.chat} />
                   <div className="input-box">
                     <form onSubmit={this.handleSubmit}>
                       <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
@@ -265,36 +265,39 @@ class Conversation extends Component {
           <p>You both are friends now</p>
         </div>
         <div className="fri-dialog">
-          <span>Hello</span>
+          <div>Hello</div>
+        </div>
+        <div className="fri-dialog">
+          <div>Hello</div>
         </div>
         <div className="my-dialog">
-          <span>YOYO</span>
+          <div>在第5版中將地圖添加到ECMA-262標準中； 因此，它可能並不存在於該標準的所有實現中。 您可以通過在腳本的開頭插入以下代碼來解決此問題，從而允許在本身不支持它的實現中使用map。 假設Object</div>
         </div>
-       
+
         {this.props.chat.map((item, index) => {
-            console.log(item.sender);
-            if (item.sender === "admin") {
-              return (
-                <div className="adm-dialog" key={index}>
-                  <p>{item.content}</p>
-                </div>
-              )
-            } else if (item.sender === "Joy") {
-              return (
-                <div className="my-dialog" key={index}>
-                  <span>{item.content}</span>
-                </div>
-              )
-            } else {
-              return (
-                <div className="fri-dialog" key={index}>
-                  <span>{item.content}</span>
-                </div>
-              )
-            }
-          } 
+          console.log(item.sender);
+          if (item.sender === "admin") {
+            return (
+              <div className="adm-dialog" key={index}>
+                <p>{item.content}</p>
+              </div>
+            )
+          } else if (item.sender === "Joy") {
+            return (
+              <div className="my-dialog" key={index}>
+                <div>{item.content}</div>
+              </div>
+            )
+          } else {
+            return (
+              <div className="fri-dialog" key={index}>
+                <div>{item.content}</div>
+              </div>
+            )
+          }
+        }
         )}
-        
+
         {/* {this.state.chat.map((item, index) => (
         <div className="dialog" key={index}>
           <p className="fri-dialog">{item.content}</p>

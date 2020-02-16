@@ -10,6 +10,7 @@ import Soulfun from '../img/funsoul_logo.svg';
 
 const LandingPage = () => (
   <>
+    {/* <Navigation /> */}
     <Landing />
   </>
 );

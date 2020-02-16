@@ -102,24 +102,28 @@
     color: gray;
     text-align: center;
 }
+/* need to fix: long message use div, short message use span */
 .message>.main>.conversation>.talks>.fri-dialog {
-    text-align: left;
+    /* text-align: left; */
+    display: flex;
+    justify-content: flex-start;
     margin: 2% 0%;
 }
-.message>.main>.conversation>.talks>.fri-dialog>span {
+.message>.main>.conversation>.talks>.my-dialog {
+    /* text-align: right; */
+    display: flex;
+    justify-content: flex-end;
+    margin: 2% 0%;
+}
+.message>.main>.conversation>.talks>.fri-dialog>div {
+    width: 60%;
     background-color: #ffd32a;
     border-radius: 20px;
     font-size: 16px;
     padding: 1% 2%;
 }
-.message>.main>.conversation>.talks>.my-dialog {
-    text-align: right;
-    margin: 2% 0%;
-    height: auto;
-}
-.message>.main>.conversation>.talks>.my-dialog>span {
-    width:auto;
-    height: auto;
+.message>.main>.conversation>.talks>.my-dialog>div {
+    width: 60%;
 	background-color:#f1f2f6;
     border-radius: 20px;
     font-size: 16px;
