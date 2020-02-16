@@ -5,6 +5,7 @@ import './message.css';
 import Logo from '../img/logo.svg';
 import Navigation from '../App/navigation.js';
 import Loading from '../img/loading.gif';
+import SendMessage from '../img/send_message.svg';
 
 const Message = () => {
   return (
@@ -167,6 +168,9 @@ class MessageBase extends Component {
           timestamp: Date.now()
         }
       )
+      .then(
+        () => { this.setState({ value: '' })}
+      )
     firebase.db.collection("Room").doc(roomID)
       .update(
         {
@@ -196,8 +200,9 @@ class MessageBase extends Component {
                     <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
                       <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
                       <div className="container">
-                        <h4 className="name">{item.friendInfo.name}</h4>
-                        <p className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</p>
+                        <b className="name">{item.friendInfo.name}</b>
+                        <br/>
+                        <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
                       </div>
                     </div>
                   ))}
@@ -208,8 +213,9 @@ class MessageBase extends Component {
                   <Conversation chat={this.state.chat} talkToWhom={this.state.talkToWhom} />
                   <div className="input-box">
                     <form onSubmit={this.handleSubmit}>
-                      <input className='input-message' type="text" value={this.state.value} onChange={this.handleChange} />
-                      <input className='input-click' type="submit" value="Enter" />
+                      <input className='input-message' type="text"  placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
+                      {/* <input className='input-click' type="submit" value="Enter" /> */}
+                      <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                     </form>
                   </div>
                 </div>
@@ -263,18 +269,15 @@ class Conversation extends Component {
     // console.log('conversation', this.props.chat[0].sender);
     return (
       <div className="talks">
-        <div className="adm-dialog">
+        {/* <div className="adm-dialog">
           <p>You both are friends now</p>
-        </div>
-        <div className="fri-dialog">
-          <div>Hello</div>
         </div>
         <div className="fri-dialog">
           <div>Hello</div>
         </div>
         <div className="my-dialog">
           <div>在第5版中將地圖添加到ECMA-262標準中； 因此，它可能並不存在於該標準的所有實現中。 您可以通過在腳本的開頭插入以下代碼來解決此問題，從而允許在本身不支持它的實現中使用map。 假設Object</div>
-        </div>
+        </div> */}
 
         {this.props.chat.map((item, index) => {
           console.log(item.sender);
@@ -282,6 +285,7 @@ class Conversation extends Component {
             return (
               <div className="adm-dialog" key={index}>
                 <p>{item.content}</p>
+                <div>{Date(item.timestamp).substring(0,24)}</div>
               </div>
             )
           } else if (item.sender === this.props.talkToWhom) {
@@ -291,7 +295,7 @@ class Conversation extends Component {
               </div>
             )
           } else {
-            return (
+            return  (
               <div className="my-dialog" key={index}>
                 <div>{item.content}</div>
               </div>
@@ -299,12 +303,6 @@ class Conversation extends Component {
           }
         }
         )}
-
-        {/* {this.state.chat.map((item, index) => (
-        <div className="dialog" key={index}>
-          <p className="fri-dialog">{item.content}</p>
-        </div>
-      ))} */}
       </div>
     )
   }
