@@ -40,9 +40,20 @@
     display: flex;
     justify-content: center;
 }
+.home>.main>.sideNav {
+    width: 20%;
+    padding: 3% 0 0 3%;
+    /* display: flex;
+    justify-content: center; */
+}
+.home>.main>.sideNav>div {
+    padding: 2%;
+    /* display: flex;
+    justify-content: center; */
+}
 .home>.main>.container{
     width: 80%;
-    margin: 3%;
+    padding: 2%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;

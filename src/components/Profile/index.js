@@ -96,7 +96,6 @@ class ProfileBase extends Component {
           status: "confirm"
         }
       )
-
     // 建立聊天室
     firebase.db.collection("Room").doc(UserData.authUser.uid).collection("friends").doc(UserData.authUser.uid)
       .update(

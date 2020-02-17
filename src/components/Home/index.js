@@ -32,10 +32,13 @@ class HomeBase extends Component {
       referlist: [],
       goToChat: false,
       friendID: '',
+      isLoaded_friend: false,
       confirmfriend: []
     }
     this.addFriend = this.addFriend.bind(this);
-    this.referFriends = this.referFriends.bind(this)
+    this.referFriends = this.referFriends.bind(this);
+    this.friendInvite = this.friendInvite.bind(this);
+    this.confirmFriend = this.confirmFriend.bind(this);
   }
 
   // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
@@ -121,7 +124,7 @@ class HomeBase extends Component {
     }
   }
   addFriend(id, name, avatar) {
-    const { firebase, UserData } = this.props
+    const { firebase, UserData } = this.props;
     console.log(UserData);
     // modify my list
     firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
@@ -143,7 +146,49 @@ class HomeBase extends Component {
           status: "askUrConfirm"
         }
       )
-
+  }
+  friendInvite() {
+    const { firebase, UserData } = this.props;
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+      // .get()
+      // .then(
+      // use .onSnapshot() instead of .get() to get notice immediately
+      .onSnapshot(
+        (querySnapshot) => {
+          let confirmfriend = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (doc.data().status === "askUrConfirm") {
+              console.log(doc.id, " => ", doc.data());
+              confirmfriend.push(doc.data());
+            }
+          })
+          this.setState({ confirmfriend });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    // )
+  }
+  confirmFriend(id, name, avatar) {
+    const { firebase, UserData } = this.props;
+    console.log(UserData);
+    // modify my list
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
+      .update(
+        {
+          status: "confirm"
+        }
+      );
+    // modify invited friend's list
+    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+      .update(
+        {
+          status: "confirm"
+        }
+      )
+    // 建立聊天室
     // createRoomID(uid1, uid2)
     let roomID = createRoomID(id, UserData.authUser.uid);
     console.log(roomID);
@@ -173,14 +218,13 @@ class HomeBase extends Component {
     UserData.updateUserData({ friendID: id })
     this.setState({ goToChat: true, friendID: id });
   }
-
   render() {
     console.log('home', this.state);
     if (this.state.goToChat) {
       return <Redirect to="/message" />
     }
     // const { friendlist } = this.state
-    const { error, isLoaded, referlist } = this.state
+    const { error, isLoaded, referlist, confirmfriend } = this.state
     if (error) {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
@@ -196,11 +240,47 @@ class HomeBase extends Component {
             <Navigation />
           </div>
           <div className="main">
+            <div className="sideNav">
+              <div className="discover-friends">Discover Friends</div>
+              <div className="friend-requests" onClick={this.friendInvite}>Friend Requests</div>
+              <div className="my-friend">My Friend Lists</div>
+            </div>
             <Main referlist={referlist} addFriend={this.addFriend.bind(this)} />
+            <ConfirmFriend confirmfriend={confirmfriend}
+              confirmFriend={this.confirmFriend.bind(this)}
+            />
           </div>
         </div>
       )
     }
+  }
+}
+
+class ConfirmFriend extends Component {
+  constructor(props) {
+    super(props);
+  }
+  handleSubmit(id, name, avatar) {
+    console.log(id, name, avatar);
+    this.props.confirmFriend(id, name, avatar);
+  }
+  render() {
+    console.log(this.props)
+    const { confirmfriend } = this.props
+    return (
+      <div className="confirm-friend">
+        <h3>Friend Invitation</h3>
+        {confirmfriend.map(item => (
+          <div className="confirm-box" key={item.id}>
+            <img className="avatar" src={item.avatar} alt="avatar" />
+            <div className="center">
+              <h4>{item.name}</h4>
+              <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    )
   }
 }
 

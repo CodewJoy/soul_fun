@@ -291,7 +291,7 @@ function createRoomID(uid1, uid2) {
 
 class Conversation extends Component {
   render() {
-    console.log('conversation', this.props.talkToWhom);
+    // console.log('conversation', this.props.talkToWhom);
     // console.log('conversation', this.props.chat);
     // console.log('conversation', this.props.chat[0].sender);
     return (
