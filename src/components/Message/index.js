@@ -105,7 +105,7 @@ class MessageBase extends Component {
                   loaded++;
                   // console.log("loaded", loaded);
                   if (loaded === document.length) {
-                    console.log("document_peng", document);
+                    // console.log("document_try", document);
                     this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
                     this.setState({ document: document, talkToWhom: document[0].friendInfo.uid });
                   }
@@ -238,8 +238,10 @@ class MessageBase extends Component {
           <div className="message">
             <Navbar />
             <div className="main">
-              <div className="my-chat">
-                <h2>Chats</h2>
+              <div className='chat-room'>
+                <div className="my-chat">
+                  <h2>Chats</h2>
+                </div>
               </div>
               <div className="headerDivider"></div>
               <div className='conversation'>
@@ -252,6 +254,7 @@ class MessageBase extends Component {
                   </form>
                 </div>
               </div>
+
             </div>
           </div>
         )

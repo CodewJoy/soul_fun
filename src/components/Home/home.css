@@ -41,7 +41,7 @@
     justify-content: center;
 }
 .home>.main>.container{
-    width: 84%;
+    width: 80%;
     margin: 3%;
     display: flex;
     flex-wrap: wrap;
@@ -57,8 +57,12 @@
     border-radius: 5px;
 }
 .home>.main>.container>.friend-box>.avatar{
-    margin: 2%;
-    width: 70%;
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 1px #ffd32a solid;
+    width: 80px;
+    height: 80px;
+    margin: 1%;
     text-align: center;
 }
 

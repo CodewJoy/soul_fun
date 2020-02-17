@@ -27,9 +27,12 @@ class HomeBase extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      friendlist: [],
+      myfriend: [],
+      // friendlist: [],
+      referlist: [],
       goToChat: false,
-      friendID : ''
+      friendID: '',
+      confirmfriend: []
     }
     this.addFriend = this.addFriend.bind(this);
     this.referFriends = this.referFriends.bind(this)
@@ -43,43 +46,79 @@ class HomeBase extends Component {
       this.referFriends(UserData, firebase, isLoaded);
     }
   }
-  referFriends(UserData, firebase, isLoaded) {
-    if (!isLoaded) {
-      firebase.db.collection("Users")
-        .get()
-        .then(
-          (querySnapshot) => {
-            let friendlist = [];
-            querySnapshot.forEach((doc) => {
-              // if (!doc.data().status) {
-                if (doc.data().avatar) {
-                  // cant see self as a friend
-                  if (doc.id !== UserData.authUser.uid) {
-                    console.log(doc.id, " => ", doc.data());
-                    friendlist.push(doc.data());
-                  }
-                }
-              // }
-            });
-            this.setState({
-              isLoaded: true, friendlist
-            })
-            console.log(this.state)
-          },
-          (error) => {
-            this.setState({
-              isLoaded: true,
-              error
-            })
-          }
-        )
-    }
-  }
-// 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
+  // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
   componentDidUpdate() {
     const { UserData, firebase } = this.props;
     const { isLoaded } = this.state;
     this.referFriends(UserData, firebase, isLoaded);
+  }
+  referFriends(UserData, firebase, isLoaded) {
+    // 加個鎖不然會無限 loading
+    if (!isLoaded) {
+      // 先取得我的朋友列表
+      firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+        .onSnapshot(
+          (querySnapshot) => {
+            let myfriend = [];
+            querySnapshot.forEach((doc) => {
+              console.log('myfriend', doc.id, " => ", doc.data());
+              myfriend.push(doc.data().id);
+            })
+            console.log('myfriend', myfriend);
+            // 接著取得目前用戶列表
+            firebase.db.collection("Users")
+              .limit(20)
+              .get()
+              .then(
+                (querySnapshot) => {
+                  let friendlist = [];
+                  querySnapshot.forEach((doc) => {
+                    // if 有填資料再進來
+                    if (doc.data().avatar) {
+                      // cant see self as a friend
+                      if (doc.id !== UserData.authUser.uid) {
+                        console.log(doc.id, " => ", doc.data());
+                        friendlist.push(doc.data().id);
+                      }
+                    }
+                  });
+                  // console.log('friendlist', friendlist);
+                  // console.log(deleteIntersection(friendlist, myfriend));
+                  let loaded = 0;
+                  let refer = deleteIntersection(friendlist, myfriend);
+                  let referlist = [];
+                  for (let i = 0; i < refer.length; i++) {
+                    firebase.db.collection("Users").doc(refer[i])
+                      .onSnapshot(
+                        (doc) => {
+                          console.log("Document data:", doc.data());
+                          referlist.push(doc.data());
+                          loaded++;
+                          if (loaded === refer.length) {
+                            // console.log("document_try", document);
+                            this.setState({ isLoaded: true, referlist, myfriend });
+                          }
+                        },
+                        (error) => {
+                          console.log(error)
+                        }
+                      )
+                  }
+                },
+                (error) => {
+                  console.log(error)
+                  this.setState({
+                    isLoaded: true,
+                    error
+                  })
+                }
+              )
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+    }
   }
   addFriend(id, name, avatar) {
     const { firebase, UserData } = this.props
@@ -104,42 +143,44 @@ class HomeBase extends Component {
           status: "askUrConfirm"
         }
       )
-    
+
     // createRoomID(uid1, uid2)
     let roomID = createRoomID(id, UserData.authUser.uid);
     console.log(roomID);
- 
+
     // 同時設定文件欄位又設定他的子集合兩件事並不衝突
     firebase.db.collection("Room").doc(roomID)
-    .set(
-      {
-        uid: [UserData.authUser.uid, id],
-        user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username},
-        user2: { uid: id, avatar: avatar, name: name}, 
-        timestamp: Date.now()
-      }
-    )
+      .set(
+        {
+          uid: [UserData.authUser.uid, id],
+          user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username },
+          user2: { uid: id, avatar: avatar, name: name },
+          timestamp: Date.now()
+        }
+      )
 
+    // 這段是要設給已經收到邀請後 confirm to chat 的頁面
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
-    .set(
-      {
-        sender: "admin",
-        content: "You both are friends now. Let's message your friend.",
-        timestamp: Date.now()
-      }
-    );
-    
+      .set(
+        {
+          sender: "admin",
+          content: "You both are friends now. Let's message your friend.",
+          timestamp: Date.now()
+        }
+      );
+
     // update context
-    UserData.updateUserData({friendID: id})
+    UserData.updateUserData({ friendID: id })
     this.setState({ goToChat: true, friendID: id });
   }
 
   render() {
-    if(this.state.goToChat){
+    console.log('home', this.state);
+    if (this.state.goToChat) {
       return <Redirect to="/message" />
     }
     // const { friendlist } = this.state
-    const { error, isLoaded, friendlist } = this.state
+    const { error, isLoaded, referlist } = this.state
     if (error) {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
@@ -154,18 +195,33 @@ class HomeBase extends Component {
             </div>
             <Navigation />
           </div>
-          <Main friendlist={friendlist} addFriend={this.addFriend.bind(this)} />
+          <div className="main">
+            <Main referlist={referlist} addFriend={this.addFriend.bind(this)} />
+          </div>
         </div>
       )
     }
   }
 }
+
+function deleteIntersection(nums1, nums2) {
+  for (let i = 0; i < nums1.length; i++) {
+    for (let j = 0; j < nums2.length; j++) {
+      if (nums1[i] === nums2[j]) {
+        // 從 nums1 中刪除重複的值
+        nums1.splice(i, 1);
+      }
+    }
+  }
+  return nums1;
+}
+
 function createRoomID(uid1, uid2) {
   if (uid1 < uid2) {
-    return uid1+uid2;  
-    }
+    return uid1 + uid2;
+  }
   else {
-    return uid2+uid1;
+    return uid2 + uid1;
   }
 }
 
@@ -181,20 +237,26 @@ class Main extends Component {
   }
   render() {
     return (
-      <div className="main">
-        <div className="container">
-          {this.props.friendlist.map(item => (
-            <div key={item.id} className="friend-box">
-              <img className="avatar" src={item.avatar} alt="avatar" />
-              <h3>{item.username}</h3>
-              <p>Country: {item.country}</p>
-              <hr />
-              <p>Language: {item.language}</p>
-              <h4>Interest: {item.interest}</h4>
-              <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
-            </div>
-          ))}
-        </div>
+      <div className="container">
+        {this.props.referlist.map(item => (
+          <div key={item.id} className="friend-box">
+            <img className="avatar" src={item.avatar} alt="avatar" />
+            <p>
+              <b>{item.username}</b>
+            </p>
+            <p>{item.country}</p>
+            {/* <p>Country: {item.country}</p> */}
+            <hr />
+            <p>{item.language}</p>
+            {/* <p>Language: {item.language}</p> */}
+            <p>
+              <b>{item.interest}</b>
+              {/* <b>Interest: {item.interest}</b> */}
+            </p>
+
+            <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
+          </div>
+        ))}
       </div>
     )
   }
