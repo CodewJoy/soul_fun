@@ -169,7 +169,7 @@ class MessageBase extends Component {
         }
       )
       .then(
-        () => { this.setState({ value: '' })}
+        () => { this.setState({ value: '' }) }
       )
     firebase.db.collection("Room").doc(roomID)
       .update(
@@ -196,12 +196,15 @@ class MessageBase extends Component {
               <Navbar />
               <div className="main">
                 <div className='chat-room'>
+                  <div className="my-chat">
+                    <h2>Chats</h2>
+                  </div>
                   {this.state.document.map(item => (
                     <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
                       <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
                       <div className="container">
                         <b className="name">{item.friendInfo.name}</b>
-                        <br/>
+                        <br />
                         <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
                       </div>
                     </div>
@@ -213,7 +216,7 @@ class MessageBase extends Component {
                   <Conversation chat={this.state.chat} talkToWhom={this.state.talkToWhom} />
                   <div className="input-box">
                     <form onSubmit={this.handleSubmit}>
-                      <input className='input-message' type="text"  placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
+                      <input className='input-message' type="text" placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
                       {/* <input className='input-click' type="submit" value="Enter" /> */}
                       <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                     </form>
@@ -230,7 +233,28 @@ class MessageBase extends Component {
           return <div className="loading"><img src={Loading} alt="Loading" /></div>
         }
       } else {
-        return <div className="loading"><img src={Loading} alt="Loading" /></div>
+        // return <div className="loading"><img src={Loading} alt="Loading" /></div>
+        return (
+          <div className="message">
+            <Navbar />
+            <div className="main">
+              <div className="my-chat">
+                <h2>Chats</h2>
+              </div>
+              <div className="headerDivider"></div>
+              <div className='conversation'>
+                <div className="talks"></div>
+                <div className="input-box">
+                  <form onSubmit={this.handleSubmit}>
+                    <input className='input-message' type="text" placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
+                    {/* <input className='input-click' type="submit" value="Enter" /> */}
+                    <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        )
       }
     }
   }
@@ -285,7 +309,7 @@ class Conversation extends Component {
             return (
               <div className="adm-dialog" key={index}>
                 <p>{item.content}</p>
-                <div>{Date(item.timestamp).substring(0,24)}</div>
+                <div>{Date(item.timestamp).substring(0, 24)}</div>
               </div>
             )
           } else if (item.sender === this.props.talkToWhom) {
@@ -295,7 +319,7 @@ class Conversation extends Component {
               </div>
             )
           } else {
-            return  (
+            return (
               <div className="my-dialog" key={index}>
                 <div>{item.content}</div>
               </div>

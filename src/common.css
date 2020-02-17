@@ -50,8 +50,11 @@ button:hover {
 
 .loading {
   position: fixed;
-  top: 20%;
-  left: 35%;
-  width: 30%;
+  top: calc(50% - 150px);
+  left: calc(50% - 75px);
   text-align: center;
+}
+.loading>img {
+  width: 150px;
+  height: auto;
 }

@@ -52,6 +52,13 @@
     width: 22%;
     max-height: 100%;
     overflow-y: scroll;
+    /* display: flex;
+    align-content: center; */
+}
+.message>.main>.chat-room>.my-chat {
+    text-align: center;
+    /* margin: 1%;
+    width: 98%; */
 }
 
 .message>.main>.chat-room>.chat-box {
@@ -85,6 +92,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     color: grey;
+    font-size: 14px;
 }
 
 .message>.main>.conversation {
@@ -97,7 +105,8 @@
 
 .message>.main>.conversation>.talks {
     overflow-y: scroll;
-    max-height: 86%;
+    /* max-height: 86%; */
+    height: 86%;
     width: 100%;
 }
 
