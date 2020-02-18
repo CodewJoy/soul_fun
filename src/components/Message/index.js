@@ -201,6 +201,19 @@ class MessageBase extends Component {
                   </div>
                   {this.state.document.map(item => (
                     <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
+                      <input type="radio" id={item.friendInfo.name} name="chatroom" value={item.friendInfo.name} />
+                      <label htmlFor={item.friendInfo.name}>
+                        <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
+                        <div className="container">
+                          <b className="name">{item.friendInfo.name}</b>
+                          <br />
+                          <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
+                        </div>
+                      </label>
+                    </div>
+                  ))}
+                  {/* {this.state.document.map(item => (
+                    <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
                       <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
                       <div className="container">
                         <b className="name">{item.friendInfo.name}</b>
@@ -208,7 +221,7 @@ class MessageBase extends Component {
                         <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
                       </div>
                     </div>
-                  ))}
+                  ))} */}
                 </div>
                 <div className="headerDivider"></div>
 

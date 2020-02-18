@@ -46,29 +46,17 @@
     width: 22%;
     text-align: center;
 }
+.profile>.main>.display>.avatar {
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 1px #ffd32a solid;
+    width: 150px;
+    height: 150px;
+    margin: 1%;
+    text-align: center;
+}
 .profile>.main>.setting {
     padding: 4%;
     width: 32%;
     font-size: 18px;
-}
-.profile>.main>.confirm-friend {
-    padding: 4%; 
-    width: 22%;
-    text-align: center;
-}
-.profile>.main>.display>.avatar {
-    width: 150px;
-}
-
-.profile>.main>.confirm-friend>.confirm-box {
-    display: inline-flex;
-    margin: 2%;
-}
-.profile>.main>.confirm-friend>.confirm-box>.center {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-}
-.profile>.main>.confirm-friend>.confirm-box>.avatar {
-    width: 90px;
 }

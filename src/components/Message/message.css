@@ -4,7 +4,6 @@
     position: absolute;
     /* background: #63cdda; */
 }
-
 .message>.navbar {
     width: 100%;
     display: flex;
@@ -13,41 +12,34 @@
     background-color: #63cdda;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
-
 .message>.navbar>.logo {
     margin: 10px 25px;
     display: inline-flex;
     align-items: center;
 }
-
 .message>.navbar>.logo>.logo-img {
     height: 40px;
     width: 40px;
 }
-
 .message>.navbar>.member-navbar {
     width: 35%;
     /* margin: 1% 2%; */
 }
-
 .message>.navbar>.member-navbar>ul {
     display: flex;
     align-items: center;
     justify-content: space-around;
     list-style: none;
 }
-
 .message>.navbar>.member-navbar>ul>li>button {
     min-width: 110px;
 }
-
 .message>.main {
     width: 100%;
     /* height: 90%; */
     height: calc(100% - 80px);
     display: flex;
 }
-
 .message>.main>.chat-room {
     width: 22%;
     max-height: 100%;
@@ -55,46 +47,57 @@
     /* display: flex;
     align-content: center; */
 }
+.message>.main>.chat-room>.chat-box>input[type="radio"] {
+    display: none;
+}
+.message>.main>.chat-room>.chat-box>input[type="radio"] + label {
+    cursor: pointer;
+}
+.message>.main>.chat-room>.chat-box>input[type="radio"] + label:hover {
+    background-color: #f1f2f6;
+}
+.message>.main>.chat-room>.chat-box>input[type="radio"]:checked + label {
+    background-color: #f1f2f6;
+}
 .message>.main>.chat-room>.my-chat {
     text-align: center;
     /* margin: 1%;
     width: 98%; */
 }
-
 .message>.main>.chat-room>.chat-box {
     margin: 1%;
     width: 98%;
     min-height: 60px;
+}
+.message>.main>.chat-room>.chat-box>label{
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 }
-
-.message>.main>.chat-room>.chat-box>.avatar {
+.message>.main>.chat-room>.chat-box>label>.avatar {
     vertical-align: middle;
     border-radius: 50%;
-    border: 1px #ffd32a solid;
+    border: 2px #ffd32a solid;
     width: 50px;
     height: 50px;
     margin: 3%;
     /* flex: none; */
 }
-
-.message>.main>.chat-room>.chat-box>.container {
+.message>.main>.chat-room>.chat-box>label>.container {
     width: calc(80% - 50px);
     /* flex: auto; */
 }
-
-.message>.main>.chat-room>.chat-box>.container>.word {
+.message>.main>.chat-room>.chat-box>label>.container>.word {
     width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: inline-block;
     color: grey;
     font-size: 14px;
 }
-
 .message>.main>.conversation {
     width: 80%;
     height: 100%;
@@ -102,14 +105,12 @@
     font-size: 18px;
     padding-bottom: 100px;
 }
-
 .message>.main>.conversation>.talks {
     overflow-y: scroll;
     /* max-height: 86%; */
     height: 86%;
     width: 100%;
 }
-
 .message>.main>.conversation>.input-box {
     height: 10%;
     width: 100%;
@@ -118,7 +119,6 @@
     border-left: 1px solid lightgray;
     height: 100%;
 }
-
 .message>.main>.conversation>.talks>.adm-dialog {
     font-size: 14px;
     color: gray;
@@ -126,21 +126,18 @@
 }
 
 /* need to fix: long message use div, short message use span */
-
 .message>.main>.conversation>.talks>.fri-dialog {
     /* text-align: left; */
     display: flex;
     justify-content: flex-start;
     margin: 2% 0%;
 }
-
 .message>.main>.conversation>.talks>.my-dialog {
     /* text-align: right; */
     display: flex;
     justify-content: flex-end;
     margin: 2% 0%;
 }
-
 .message>.main>.conversation>.talks>.fri-dialog>div {
     width: 60%;
     background-color: #ffd32a;
@@ -148,7 +145,6 @@
     font-size: 16px;
     padding: 1% 2%;
 }
-
 .message>.main>.conversation>.talks>.my-dialog>div {
     width: 60%;
     background-color: #f1f2f6;
@@ -156,7 +152,6 @@
     font-size: 16px;
     padding: 1% 2%;
 }
-
 .message>.main>.conversation>.input-box>form {
     border: 2px solid #ffd32a;
     width: 96%;
@@ -166,6 +161,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.message>.main>.conversation>.input-box>form> textarea:focus, input:focus {
+    outline: none;
 }
 .message>.main>.conversation>.input-box>form>.input-message {
     width: calc(95% - 40px);;

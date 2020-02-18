@@ -17,13 +17,13 @@ const LandingPage = () => (
 
 class Landing extends Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       showsignup: false,
       showlogin: false
-    }
-    this.ShowSignUp = this.ShowSignUp.bind(this)
-    this.ShowLogIn = this.ShowLogIn.bind(this)
+    };
+    this.ShowSignUp = this.ShowSignUp.bind(this);
+    this.ShowLogIn = this.ShowLogIn.bind(this);
   }
   ShowSignUp() {
     this.setState({ showsignup: !this.state.showsignup })
@@ -31,13 +31,12 @@ class Landing extends Component {
   ShowLogIn() {
     this.setState({ showlogin: !this.state.showlogin })
   }
-  closeLogin(status) {
-    this.setState({ showlogin: status })
-  }
   closeSignup(status) {
     this.setState({ showsignup: status })
   }
-
+  closeLogin(status) {
+    this.setState({ showlogin: status })
+  }
   render() {
     return (
       <div className="landing">

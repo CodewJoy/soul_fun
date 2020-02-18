@@ -35,81 +35,81 @@ class ProfileBase extends Component {
       isLoaded_friend: false,
       confirmfriend: []
     }
-    this.friendInvite = this.friendInvite.bind(this);
+    // this.friendInvite = this.friendInvite.bind(this);
     // this.confirmFriendFriend = this.confirmFriendFriend.bind(this);
   }
-  componentDidMount() {
-    const { UserData, firebase } = this.props;
-    if (UserData.authUser) {
-      console.log("Updated", this.state.isLoaded_friend);
-      if (!this.state.isLoaded_friend) {
-        this.friendInvite(UserData.authUser.uid, firebase, UserData);
-        this.setState({ isLoaded_friend: true });
-      }
-    }
-  }
-  componentDidUpdate() {
-    const { UserData, firebase } = this.props;
-    console.log("Updated", this.state.isLoaded_friend);
-    if (!this.state.isLoaded_friend) {
-      this.friendInvite(UserData.authUser.uid, firebase, UserData);
-      this.setState({ isLoaded_friend: true });
-    }
-  }
-  friendInvite(myuid, firebase) {
-    firebase.db.collection("Users").doc(myuid).collection("friends")
-      // .get()
-      // .then(
-      // use .onSnapshot() instead of .get() to get notice immediately
-      .onSnapshot(
-        (querySnapshot) => {
-          let confirmfriend = [];
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-              if (doc.data().status === "askUrConfirm") {
-                console.log(doc.id, " => ", doc.data());
-                confirmfriend.push(doc.data());
-              }
-            })
-            this.setState({ confirmfriend });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    // )
-  }
-  confirmFriend(id) {
-    const { firebase, UserData } = this.props
-    console.log(UserData);
-    // modify my list
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
-      .update(
-        {
-          status: "confirm"
-        }
-      );
-    // modify invited friend's list
-    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
-      .update(
-        {
-          status: "confirm"
-        }
-      )
-    // 建立聊天室
-    firebase.db.collection("Room").doc(UserData.authUser.uid).collection("friends").doc(UserData.authUser.uid)
-      .update(
-        {
-          status: "confirm"
-        }
-      )
-  }
+  // componentDidMount() {
+  //   const { UserData, firebase } = this.props;
+  //   if (UserData.authUser) {
+  //     console.log("Updated", this.state.isLoaded_friend);
+  //     if (!this.state.isLoaded_friend) {
+  //       this.friendInvite(UserData.authUser.uid, firebase, UserData);
+  //       this.setState({ isLoaded_friend: true });
+  //     }
+  //   }
+  // }
+  // componentDidUpdate() {
+  //   const { UserData, firebase } = this.props;
+  //   console.log("Updated", this.state.isLoaded_friend);
+  //   if (!this.state.isLoaded_friend) {
+  //     this.friendInvite(UserData.authUser.uid, firebase, UserData);
+  //     this.setState({ isLoaded_friend: true });
+  //   }
+  // }
+  // friendInvite(myuid, firebase) {
+  //   firebase.db.collection("Users").doc(myuid).collection("friends")
+  //     // .get()
+  //     // .then(
+  //     // use .onSnapshot() instead of .get() to get notice immediately
+  //     .onSnapshot(
+  //       (querySnapshot) => {
+  //         let confirmfriend = [];
+  //         querySnapshot.forEach((doc) => {
+  //           // doc.data() is never undefined for query doc snapshots
+  //             if (doc.data().status === "askUrConfirm") {
+  //               console.log(doc.id, " => ", doc.data());
+  //               confirmfriend.push(doc.data());
+  //             }
+  //           })
+  //           this.setState({ confirmfriend });
+  //       },
+  //       (error) => {
+  //         console.log(error)
+  //       }
+  //     )
+  //   // )
+  // }
+  // confirmFriend(id) {
+  //   const { firebase, UserData } = this.props
+  //   console.log(UserData);
+  //   // modify my list
+  //   firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
+  //     .update(
+  //       {
+  //         status: "confirm"
+  //       }
+  //     );
+  //   // modify invited friend's list
+  //   firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+  //     .update(
+  //       {
+  //         status: "confirm"
+  //       }
+  //     )
+  //   // 建立聊天室
+  //   firebase.db.collection("Room").doc(UserData.authUser.uid).collection("friends").doc(UserData.authUser.uid)
+  //     .update(
+  //       {
+  //         status: "confirm"
+  //       }
+  //     )
+  // }
   render() {
     // const { confirmfriend } = this.state
-    const { isLoaded_friend, confirmfriend } = this.state
-    if (!isLoaded_friend) {
-      return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    } else {
+    // const { isLoaded_friend, confirmfriend } = this.state
+    // if (!isLoaded_friend) {
+    //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
+    // } else {
       console.log(this.props)
       return (
         <div className="profile">
@@ -117,17 +117,16 @@ class ProfileBase extends Component {
           <div className="main">
             <Display userInfo={this.props.UserData.userInfo} />
             <Setting userInfo={this.props.UserData.userInfo} />
-            {/* <ConfirmFriend /> */}
+            {/* <ConfirmFriend />
             <ConfirmFriend confirmfriend={confirmfriend}
               confirmFriend={this.confirmFriend.bind(this)}
-            />
+            /> */}
           </div>
           <div className="center-button">
             <button>Change your profile</button>
           </div>
         </div>
       );
-    }
   }
 }
 class ConfirmFriend extends Component {

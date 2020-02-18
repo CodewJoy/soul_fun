@@ -1,5 +1,6 @@
 /* eslint-disable no-undef */
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import Navigation from '../App/navigation.js';
 import './home.css';
 import { FirebaseContext } from '../../index.js';
@@ -240,22 +241,40 @@ class HomeBase extends Component {
             <Navigation />
           </div>
           <div className="main">
-            <div className="sideNav">
-              <div className="discover-friends">Discover Friends</div>
-              <div className="friend-requests" onClick={this.friendInvite}>Friend Requests</div>
-              <div className="my-friend">My Friend Lists</div>
+            <ul>
+              <li className="discover-friends">
+                <Link to='/'>Discover Friends</Link>
+              </li>
+              <li className="friend-requests">
+                <Link to='/friend-requests'>Friend Requests</Link>
+              </li>
+              <li className="my-friend">
+                <Link to='/my-friend'>My Friend</Link>
+              </li>
+            </ul>
+            {/* <div className="sideNav">
+                <div className="discover-friends">Discover Friends</div>
+                <div className="friend-requests" onClick={this.friendInvite}>Friend Requests</div>
+                <div className="my-friend">My Friend Lists</div>
+              </div> */}
+            <div className="view">
+              <ReferFriend referlist={referlist} addFriend={this.addFriend.bind(this)} />
+              <br />
+              <ConfirmFriend confirmfriend={confirmfriend}
+                confirmFriend={this.confirmFriend.bind(this)}
+              />
             </div>
-            <Main referlist={referlist} addFriend={this.addFriend.bind(this)} />
-            <ConfirmFriend confirmfriend={confirmfriend}
-              confirmFriend={this.confirmFriend.bind(this)}
-            />
           </div>
         </div>
       )
     }
   }
 }
-
+// class ConfirmFriend extends Component {
+//   constructor(props) {
+//     super(props);
+//   }
+    
 class ConfirmFriend extends Component {
   constructor(props) {
     super(props);
@@ -269,9 +288,9 @@ class ConfirmFriend extends Component {
     const { confirmfriend } = this.props
     return (
       <div className="confirm-friend">
-        <h3>Friend Invitation</h3>
         {confirmfriend.map(item => (
           <div className="confirm-box" key={item.id}>
+            <h3>Friend Invitation</h3>
             <img className="avatar" src={item.avatar} alt="avatar" />
             <div className="center">
               <h4>{item.name}</h4>
@@ -305,20 +324,32 @@ function createRoomID(uid1, uid2) {
   }
 }
 
-class Main extends Component {
+class ReferFriend extends Component {
   constructor(props) {
     super(props);
-    console.log(this.props);
-    // this.handleSubmit = this.handleSubmit.bind(this)
+    this.state = {
+      showCard: false,
+      clickWhom: ''
+    }
+    // this.handleSubmit = this.handleSubmit.bind(this);
   }
   handleSubmit(id, name, avatar) {
     // console.log(id, name, avatar);
     this.props.addFriend(id, name, avatar);
   }
+  clickToShow(item) {
+    console.log('personinfo', item);
+    this.setState({ clickWhom: item, showCard: !this.state.showCard });
+  }
+  closeCard() {
+    this.setState({ showCard: !this.state.showCard })
+  }
   render() {
+    console.log(this.props);
     return (
       <div className="container">
         {this.props.referlist.map(item => (
+          // <div key={item.id} className="friend-box" onClick={this.clickToShow.bind(this,item)}>
           <div key={item.id} className="friend-box">
             <img className="avatar" src={item.avatar} alt="avatar" />
             <p>
@@ -333,10 +364,31 @@ class Main extends Component {
               <b>{item.interest}</b>
               {/* <b>Interest: {item.interest}</b> */}
             </p>
-
             <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
           </div>
         ))}
+        {/* { this.state.showCard ? <ShowCard clickWhom={this.state.clickWhom} closeCard = {this.closeCard.bind(this)} />: null } */}
+      </div>
+    )
+  }
+}
+class ShowCard extends Component {
+  constructor(props) {
+    super(props);
+    this.changeToClose = this.changeToClose.bind(this);
+  }
+  changeToClose() {
+    this.props.closeCard();
+    console.log(this.props);
+  }
+  render() {
+    console.log('showcard', this.props);
+    return (
+
+      <div className="showCard">
+        ShowCard
+        <button onClick={this.changeToClose}>Go Back</button>
+        <button >Add Friend</button>
       </div>
     )
   }
