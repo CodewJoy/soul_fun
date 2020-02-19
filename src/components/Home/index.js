@@ -8,6 +8,7 @@ import { AuthUserContext } from '../Session';
 import Logo from '../img/logo.svg';
 import Loading from '../img/loading.gif';
 import { Redirect } from 'react-router-dom';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 
 const Home = () => (
   <>
@@ -32,14 +33,10 @@ class HomeBase extends Component {
       // myfriend: [],
       // friendlist: [],
       referlist: [],
-      goToChat: false,
       selected: 'discover',
-      // friendID still not used yet
-      friendID: ''
     }
     this.addFriend = this.addFriend.bind(this);
     this.referFriends = this.referFriends.bind(this);
-    this.confirmFriend = this.confirmFriend.bind(this);
     this.sideNav = this.sideNav.bind(this);
   }
 
@@ -149,9 +146,176 @@ class HomeBase extends Component {
         }
       )
   }
+  sideNav(name) {
+    this.setState({ selected: name });
+  }
+  render() {
+    console.log('home', this.state);
+    const { friendlist } = this.state
+    const { error, isLoaded, referlist } = this.state
+    if (error) {
+      return <div>Error: {error.message}</div>
+    } else if (!isLoaded) {
+      return <div className="loading"><img src={Loading} alt="Loading" /></div>
+    } else {
+      return (
+        <div className="home">
+          <div className="navbar">
+            <div className="logo">
+              <img className="logo-img" src={Logo} alt="Logo" />
+              <h3>SOULFUN</h3>
+            </div>
+            <Navigation />
+          </div>
+          <div className="main">
+            <ul className="sideNav">
+              <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+                <Link to='/home'>Discover Friends</Link>
+              </li>
+              <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+                <Link to='/home/friend-requests'>Friend Requests</Link>
+              </li>
+              <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
+                <Link to='/home/my-friend'>My Friend</Link>
+              </li>
+            </ul>
+            <Switch>
+              <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
+              <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+            </Switch>
+          </div>
+        </div>
+      )
+    }
+  }
+}
+class MyFriend extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      myfriend: [],
+      goToChat: false,
+    }
+    this.myFriend = this.myFriend.bind(this);
+  }
+  componentDidMount() {
+    const { UserData } = this.props.props;
+    if (UserData.authUser) {
+      this.myFriend();
+    }
+  }
+  myFriend() {
+    const { firebase, UserData } = this.props.props;
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+      .onSnapshot(
+        (querySnapshot) => {
+          let myfriend = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (doc.data().status === "confirm") {
+              console.log(doc.id, " => ", doc.data());
+              myfriend.push(doc.data());
+            }
+          })
+          this.setState({ myfriend });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+  }
+  handleSubmit(id) {
+    const { firebase, UserData } = this.props.props;
+    // 找到聊天室
+    // createRoomID(uid1, uid2)
+    let roomID = createRoomID(id, UserData.authUser.uid);
+    console.log(roomID);
+    firebase.db.collection("Room").doc(roomID)
+      .update(
+        {
+          timestamp: Date.now()
+        }
+      );
+    this.setState({ goToChat: true });
+  }
+  render() {
+    console.log('myfriend', this.state);
+    if (this.state.goToChat) {
+      return <Redirect to="/message" />
+    }
+    return (
+      <div className="view">
+        <h3>Your Friends</h3>
+        <div className="container">
+          {this.state.myfriend.map(item => (
+            <div className="friend-box" key={item.id}>
+              <img className="avatar" src={item.avatar} alt="avatar" />
+              <div className="center">
+                <h4>{item.name}</h4>
+                <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
 
+class FriendRequests extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      confirmfriend: [],
+      goToChat: false,
+      showCard: false,
+      clickWhom: '',
+      // friendID still not used yet
+      // friendID: ''
+    }
+    this.friendInvite = this.friendInvite.bind(this);
+    this.confirmFriend = this.confirmFriend.bind(this);
+    this.closeCard = this.closeCard.bind(this);
+  }
+  componentDidMount() {
+    // console.log('confirmfriend', this.props)
+    // console.log('confirmfriend', this.props.props)
+    console.log('confirmfriend', this.context);
+    const { UserData } = this.props.props;
+    if (UserData.authUser) {
+      this.friendInvite();
+    }
+  }
+  // componentDidUpdate() {
+  //   // console.log('confirmfriend', this.props)
+  // }
+  friendInvite() {
+    const { firebase, UserData } = this.props.props;
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+      // .get()
+      // .then(
+      // use .onSnapshot() instead of .get() to get notice immediately
+      .onSnapshot(
+        (querySnapshot) => {
+          let confirmfriend = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (doc.data().status === "askUrConfirm") {
+              console.log(doc.id, " => ", doc.data());
+              confirmfriend.push(doc.data());
+            }
+          })
+          this.setState({ confirmfriend });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    // )
+  }
   confirmFriend(id, name, avatar) {
-    const { firebase, UserData } = this.props;
+    const { firebase, UserData } = this.props.props;
     console.log(UserData);
     // modify my list
     firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
@@ -192,183 +356,112 @@ class HomeBase extends Component {
           timestamp: Date.now()
         }
       );
-
     // update context
-    UserData.updateUserData({ friendID: id })
-    this.setState({ goToChat: true, friendID: id });
-  }
-  sideNav(e, name) {
-    this.setState({ selected : name });
-  }
-  render() {
-    console.log('home', this.state);
-    if (this.state.goToChat) {
-      return <Redirect to="/message" />
-    }
-    // const { friendlist } = this.state
-    const { error, isLoaded, referlist } = this.state
-    if (error) {
-      return <div>Error: {error.message}</div>
-    } else if (!isLoaded) {
-      return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    } else {
-      return (
-        <div className="home">
-          <div className="navbar">
-            <div className="logo">
-              <img className="logo-img" src={Logo} alt="Logo" />
-              <h3>SOULFUN</h3>
-            </div>
-            <Navigation />
-          </div>
-          <div className="main">
-            <ul className="sideNav">
-              <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'discover')}>
-                <Link to='/home'>Discover Friends</Link>
-              </li>
-              <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'requests')}>
-                <Link to='/home/friend-requests'>Friend Requests</Link>
-              </li>
-              <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'myfriend')}>
-                <Link to='/home/my-friend'>My Friend</Link>
-              </li>
-            </ul>
-            <Switch>
-              <Route exact path='/home' render={(props) => (<ReferFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
-              <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} props={this.props} />)} />
-              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
-            </Switch>
-          </div>
-        </div>
-      )
-    }
-  }
-}
-class MyFriend extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      myfriend: []
-    }
-    this.myFriend = this.myFriend.bind(this);
-  }
-  componentDidMount() {
-    const { UserData } = this.props.props;
-    if (UserData.authUser) {
-      this.myFriend();
-    }
-  }
-  myFriend() {
-    const { firebase, UserData } = this.props.props;
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
-      .onSnapshot(
-        (querySnapshot) => {
-          let myfriend = [];
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            if (doc.data().status === "confirm") {
-              console.log(doc.id, " => ", doc.data());
-              myfriend.push(doc.data());
-            }
-          })
-          this.setState({ myfriend });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-  }
-  render() {
-    console.log('myfriend', this.state)
-    return (
-      <div className="view">
-        <h3>Your Friends</h3>
-        <div className="container">
-          {this.state.myfriend.map(item => (
-            <div className="friend-box" key={item.id}>
-              <img className="avatar" src={item.avatar} alt="avatar" />
-              <div className="center">
-                <h4>{item.name}</h4>
-                {/* <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button> */}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
-}
-
-class ConfirmFriend extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      confirmfriend: []
-    }
-    this.friendInvite = this.friendInvite.bind(this);
-  }
-  componentDidMount() {
-    // console.log('confirmfriend', this.props)
-    // console.log('confirmfriend', this.props.props)
-    console.log('confirmfriend', this.context)
-    const { UserData } = this.props.props;
-    if (UserData.authUser) {
-      this.friendInvite();
-    }
-  }
-  componentDidUpdate() {
-    console.log('confirmfriend', this.props)
-    console.log('confirmfriend', this.state)
-    console.log('confirmfriend', this.context)
-    // this.friendInvite();
-  }
-  friendInvite() {
-    const { firebase, UserData } = this.props.props;
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
-      // .get()
-      // .then(
-      // use .onSnapshot() instead of .get() to get notice immediately
-      .onSnapshot(
-        (querySnapshot) => {
-          let confirmfriend = [];
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            if (doc.data().status === "askUrConfirm") {
-              console.log(doc.id, " => ", doc.data());
-              confirmfriend.push(doc.data());
-            }
-          })
-          this.setState({ confirmfriend });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    // )
+    // this.setState({ goToChat: true, friendID: id });
+    this.setState({ goToChat: true });
   }
   handleSubmit(id, name, avatar) {
-    console.log(id, name, avatar);
-    this.props.confirmFriend(id, name, avatar);
+    // console.log(id, name, avatar);
+    // this.props.addFriend(id, name, avatar);
+    this.setState({ showCard: !this.state.showCard })
+  }
+  showCard(item) {
+    // console.log('personinfo', item);
+    this.setState({ clickWhom: item, showCard: !this.state.showCard });
+  }
+  closeCard() {
+    this.setState({ showCard: !this.state.showCard })
   }
   render() {
     console.log('confirmfriend', this.state);
-    const { confirmfriend } = this.state
-    return (
-      <div className="view">
-        <h3>Your Friend Requests</h3>
-        <div className="container">
-          {confirmfriend.map(item => (
-            <div className="friend-box" key={item.id}>
-              <img className="avatar" src={item.avatar} alt="avatar" />
+    console.log('confirmfriend', this.props);
+    console.log('confirmfriend', this.props.props.history);
+    const { confirmfriend, showCard, clickWhom } = this.state;
+
+    if (this.state.goToChat) {
+      return <Redirect to="/message" />
+    }
+    if (confirmfriend.length > 0) {
+      return (
+        <div className="view">
+          <h3>Your Friend Requests</h3>
+          <div className="container">
+            {confirmfriend.map(item => (
+              <div className="friend-box" key={item.id} onClick={this.showCard.bind(this, item)}>
+                <img className="avatar" src={item.avatar} alt="avatar" />
+                <div className="center">
+                  <h4>{item.name}</h4>
+                  <button onClick={this.confirmFriend.bind(this,item.id,item.name,item.avatar)}>Chat</button>
+                </div>
+              </div>
+            ))}
+          </div>
+          {showCard ? (
+            <div className="show-card">
               <div className="center">
-                <h4>{item.name}</h4>
-                <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+                <img className="avatar" src={clickWhom.avatar} alt="avatar" />
+                <p>
+                  <b>{clickWhom.username}</b>
+                </p>
+              </div>
+              <p>
+                <b>Intro</b>
+              </p>
+              <p>{clickWhom.bio}</p>
+              <div className="container">
+                <div className="container-1">
+                  <p>
+                    <b>Age&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Star-Sign&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Gender&ensp;</b>
+                    {clickWhom.gender}
+                  </p>
+                </div>
+                {/* <div className="line"></div> */}
+                <div className="container-2">
+                  <p>
+                    <b>Last online&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Country&ensp;</b>
+                    {clickWhom.country}
+                  </p>
+                  <p>
+                    <b>Location&ensp;</b>
+                    {clickWhom.location}
+                  </p>
+                </div>
+              </div>
+              <p>
+                <b>Interest&ensp;</b>
+                {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
+              </p>
+              <p>
+                <b>Language&ensp;</b>
+                {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
+              </p>
+              <div className="container">
+                <div className="go-back" onClick={this.closeCard}>
+                  <ArrowBackSharpIcon style={{ fontSize: 40 }} />
+                  Go Back
+                  </div>
+                <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Add Friend</button>
               </div>
             </div>
-          ))}
+          ) : null}
         </div>
-      </div>
-    )
+      )
+    } else {
+      return (
+        <div>
+          Loading
+        </div>
+      )
+    }
   }
 }
 
@@ -393,35 +486,37 @@ function createRoomID(uid1, uid2) {
   }
 }
 
-class ReferFriend extends Component {
+class DiscoverFriend extends Component {
   constructor(props) {
     super(props);
     this.state = {
       showCard: false,
       clickWhom: ''
     }
-    // this.handleSubmit = this.handleSubmit.bind(this);
+    this.closeCard = this.closeCard.bind(this);
   }
   handleSubmit(id, name, avatar) {
     // console.log(id, name, avatar);
     this.props.addFriend(id, name, avatar);
+    this.setState({ showCard: !this.state.showCard })
   }
-  clickToShow(item) {
-    console.log('personinfo', item);
+  showCard(item) {
+    // console.log('personinfo', item);
     this.setState({ clickWhom: item, showCard: !this.state.showCard });
   }
   closeCard() {
     this.setState({ showCard: !this.state.showCard })
   }
   render() {
+    const { showCard, clickWhom } = this.state;
     console.log('referfriend', this.props);
     return (
       <div className="view">
         <h3>Discover new friends here!</h3>
         <div className="container">
           {this.props.referlist.map(item => (
-            // <div key={item.id} className="friend-box" onClick={this.clickToShow.bind(this,item)}>
-            <div key={item.id} className="friend-box">
+            <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
+              {/* <div key={item.id} className="friend-box"> */}
               <img className="avatar" src={item.avatar} alt="avatar" />
               <p>
                 <b>{item.username}</b>
@@ -432,38 +527,96 @@ class ReferFriend extends Component {
               <p>{item.language}</p>
               {/* <p>Language: {item.language}</p> */}
               <p>
-                <b>{item.interest}</b>
+                {/* <b>{item.interest}</b> */}
                 {/* <b>Interest: {item.interest}</b> */}
+                {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
               </p>
-              <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
+              {/* <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button> */}
             </div>
           ))}
           {/* { this.state.showCard ? <ShowCard clickWhom={this.state.clickWhom} closeCard = {this.closeCard.bind(this)} />: null } */}
         </div>
+        {showCard ? (
+          <div className="show-card">
+            <div className="center">
+              <img className="avatar" src={clickWhom.avatar} alt="avatar" />
+              <p>
+                <b>{clickWhom.username}</b>
+              </p>
+            </div>
+            <p>
+              <b>Intro</b>
+            </p>
+            <p>{clickWhom.bio}</p>
+            <div className="container">
+              <div className="container-1">
+                <p>
+                  <b>Age&ensp;</b>
+                </p>
+                <p>
+                  <b>Star-Sign&ensp;</b>
+                </p>
+                <p>
+                  <b>Gender&ensp;</b>
+                  {clickWhom.gender}
+                </p>
+              </div>
+              {/* <div className="line"></div> */}
+              <div className="container-2">
+                <p>
+                  <b>Last online&ensp;</b>
+                </p>
+                <p>
+                  <b>Country&ensp;</b>
+                  {clickWhom.country}
+                </p>
+                <p>
+                  <b>Location&ensp;</b>
+                  {clickWhom.location}
+                </p>
+              </div>
+            </div>
+            <p>
+              <b>Interest&ensp;</b>
+              {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
+            </p>
+            <p>
+              <b>Language&ensp;</b>
+              {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
+            </p>
+            <div className="container">
+              <div className="go-back" onClick={this.closeCard}>
+                <ArrowBackSharpIcon style={{ fontSize: 40 }} />
+                Go Back
+                </div>
+              <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Add Friend</button>
+            </div>
+          </div>
+        ) : null}
       </div>
     )
   }
 }
-class ShowCard extends Component {
-  constructor(props) {
-    super(props);
-    this.changeToClose = this.changeToClose.bind(this);
-  }
-  changeToClose() {
-    this.props.closeCard();
-    console.log(this.props);
-  }
-  render() {
-    console.log('showcard', this.props);
-    return (
+// class ShowCard extends Component {
+//   constructor(props) {
+//     super(props);
+//     this.changeToClose = this.changeToClose.bind(this);
+//   }
+//   changeToClose() {
+//     this.props.closeCard();
+//     console.log(this.props);
+//   }
+//   render() {
+//     console.log('showcard', this.props);
+//     return (
 
-      <div className="showCard">
-        ShowCard
-        <button onClick={this.changeToClose}>Go Back</button>
-        <button >Add Friend</button>
-      </div>
-    )
-  }
-}
+//       <div className="showCard">
+//         ShowCard
+//         <button onClick={this.changeToClose}>Go Back</button>
+//         <button >Add Friend</button>
+//       </div>
+//     )
+//   }
+// }
 
 export default Home;

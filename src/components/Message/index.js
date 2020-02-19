@@ -158,25 +158,27 @@ class MessageBase extends Component {
     // 要有資料防護機制 在還沒 load 完之前不能按？
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
     console.log('input', this.state.document[0].friendInfo.uid);
-    let roomID = createRoomID(UserData.authUser.uid, this.state.talkToWhom)
-    // let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
-    firebase.db.collection("Room").doc(roomID).collection("message").doc()
-      .set(
-        {
-          sender: UserData.userInfo.id,
-          content: this.state.value,
-          timestamp: Date.now()
-        }
-      )
-      .then(
-        () => { this.setState({ value: '' }) }
-      )
-    firebase.db.collection("Room").doc(roomID)
-      .update(
-        {
-          timestamp: Date.now()
-        }
-      )
+    if (this.state.value !== '') {
+      let roomID = createRoomID(UserData.authUser.uid, this.state.talkToWhom)
+      // let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
+      firebase.db.collection("Room").doc(roomID).collection("message").doc()
+        .set(
+          {
+            sender: UserData.userInfo.id,
+            content: this.state.value,
+            timestamp: Date.now()
+          }
+        )
+        .then(
+          () => { this.setState({ value: '' }) }
+        )
+      firebase.db.collection("Room").doc(roomID)
+        .update(
+          {
+            timestamp: Date.now()
+          }
+        )
+    }
   }
   render() {
     // console.log("render", this.state.document);
@@ -212,16 +214,6 @@ class MessageBase extends Component {
                       </label>
                     </div>
                   ))}
-                  {/* {this.state.document.map(item => (
-                    <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
-                      <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
-                      <div className="container">
-                        <b className="name">{item.friendInfo.name}</b>
-                        <br />
-                        <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
-                      </div>
-                    </div>
-                  ))} */}
                 </div>
                 <div className="headerDivider"></div>
 
@@ -237,7 +229,6 @@ class MessageBase extends Component {
                 </div>
                 {/* <div className="headerDivider"></div>  */}
                 {/* <ChatRoom friend={this.state.friend} /> */}
-
                 {/* <friendProfile friendList={this.state.friendList}/> */}
               </div>
             </div>
@@ -318,7 +309,6 @@ class Conversation extends Component {
         <div className="my-dialog">
           <div>在第5版中將地圖添加到ECMA-262標準中； 因此，它可能並不存在於該標準的所有實現中。 您可以通過在腳本的開頭插入以下代碼來解決此問題，從而允許在本身不支持它的實現中使用map。 假設Object</div>
         </div> */}
-
         {this.props.chat.map((item, index) => {
           console.log(item.sender);
           if (item.sender === "admin") {

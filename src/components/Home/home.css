@@ -103,6 +103,45 @@
     margin: 1%;
     text-align: center;
 }
+.home>.main>.view>.show-card{
+    position: fixed;
+    top: 80px;
+    background-color: white;
+    width: 40%;
+    box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 5px;
+    padding: 2%;
+    border: 3px
+}
+.home>.main>.view>.show-card>.center>.avatar{
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 2px #ffd32a solid;
+    width: 80px;
+    height: 80px;
+    margin: 1%;
+    text-align: center;
+}
+.home>.main>.view>.show-card>.container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+.home>.main>.view>.show-card>.container>.container1 {
+    display: flex;
+    width: 50%;
+}
+.home>.main>.view>.show-card>.container>.container2 {
+    display: flex;
+    width: 50%;
+}
+.home>.main>.view>.show-card>.center {
+    text-align: center;
+}
+.home>.main>.view>.show-card>.container>.go-back {
+    display: inline-flex;
+    align-items: center;
+}
 .home>.main>.view>.confirm-friend {
     padding: 4%; 
     width: 22%;
@@ -111,7 +150,6 @@
 .home>.main>.view>.display>.avatar {
     width: 150px;
 }
-
 .home>.main>.view>.confirm-friend>.confirm-box {
     display: inline-flex;
     margin: 2%;
@@ -124,6 +162,7 @@
 .home>.main>.view>.confirm-friend>.confirm-box>.avatar {
     width: 90px;
 }
+
 
 @media (max-width: 500px) {
     .home>.main>.view>.container{
