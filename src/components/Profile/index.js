@@ -114,6 +114,7 @@ class ProfileBase extends Component {
       return (
         <div className="profile">
           <Navbar />
+          
           <div className="main">
             <Display userInfo={this.props.UserData.userInfo} />
             <Setting userInfo={this.props.UserData.userInfo} />

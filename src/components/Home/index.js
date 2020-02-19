@@ -28,18 +28,19 @@ class HomeBase extends Component {
     this.state = {
       error: null,
       isLoaded: false,
-      myfriend: [],
+      isLoaded_friend: false,
+      // myfriend: [],
       // friendlist: [],
       referlist: [],
       goToChat: false,
-      friendID: '',
-      isLoaded_friend: false,
-      confirmfriend: []
+      selected: 'discover',
+      // friendID still not used yet
+      friendID: ''
     }
     this.addFriend = this.addFriend.bind(this);
     this.referFriends = this.referFriends.bind(this);
-    this.friendInvite = this.friendInvite.bind(this);
     this.confirmFriend = this.confirmFriend.bind(this);
+    this.sideNav = this.sideNav.bind(this);
   }
 
   // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
@@ -148,30 +149,7 @@ class HomeBase extends Component {
         }
       )
   }
-  friendInvite() {
-    const { firebase, UserData } = this.props;
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
-      // .get()
-      // .then(
-      // use .onSnapshot() instead of .get() to get notice immediately
-      .onSnapshot(
-        (querySnapshot) => {
-          let confirmfriend = [];
-          querySnapshot.forEach((doc) => {
-            // doc.data() is never undefined for query doc snapshots
-            if (doc.data().status === "askUrConfirm") {
-              console.log(doc.id, " => ", doc.data());
-              confirmfriend.push(doc.data());
-            }
-          })
-          this.setState({ confirmfriend });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
-    // )
-  }
+
   confirmFriend(id, name, avatar) {
     const { firebase, UserData } = this.props;
     console.log(UserData);
@@ -219,13 +197,16 @@ class HomeBase extends Component {
     UserData.updateUserData({ friendID: id })
     this.setState({ goToChat: true, friendID: id });
   }
+  sideNav(e, name) {
+    this.setState({ selected : name });
+  }
   render() {
     console.log('home', this.state);
     if (this.state.goToChat) {
       return <Redirect to="/message" />
     }
     // const { friendlist } = this.state
-    const { error, isLoaded, referlist, confirmfriend } = this.state
+    const { error, isLoaded, referlist } = this.state
     if (error) {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
@@ -241,81 +222,151 @@ class HomeBase extends Component {
             <Navigation />
           </div>
           <div className="main">
-            <ul>
-              <li className="discover-friends">
+            <ul className="sideNav">
+              <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'discover')}>
                 <Link to='/home'>Discover Friends</Link>
               </li>
-              <li className="friend-requests">
+              <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'requests')}>
                 <Link to='/home/friend-requests'>Friend Requests</Link>
               </li>
-              <li className="my-friend">
+              <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={(e)=>this.sideNav(e, 'myfriend')}>
                 <Link to='/home/my-friend'>My Friend</Link>
               </li>
             </ul>
-            {/* <div className="sideNav">
-                <div className="discover-friends">Discover Friends</div>
-                <div className="friend-requests" onClick={this.friendInvite}>Friend Requests</div>
-                <div className="my-friend">My Friend Lists</div>
-              </div> */}
-            <div className="view">
-              <Switch>
-                <Route exact path='/home' render={(props) => (<ReferFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
-                {/* <Route path='/home/friend-requests' render={() => <ConfirmFriend />} /> */}
-                <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} confirmfriend={confirmfriend} confirmFriend={this.confirmFriend.bind(this)} />)} />
-                {/* <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} confirmfriend={confirmfriend} confirmFriend={this.confirmFriend.bind(this)} />)} /> */}
-              </Switch>
-              {/* <ConfirmFriend confirmfriend={confirmfriend}
-                confirmFriend={this.confirmFriend.bind(this)}
-              /> */}
-            </div>
-            {/* <div className="view">
-              <ReferFriend referlist={referlist} addFriend={this.addFriend.bind(this)} />
-              <ConfirmFriend confirmfriend={confirmfriend}
-                confirmFriend={this.confirmFriend.bind(this)}
-              />
-            </div> */}
+            <Switch>
+              <Route exact path='/home' render={(props) => (<ReferFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
+              <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} props={this.props} />)} />
+              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+            </Switch>
           </div>
         </div>
       )
     }
   }
 }
-// class ConfirmFriend extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-
-//   render() {
-//     return (
-
-//     );
-//   }
-// }
+class MyFriend extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      myfriend: []
+    }
+    this.myFriend = this.myFriend.bind(this);
+  }
+  componentDidMount() {
+    const { UserData } = this.props.props;
+    if (UserData.authUser) {
+      this.myFriend();
+    }
+  }
+  myFriend() {
+    const { firebase, UserData } = this.props.props;
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+      .onSnapshot(
+        (querySnapshot) => {
+          let myfriend = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (doc.data().status === "confirm") {
+              console.log(doc.id, " => ", doc.data());
+              myfriend.push(doc.data());
+            }
+          })
+          this.setState({ myfriend });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+  }
+  render() {
+    console.log('myfriend', this.state)
+    return (
+      <div className="view">
+        <h3>Your Friends</h3>
+        <div className="container">
+          {this.state.myfriend.map(item => (
+            <div className="friend-box" key={item.id}>
+              <img className="avatar" src={item.avatar} alt="avatar" />
+              <div className="center">
+                <h4>{item.name}</h4>
+                {/* <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button> */}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+}
 
 class ConfirmFriend extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      confirmfriend: []
+    }
+    this.friendInvite = this.friendInvite.bind(this);
+  }
+  componentDidMount() {
+    // console.log('confirmfriend', this.props)
+    // console.log('confirmfriend', this.props.props)
+    console.log('confirmfriend', this.context)
+    const { UserData } = this.props.props;
+    if (UserData.authUser) {
+      this.friendInvite();
+    }
+  }
+  componentDidUpdate() {
+    console.log('confirmfriend', this.props)
+    console.log('confirmfriend', this.state)
+    console.log('confirmfriend', this.context)
+    // this.friendInvite();
+  }
+  friendInvite() {
+    const { firebase, UserData } = this.props.props;
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+      // .get()
+      // .then(
+      // use .onSnapshot() instead of .get() to get notice immediately
+      .onSnapshot(
+        (querySnapshot) => {
+          let confirmfriend = [];
+          querySnapshot.forEach((doc) => {
+            // doc.data() is never undefined for query doc snapshots
+            if (doc.data().status === "askUrConfirm") {
+              console.log(doc.id, " => ", doc.data());
+              confirmfriend.push(doc.data());
+            }
+          })
+          this.setState({ confirmfriend });
+        },
+        (error) => {
+          console.log(error)
+        }
+      )
+    // )
   }
   handleSubmit(id, name, avatar) {
     console.log(id, name, avatar);
     this.props.confirmFriend(id, name, avatar);
   }
   render() {
-    console.log('confirmfriend', this.props);
-    const { confirmfriend } = this.props
+    console.log('confirmfriend', this.state);
+    const { confirmfriend } = this.state
     return (
-      <div className="confirm-friend">
-        <h3>Friend Invitation</h3>
-        {confirmfriend.map(item => (
-          <div className="confirm-box" key={item.id}>
-            <h3>Friend Invitation</h3>
-            <img className="avatar" src={item.avatar} alt="avatar" />
-            <div className="center">
-              <h4>{item.name}</h4>
-              <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+      <div className="view">
+        <h3>Your Friend Requests</h3>
+        <div className="container">
+          {confirmfriend.map(item => (
+            <div className="friend-box" key={item.id}>
+              <img className="avatar" src={item.avatar} alt="avatar" />
+              <div className="center">
+                <h4>{item.name}</h4>
+                <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+              </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     )
   }
@@ -363,29 +414,32 @@ class ReferFriend extends Component {
     this.setState({ showCard: !this.state.showCard })
   }
   render() {
-    console.log('referfriend',this.props);
+    console.log('referfriend', this.props);
     return (
-      <div className="container">
-        {this.props.referlist.map(item => (
-          // <div key={item.id} className="friend-box" onClick={this.clickToShow.bind(this,item)}>
-          <div key={item.id} className="friend-box">
-            <img className="avatar" src={item.avatar} alt="avatar" />
-            <p>
-              <b>{item.username}</b>
-            </p>
-            <p>{item.country}</p>
-            {/* <p>Country: {item.country}</p> */}
-            <hr />
-            <p>{item.language}</p>
-            {/* <p>Language: {item.language}</p> */}
-            <p>
-              <b>{item.interest}</b>
-              {/* <b>Interest: {item.interest}</b> */}
-            </p>
-            <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
-          </div>
-        ))}
-        {/* { this.state.showCard ? <ShowCard clickWhom={this.state.clickWhom} closeCard = {this.closeCard.bind(this)} />: null } */}
+      <div className="view">
+        <h3>Discover new friends here!</h3>
+        <div className="container">
+          {this.props.referlist.map(item => (
+            // <div key={item.id} className="friend-box" onClick={this.clickToShow.bind(this,item)}>
+            <div key={item.id} className="friend-box">
+              <img className="avatar" src={item.avatar} alt="avatar" />
+              <p>
+                <b>{item.username}</b>
+              </p>
+              <p>{item.country}</p>
+              {/* <p>Country: {item.country}</p> */}
+              <hr />
+              <p>{item.language}</p>
+              {/* <p>Language: {item.language}</p> */}
+              <p>
+                <b>{item.interest}</b>
+                {/* <b>Interest: {item.interest}</b> */}
+              </p>
+              <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button>
+            </div>
+          ))}
+          {/* { this.state.showCard ? <ShowCard clickWhom={this.state.clickWhom} closeCard = {this.closeCard.bind(this)} />: null } */}
+        </div>
       </div>
     )
   }
