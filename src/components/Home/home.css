@@ -94,7 +94,7 @@
 .home>.main>.view>.container>.friend-box>.avatar{
     vertical-align: middle;
     border-radius: 50%;
-    border: 1px #ffd32a solid;
+    border: 2px #ffd32a solid;
     width: 80px;
     height: 80px;
     margin: 1%;

@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { 
+  BrowserRouter as Router, 
+  Switch, 
+  Route } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import LandingPage from '../Landing';
 import HomePage from '../Home';
@@ -58,31 +61,10 @@ class AppBase extends Component {
                 console.log(error)
               }
             )
-        //// get method
-        //   this.props.firebase.db.collection("Users").doc(authUser.uid)
-        //     .get()
-        //     .then(
-        //       (doc) => {
-        //         if (doc.exists) {
-        //           console.log("Document data:", doc.data());
-        //           this.setState({ userInfo: doc.data() })
-        //         } else {
-        //           // doc.data() will be undefined in this case
-        //           console.log("No such document!");
-        //         }
-        //       }
-        //     )
-        //     .catch(function (error) {
-        //       console.log("Error getting document:", error);
-        //     });
-        // }
         }
         else {
           this.setState({ authUser: null });
         }
-        // authUser
-        //   ? this.setState({ authUser: authUser })
-        //   : this.setState({ authUser: null });
       },
     );
   }
@@ -93,13 +75,13 @@ class AppBase extends Component {
     return (
       <AuthUserContext.Provider value={this.state}>
         <Router>
-          <>
-            <Route exact path={ROUTES.LANDING} component={LandingPage} />
-            <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-            <Route path={ROUTES.HOME} component={HomePage} />
-            <Route path={ROUTES.MESSAGE} component={MessagePage} />
-            <Route path={ROUTES.PROFILE} component={ProfilePage} />
-          </>
+         <Switch>
+          <Route exact path={ROUTES.LANDING} component={LandingPage} />
+          <Route path={ROUTES.ACCOUNT} component={AccountPage} />
+          <Route path={ROUTES.HOME} component={HomePage} />
+          <Route path={ROUTES.MESSAGE} component={MessagePage} />
+          <Route path={ROUTES.PROFILE} component={ProfilePage} />
+         </Switch>
         </Router>
       </AuthUserContext.Provider>
     )

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import Navigation from '../App/navigation.js';
 import './home.css';
 import { FirebaseContext } from '../../index.js';
@@ -243,13 +243,13 @@ class HomeBase extends Component {
           <div className="main">
             <ul>
               <li className="discover-friends">
-                <Link to='/'>Discover Friends</Link>
+                <Link to='/home'>Discover Friends</Link>
               </li>
               <li className="friend-requests">
-                <Link to='/friend-requests'>Friend Requests</Link>
+                <Link to='/home/friend-requests'>Friend Requests</Link>
               </li>
               <li className="my-friend">
-                <Link to='/my-friend'>My Friend</Link>
+                <Link to='/home/my-friend'>My Friend</Link>
               </li>
             </ul>
             {/* <div className="sideNav">
@@ -258,12 +258,22 @@ class HomeBase extends Component {
                 <div className="my-friend">My Friend Lists</div>
               </div> */}
             <div className="view">
+              <Switch>
+                <Route exact path='/home' render={(props) => (<ReferFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
+                {/* <Route path='/home/friend-requests' render={() => <ConfirmFriend />} /> */}
+                <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} confirmfriend={confirmfriend} confirmFriend={this.confirmFriend.bind(this)} />)} />
+                {/* <Route path='/home/friend-requests' render={(props) => (<ConfirmFriend {...props} confirmfriend={confirmfriend} confirmFriend={this.confirmFriend.bind(this)} />)} /> */}
+              </Switch>
+              {/* <ConfirmFriend confirmfriend={confirmfriend}
+                confirmFriend={this.confirmFriend.bind(this)}
+              /> */}
+            </div>
+            {/* <div className="view">
               <ReferFriend referlist={referlist} addFriend={this.addFriend.bind(this)} />
-              <br />
               <ConfirmFriend confirmfriend={confirmfriend}
                 confirmFriend={this.confirmFriend.bind(this)}
               />
-            </div>
+            </div> */}
           </div>
         </div>
       )
@@ -274,7 +284,14 @@ class HomeBase extends Component {
 //   constructor(props) {
 //     super(props);
 //   }
-    
+
+//   render() {
+//     return (
+
+//     );
+//   }
+// }
+
 class ConfirmFriend extends Component {
   constructor(props) {
     super(props);
@@ -284,10 +301,11 @@ class ConfirmFriend extends Component {
     this.props.confirmFriend(id, name, avatar);
   }
   render() {
-    console.log(this.props)
+    console.log('confirmfriend', this.props);
     const { confirmfriend } = this.props
     return (
       <div className="confirm-friend">
+        <h3>Friend Invitation</h3>
         {confirmfriend.map(item => (
           <div className="confirm-box" key={item.id}>
             <h3>Friend Invitation</h3>
@@ -345,7 +363,7 @@ class ReferFriend extends Component {
     this.setState({ showCard: !this.state.showCard })
   }
   render() {
-    console.log(this.props);
+    console.log('referfriend',this.props);
     return (
       <div className="container">
         {this.props.referlist.map(item => (
