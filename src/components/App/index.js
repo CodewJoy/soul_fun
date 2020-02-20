@@ -9,7 +9,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import MessagePage from '../Message';
 import ProfilePage from '../Profile';
-
+import Loading from '../img/loading.gif';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 
@@ -34,7 +34,7 @@ class AppBase extends Component {
     };
 
     this.state = {
-      authUser: null,
+      authUser: "",
       userInfo: '',
       updateUserData: this.updateUserData
     };
@@ -77,10 +77,38 @@ class AppBase extends Component {
         <Router>
          <Switch>
           <Route exact path={ROUTES.LANDING} component={LandingPage} />
-          <Route path={ROUTES.ACCOUNT} component={AccountPage} />
-          <Route path={ROUTES.HOME} component={HomePage} />
-          <Route path={ROUTES.MESSAGE} component={MessagePage} />
-          <Route path={ROUTES.PROFILE} component={ProfilePage} />
+          <Route path={ROUTES.ACCOUNT} render={() => {
+            if(this.state.authUser=== "") {
+              return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+            } else if(this.state.authUser=== null) {
+              return (<LandingPage/>)
+            } else {
+              return (<AccountPage/> )
+            }}} />
+          <Route path={ROUTES.HOME} render={() => {
+            if(this.state.authUser=== "") {
+              return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+            } else if(this.state.authUser=== null) {
+              return (<LandingPage/>)
+            } else {
+              return (<HomePage/>)
+            }}} />
+          <Route path={ROUTES.MESSAGE} render={() => {
+            if(this.state.authUser=== "") {
+              return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+            } else if(this.state.authUser=== null) {
+              return (<LandingPage/>)
+            } else {
+              return (<MessagePage/>)
+            }}} />
+          <Route path={ROUTES.PROFILE} render={() => {
+            if(this.state.authUser=== "") {
+              return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+            } else if(this.state.authUser=== null) {
+              return (<LandingPage/>)
+            } else {
+              return (<ProfilePage/>)
+            }}} />
          </Switch>
         </Router>
       </AuthUserContext.Provider>

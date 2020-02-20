@@ -59,6 +59,10 @@
     padding: 16px;
     text-decoration: none;
   }
+  .home>.main>.sideNav>li>a {
+    font-size: 18px;
+    padding: 2%;
+  }
   /* add active classname */
   .home>.main>.sideNav>li.active {
     background-color: #63cdda;

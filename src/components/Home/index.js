@@ -27,6 +27,7 @@ class HomeBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      goToHome: false,
       error: null,
       isLoaded: false,
       isLoaded_friend: false,
@@ -46,7 +47,13 @@ class HomeBase extends Component {
     const { isLoaded } = this.state;
     if (UserData.authUser) {
       this.referFriends(UserData, firebase, isLoaded);
-    }
+    } 
+    // else if (UserData.authUser === "") {
+    //   this.setState({ isLoaded: false });
+    // } 
+    // else {
+    //   this.setState({ goToHome: true });
+    // }
   }
   // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
   componentDidUpdate() {
@@ -152,7 +159,10 @@ class HomeBase extends Component {
   render() {
     console.log('home', this.state);
     const { friendlist } = this.state
-    const { error, isLoaded, referlist } = this.state
+    const { error, isLoaded, referlist } = this.state;
+    if (this.state.goToHome) {
+      return <Redirect to="/" />
+    }
     if (error) {
       return <div>Error: {error.message}</div>
     } else if (!isLoaded) {
@@ -196,8 +206,11 @@ class MyFriend extends Component {
     this.state = {
       myfriend: [],
       goToChat: false,
+      showCard: false,
+      clickWhom: '',
     }
     this.myFriend = this.myFriend.bind(this);
+    this.closeCard = this.closeCard.bind(this);
   }
   componentDidMount() {
     const { UserData } = this.props.props;
@@ -239,7 +252,25 @@ class MyFriend extends Component {
       );
     this.setState({ goToChat: true });
   }
+  showCard(id) {
+    console.log('personinfo', id);
+    this.props.props.firebase.db.collection("Users").doc(id)
+      .get()
+      .then(
+        (doc) => {
+          console.log("Document data:", doc.data());
+          this.setState({ clickWhom: doc.data(), showCard: !this.state.showCard });
+        }
+      )
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });
+  }
+  closeCard() {
+    this.setState({ showCard: !this.state.showCard })
+  }
   render() {
+    const { showCard, clickWhom } = this.state;
     console.log('myfriend', this.state);
     if (this.state.goToChat) {
       return <Redirect to="/message" />
@@ -253,11 +284,68 @@ class MyFriend extends Component {
               <img className="avatar" src={item.avatar} alt="avatar" />
               <div className="center">
                 <h4>{item.name}</h4>
-                <button onClick={this.handleSubmit.bind(this, item.id, item.name, item.avatar)}>Chat</button>
+                <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
               </div>
             </div>
           ))}
         </div>
+        {showCard ? (
+          <div className="show-card">
+            <div className="center">
+              <img className="avatar" src={clickWhom.avatar} alt="avatar" />
+              <p>
+                <b>{clickWhom.username}</b>
+              </p>
+            </div>
+            <p>
+              <b>Intro</b>
+            </p>
+            <p>{clickWhom.bio}</p>
+            <div className="container">
+              <div className="container-1">
+                <p>
+                  <b>Age&ensp;</b>
+                </p>
+                <p>
+                  <b>Star-Sign&ensp;</b>
+                </p>
+                <p>
+                  <b>Gender&ensp;</b>
+                  {clickWhom.gender}
+                </p>
+              </div>
+              {/* <div className="line"></div> */}
+              <div className="container-2">
+                <p>
+                  <b>Last online&ensp;</b>
+                </p>
+                <p>
+                  <b>Country&ensp;</b>
+                  {clickWhom.country}
+                </p>
+                <p>
+                  <b>Location&ensp;</b>
+                  {clickWhom.location}
+                </p>
+              </div>
+            </div>
+            <p>
+              <b>Interest&ensp;</b>
+              {clickWhom.interest.map(int => (<span key={int}>{int}&ensp;</span>))}
+            </p>
+            <p>
+              <b>Language&ensp;</b>
+              {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))}
+            </p>
+            <div className="container">
+              <div className="go-back" onClick={this.closeCard}>
+                <ArrowBackSharpIcon style={{ fontSize: 40 }} />
+                Go Back
+                  </div>
+              <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Chat</button>
+            </div>
+          </div>
+        ) : null}
       </div>
     );
   }
@@ -267,6 +355,7 @@ class FriendRequests extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoaded: false,
       confirmfriend: [],
       goToChat: false,
       showCard: false,
@@ -281,15 +370,18 @@ class FriendRequests extends Component {
   componentDidMount() {
     // console.log('confirmfriend', this.props)
     // console.log('confirmfriend', this.props.props)
-    console.log('confirmfriend', this.context);
     const { UserData } = this.props.props;
     if (UserData.authUser) {
       this.friendInvite();
     }
   }
-  // componentDidUpdate() {
-  //   // console.log('confirmfriend', this.props)
-  // }
+  componentDidUpdate() {
+    // console.log('confirmfriend', this.props)
+    if (!this.state.isLoaded) {
+      this.friendInvite();
+      this.setState({ isLoaded: true });
+    }
+  }
   friendInvite() {
     const { firebase, UserData } = this.props.props;
     firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
@@ -360,38 +452,45 @@ class FriendRequests extends Component {
     // this.setState({ goToChat: true, friendID: id });
     this.setState({ goToChat: true });
   }
-  handleSubmit(id, name, avatar) {
-    // console.log(id, name, avatar);
-    // this.props.addFriend(id, name, avatar);
-    this.setState({ showCard: !this.state.showCard })
-  }
-  showCard(item) {
-    // console.log('personinfo', item);
-    this.setState({ clickWhom: item, showCard: !this.state.showCard });
+  showCard(id) {
+    console.log('personinfo', id);
+    this.props.props.firebase.db.collection("Users").doc(id)
+      .get()
+      .then(
+        (doc) => {
+          console.log("Document data:", doc.data());
+          this.setState({ clickWhom: doc.data(), showCard: !this.state.showCard });
+        }
+      )
+      .catch(function (error) {
+        console.log("Error getting document:", error);
+      });
   }
   closeCard() {
     this.setState({ showCard: !this.state.showCard })
   }
   render() {
-    console.log('confirmfriend', this.state);
+    console.log('confirmfriend', this.state.confirmfriend);
+    console.log('clickWhom', this.state.clickWhom);
     console.log('confirmfriend', this.props);
-    console.log('confirmfriend', this.props.props.history);
     const { confirmfriend, showCard, clickWhom } = this.state;
 
     if (this.state.goToChat) {
       return <Redirect to="/message" />
     }
-    if (confirmfriend.length > 0) {
+    if (!this.state.isLoaded) {
+      return <div className="loading"><img src={Loading} alt="Loading" /></div>
+    } else {
       return (
         <div className="view">
           <h3>Your Friend Requests</h3>
           <div className="container">
             {confirmfriend.map(item => (
-              <div className="friend-box" key={item.id} onClick={this.showCard.bind(this, item)}>
+              <div className="friend-box" key={item.id}>
                 <img className="avatar" src={item.avatar} alt="avatar" />
                 <div className="center">
                   <h4>{item.name}</h4>
-                  <button onClick={this.confirmFriend.bind(this,item.id,item.name,item.avatar)}>Chat</button>
+                  <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
                 </div>
               </div>
             ))}
@@ -438,27 +537,21 @@ class FriendRequests extends Component {
               </div>
               <p>
                 <b>Interest&ensp;</b>
-                {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
+                {clickWhom.interest.map(int => (<span key={int}>{int}&ensp;</span>))}
               </p>
               <p>
                 <b>Language&ensp;</b>
-                {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
+                {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))}
               </p>
               <div className="container">
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                   Go Back
                   </div>
-                <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Add Friend</button>
+                <button onClick={this.confirmFriend.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Chat</button>
               </div>
             </div>
           ) : null}
-        </div>
-      )
-    } else {
-      return (
-        <div>
-          Loading
         </div>
       )
     }

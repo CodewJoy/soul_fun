@@ -110,24 +110,36 @@ class ProfileBase extends Component {
     // if (!isLoaded_friend) {
     //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
     // } else {
-      console.log(this.props)
-      return (
-        <div className="profile">
-          <Navbar />
-          
-          <div className="main">
-            <Display userInfo={this.props.UserData.userInfo} />
-            <Setting userInfo={this.props.UserData.userInfo} />
-            {/* <ConfirmFriend />
+    console.log(this.props)
+    return (
+      <div className="profile">
+        <Navbar />
+        <div className="main">
+          {/* <ul className="sideNav">
+            <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+              <Link to='/home'>Discover Friends</Link>
+            </li>
+            <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+              <Link to='/home/friend-requests'>Friend Requests</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
+            <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+          </Switch> */}
+          <Display userInfo={this.props.UserData.userInfo} />
+          <Setting userInfo={this.props.UserData.userInfo} />
+          {/* <ConfirmFriend />
             <ConfirmFriend confirmfriend={confirmfriend}
               confirmFriend={this.confirmFriend.bind(this)}
             /> */}
-          </div>
-          <div className="center-button">
-            <button>Change your profile</button>
-          </div>
         </div>
-      );
+        <div className="center-button">
+          <button>Edit</button>
+        </div>
+      </div>
+    );
   }
 }
 class ConfirmFriend extends Component {
