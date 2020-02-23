@@ -2,8 +2,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-import SignOutButton from '../LogOut';
 import { AuthUserContext } from '../Session';
+import PeopleSharpIcon from '@material-ui/icons/PeopleSharp';
+import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
+import ChatIcon from '@material-ui/icons/Chat';
+import NotificationsSharpIcon from '@material-ui/icons/NotificationsSharp';
 
 // only member can see this nav
 const Navigation = () => (
@@ -19,23 +22,22 @@ const Navigation = () => (
 const NavigationAuth = () => (
   <ul>
     <li>
-      <Link to={ROUTES.HOME}>Friends</Link>
+      <Link to={ROUTES.HOME}><PeopleSharpIcon style={{ fontSize: 35 }}/></Link>
+    </li>
+    <li>
+      <Link to={ROUTES.MESSAGE}><ChatIcon style={{ fontSize: 35 }}/></Link>
+    </li>
+    <li>
+      <Link to={ROUTES.PROFILE}><AccountCircleSharpIcon style={{ fontSize: 35 }}/></Link>
+    </li>
+    <li>
+      {/* <Link to={ROUTES.MESSAGE}> */}
+        <NotificationsSharpIcon style={{ fontSize: 35 }}/>
+      {/* </Link> */}
     </li>
     {/* <li>
-      <Link to={{
-        pathname: ROUTES.HOME,
-        state: { fromDashboard: true }
-      }}>Home</Link>
-    </li> */}
-    <li>
-      <Link to={ROUTES.PROFILE}>Profile</Link>
-    </li>
-    <li>
-      <Link to={ROUTES.MESSAGE}>Message</Link>
-    </li>
-    <li>
       <SignOutButton />
-    </li>
+    </li> */}
   </ul>
 );
 
@@ -46,28 +48,5 @@ const NavigationNonAuth = () => (
     </li>
   </ul>
 );
-
-// original one
-// const Navigation = () => (
-//   <div>
-//     <ul>
-//       {/* <li>
-//         <Link to={ROUTES.LANDING}>Landing</Link>
-//       </li> */}
-//       <li>
-//         <Link to={ROUTES.HOME}>Home</Link>
-//       </li>
-//       <li>
-//         <Link to={ROUTES.ACCOUNT}>Account</Link>
-//       </li>
-//       <li>
-//         <Link to={ROUTES.MESSAGE}>Message</Link>
-//       </li>
-//       <li>
-//         <SignOutButton />
-//       </li>
-//     </ul>
-//   </div>
-// );
 
 export default Navigation;

@@ -5,7 +5,10 @@ import Select from 'react-select'
 import './account.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import { INTERESTS } from '../../constants/factor.js';
 import Logo from '../img/logo.svg';
+import AddIcon from '@material-ui/icons/Add';
+
 
 const Account = () => (
   <>
@@ -21,21 +24,63 @@ const Account = () => (
   </>
 );
 
+class AccountBase extends Component {
+  constructor(props) {
+    super(props);
+    console.log(props);
+
+  }
+
+  render() {
+    return (
+      <div className="account">
+        <Navbar />
+
+        <Setting username={this.props.UserData.userInfo.username} />
+        {/* <Setting changeProfile={this.changeProfile.bind(this)} username={this.props.UserData.userInfo.username}
+            addToInterest={this.addToInterest.bind(this)} userInfo={this.state} /> */}
+
+        {/* <ul>
+          {this.state.items.map((item, i) =>
+            <li key={i}>
+              {item.text}
+              <input type="checkbox" onChange={this.onToggle.bind(this, i)} />
+            </li>
+          )}
+        </ul> */}
+      </div>
+    );
+  }
+}
+
+class Navbar extends Component {
+  render() {
+    return (
+      <div className="navbar">
+        <div className="logo">
+          <img className="logo-img" src={Logo} alt="Logo" />
+          <h3>SOULFUN</h3>
+        </div>
+      </div>
+    )
+  }
+}
+
 const INITIAL_STATE = {
   // username: 
   gender: 'male',
   birthday: "1995-01-01",
-  location: 'taiwan',
-  country: 'taiwan',
+  location: '',
+  country: '',
   language: '',
-  avatar: 'https://firebasestorage.googleapis.com/v0/b/personal-project-b5b0e.appspot.com/o/002-male.svg?alt=media&token=e78987fe-00b1-4848-aee7-dc621352875d',
+  avatar: '',
   bio: '',
+  hobby: {
+    'Travel': false, 'Diving': false, 'Hiking': false, 'Movies': false, 'Art': false, 'Photography': false, 'Music': false, 'Animals': false,
+    'Nature': false, 'Reading': false, 'Writing': false, 'Sports': false, 'Fitness': false, 'Language': false, 'Cooking': false, 'Coding': false, 'Gaming': false, 'Fashion': false,
+    'Psychology': false, 'Philosophy': false, 'Investing': false, 'Career': false, 'Coffee': false, 'Tea': false, 'Wine': false
+  },
   interest: [],
-  items: [
-    { text: 'coding', checked: false },
-    { text: 'reading', checked: false },
-    { text: 'diveing', checked: false },
-  ],
   isLoaded: false,
   fin_acc: false
 };
@@ -45,39 +90,16 @@ const options = [
   { value: 'chinese', label: 'Chinese' }
 ]
 
-class AccountBase extends Component {
+class Setting extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = { ...INITIAL_STATE };
-    this.changeProfile = this.changeProfile.bind(this);
     this.addToInterest = this.addToInterest.bind(this);
     this.saveToDB = this.saveToDB.bind(this);
+    this.onChange = this.onChange.bind(this);
+    // this.onAddInterest = this.onAddInterest.bind(this);
+    this.AddHobby = this.AddHobby.bind(this);
   }
-  changeProfile(value) {
-    this.setState(value, () => {
-      console.log(this.state)
-    });
-    console.log(this.props)
-    // this.props.UserData.updateUserDate(value)
-  }
-  addToInterest(value) {
-    this.setState(state => {
-      let interest = state.interest.concat(value);
-      return { interest };
-    }, () => {
-      console.log(this.state);
-    });
-  }
-
-  // onToggle(index) {
-  //   let newItems = this.state.items.slice();
-  //   newItems[index].checked = !newItems[index].checked;
-  //   this.setState({
-  //     items: newItems,
-  //     // interest
-  //   }, () => { console.log(this.state) });
-  // }
   saveToDB() {
     const { gender, birthday, location, country, language, avatar, bio, interest } = this.state;
 
@@ -99,155 +121,151 @@ class AccountBase extends Component {
         //this.props.history.push(ROUTES.ACCOUNT);
       })
   }
+
+  onChange(event) {
+    // console.log(event.target.name);
+    // console.log(event.target.value);
+    this.setState({ [event.target.name]: event.target.value }, () => {
+      console.log(this.state)
+    });
+    // console.log(this.props)
+    // this.props.changeProfile({ [event.target.name]: event.target.value });
+  }
+  AddHobby(e) {
+    const key = e.target.value;
+    console.log('hobby', key);
+    console.log('hobby', this.state);
+    // console.log('hobby',this.state.hobby);
+    // console.log('hobby',this.state.hobby[key]);
+    this.setState(state => ({
+      hobby: {
+        ...state.hobby,
+        [key]: !state.hobby[key]
+      }
+    }))
+    this.addToInterest()
+  }
+  addToInterest() {
+    let interest = [];
+    let hobby = this.state.hobby;
+    for (const key in hobby) {
+      if (hobby[key]) {
+        interest.push[key];
+      }
+    }
+    console.log(interest)
+    console.log(this.state.interest)
+    // this.setState(state => {
+    //   let interest = state.interest.concat(value);
+    //   return { interest };
+    // }, () => {
+    //   console.log(this.state);
+    // });
+  }
   render() {
+    console.log(this.props)
+    console.log(this.state)
     console.log("fin_acc", this.state.fin_acc);
     if (this.state.fin_acc) {
       return <Redirect to="/home" />;
     }
     console.log('account:', this.props);
     return (
-      <div className="account">
-        <Navbar />
-        <div className="main">
-          <Display changeProfile={this.changeProfile.bind(this)} username={this.props.UserData.userInfo.username} userInfo={this.state} />
-          <Setting changeProfile={this.changeProfile.bind(this)}
-            addToInterest={this.addToInterest.bind(this)} userInfo={this.state} />
+      <div className="main">
+        <br/>
+        {/* <h3>Welcome {this.props.username}! Share more about you :)</h3> */}
+        <div className="view">
+          <div className="setting-1">
+            <div className="upload">
+              <div className="border">
+                <div className="avatar">
+                  <AddIcon style={{ size: 60 }} />
+                </div>
+              </div>
+              {/* <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" /> */}
+              <p>
+                <sub>
+                  *Upload a picture that represents you.
+              </sub>
+              </p>
+            </div>
+            <p><b>Gender</b></p>
+            <form className="gender line">
+              <input type="radio" name="gender" value="male" checked={this.state.gender === "male"} onChange={this.onChange} />Male&emsp;<br />
+              <input type="radio" name="gender" value="female" checked={this.state.gender === "female"} onChange={this.onChange} /> Female&emsp;<br />
+              <input type="radio" name="gender" value="non-binary" checked={this.state.gender === "non-binary"} onChange={this.onChange} /> Non-binary&emsp;<br />
+              {/* <input type="submit" value="Save" /> */}
+            </form>
+            <br />
+            <form className="birthday" >
+              <p><b>When is your birthday?</b></p>
+              <input type="date" name="birthday" value={this.state.birthday} onChange={this.onChange} required />
+              <p>
+                <sub>*You must be at least 18 years old to use SOULFUN.</sub>
+              </p>
+            </form>
+            <div className="country">
+              <p><b>Where are you from?</b></p>
+              <form>
+                <select value={this.state.country} name="country" onChange={this.onChange}>
+                  <option value="Taiwan">Taiwan</option>
+                  <option value="U.S.">U.S.</option>
+                  <option value="France">France</option>
+                  <option value="Japan">Japan</option>
+                </select>
+              </form>
+              {/* <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/> */}
+            </div>
+            <br />
+            <div className="location">
+              <p><b>Where do you primarily live?</b></p>
+              <form>
+                <select value={this.state.location} name="location" onChange={this.onChange}>
+                  <option value="Taiwan">Taiwan</option>
+                  <option value="U.S.">U.S.</option>
+                  <option value="France">France</option>
+                  <option value="Japan">Japan</option>
+                </select>
+              </form>
+              {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/> */}
+            </div>
+            <br />
+          </div>
+          <div className="setting-2">
+            <div className="language">
+              <p><b>what kind of language do you speak?</b></p>
+              <Select options={options} onChange={this.onChange} />
+              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.onChange} /> */}
+            </div>
+            <br />
+            <p><b>Pick some topics you are interested in.</b></p>
+            <p>
+              <sub>*We will use them to find the friend with common interests.</sub>
+            </p>
+            <form className='interest line'>
+              {INTERESTS.map(item => (
+                <div key={item}>
+                  <input type="checkbox" name={item} id={item} value={item} onChange={this.AddHobby} checked={this.state.hobby[item]} />
+                  <label htmlFor={item}>
+                    <div className='interest-tag'>
+                      <b>{item}</b>
+                    </div>
+                  </label>
+                </div>
+              ))}
+            </form>
+            <br />
+            <form>
+              <p><b>About Me</b></p>
+              <textarea name="bio" value={this.state.bio} rows="10" cols="60" onChange={this.onChange}></textarea>
+              <br />
+              {/* <input type="submit" value="Save" /> */}
+            </form>
+          </div>
         </div>
-        {/* <ul>
-          {this.state.items.map((item, i) =>
-            <li key={i}>
-              {item.text}
-              <input type="checkbox" onChange={this.onToggle.bind(this, i)} />
-            </li>
-          )}
-        </ul> */}
         <div className="center-button">
           <button onClick={this.saveToDB} >Save</button>
         </div>
-      </div>
-    );
-  }
-}
-
-class Navbar extends Component {
-  render() {
-    return (
-      <div className="navbar">
-        <div className="logo">
-          <img className="logo-img" src={Logo} alt="Logo" />
-          <h3>SOULFUN</h3>
-        </div>
-      </div>
-    )
-  }
-}
-
-class Display extends Component {
-  constructor(props) {
-    super(props);
-    // this.onChange = this.onChange.bind(this);
-  }
-  // onChange(event) {
-  //   this.props.changeProfile({ [event.target.name]: event.target.value });
-  // }
-  render() {
-    // console.log(this.props)
-    return (
-      <div className="display">
-        <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
-        <h4>Hey {this.props.username}!</h4>
-      </div>
-    )
-  }
-}
-
-class Setting extends Component {
-  constructor(props) {
-    super(props);
-    this.onChange = this.onChange.bind(this);
-    this.onAddInterest = this.onAddInterest.bind(this);
-  }
-  onChange(event) {
-    // console.log(event.target.name);
-    // console.log(event.target.value);
-    this.props.changeProfile({ [event.target.name]: event.target.value });
-  }
-  onAddInterest(event) {
-    this.props.addToInterest(event.target.value);
-  }
-  render() {
-    // console.log(this.props)
-    return (
-      <div className="setting">
-        <p>Please select your gender:</p>
-        <form className="gender line">
-          <input type="radio" name="gender" value="male" checked={this.props.userInfo.gender === "male"} onChange={this.onChange} /> Male<br />
-          <input type="radio" name="gender" value="female" checked={this.props.userInfo.gender === "female"} onChange={this.onChange} /> Female<br />
-          <input type="radio" name="gender" value="non-binary" checked={this.props.userInfo.gender === "non-binary"} onChange={this.onChange} /> Non-binary<br />
-          {/* <input type="submit" value="Save" /> */}
-        </form>
-        <br />
-        <form className="birthday" >
-          <p>When is your birthday?</p>
-          <input type="date" name="birthday" value={this.props.userInfo.birthday} onChange={this.onChange} />
-          <p>You must be at least 18 years old to use SOULFUN.</p>
-          {/* <input type="submit" value="Save"/> */}
-        </form>
-        <br />
-        <div className="country">
-          <p>Where are you from?</p>
-          <form>
-            <select value={this.props.userInfo.country} name="country" onChange={this.onChange}>
-              <option value="Taiwan">Taiwan</option>
-              <option value="U.S.">U.S.</option>
-              <option value="France">France</option>
-              <option value="Japan">Japan</option>
-            </select>
-          </form>
-          {/* <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/> */}
-        </div>
-        <div className="location">
-          <p>Where do you primarily live?</p>
-          <form>
-            <select value={this.props.userInfo.location} name="location" onChange={this.onChange}>
-              <option value="Taiwan">Taiwan</option>
-              <option value="U.S.">U.S.</option>
-              <option value="France">France</option>
-              <option value="Japan">Japan</option>
-            </select>
-          </form>
-          {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/> */}
-        </div>
-
-        <div className="language">
-          {/* <p>what kind of language do you speak?</p>
-          <Select options={options} onChange={this.onChange} /> */}
-          {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.onChange} /> */}
-        </div>
-
-        <p>Pick some topics you are interested in.</p>
-        <form className='interest line'>
-          <input type="checkbox" name="interest" value="Movies" onChange={this.onAddInterest} />Movies
-            <br />
-          <input type="checkbox" name="interest" value="Pets" onChange={this.onAddInterest} />Pets
-            <br />
-          <input type="checkbox" name="interest" value="Nature" onChange={this.onAddInterest} />Nature
-            <br />
-          <input type="checkbox" name="interest" value="Travel" onChange={this.onAddInterest} />Travel
-            <br />
-          <input type="checkbox" name="interest" value="Music" onChange={this.onAddInterest} />Music
-            <br />
-          <input type="checkbox" name="interest" value="Coding" onChange={this.onAddInterest} />Coding
-            <br />
-          {/* <input type="submit" value="Save" /> */}
-        </form>
-        <form>
-          <p>Intro</p>
-          <textarea name="bio" value={this.props.userInfo.bio} rows="10" cols="60" onChange={this.onChange}></textarea>
-          <br />
-          {/* <input type="submit" value="Save" /> */}
-        </form>
-
       </div>
     )
   }

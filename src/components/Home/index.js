@@ -10,6 +10,11 @@ import Loading from '../img/loading.gif';
 import { Redirect } from 'react-router-dom';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
 const Home = () => (
   <>
     <AuthUserContext.Consumer>
@@ -47,13 +52,7 @@ class HomeBase extends Component {
     const { isLoaded } = this.state;
     if (UserData.authUser) {
       this.referFriends(UserData, firebase, isLoaded);
-    } 
-    // else if (UserData.authUser === "") {
-    //   this.setState({ isLoaded: false });
-    // } 
-    // else {
-    //   this.setState({ goToHome: true });
-    // }
+    }
   }
   // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
   componentDidUpdate() {
@@ -64,33 +63,35 @@ class HomeBase extends Component {
   referFriends(UserData, firebase, isLoaded) {
     // 加個鎖不然會無限 loading
     if (!isLoaded) {
-      // 先取得我的朋友列表
-      firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
-        .onSnapshot(
+      // 取得目前用戶列表
+      // firebase.db.collection("Users")
+      firebase.db.collection("Users").where('interest', "array-contains", 'Movies')
+      // .orderBy("timestamp")
+      .limit(20)
+        .get()
+        .then(
           (querySnapshot) => {
-            let myfriend = [];
+            let friendlist = [];
             querySnapshot.forEach((doc) => {
-              console.log('myfriend', doc.id, " => ", doc.data());
-              myfriend.push(doc.data().id);
-            })
-            console.log('myfriend', myfriend);
-            // 接著取得目前用戶列表
-            firebase.db.collection("Users")
-              .limit(20)
-              .get()
-              .then(
+              // if 有填資料再進來
+              if (doc.data().avatar) {
+                // cant see self as a friend
+                if (doc.id !== UserData.authUser.uid) {
+                  console.log(doc.id, " => ", doc.data());
+                  friendlist.push(doc.data().id);
+                }
+              }
+            });
+            // 先取得我的朋友列表
+            firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+              .onSnapshot(
                 (querySnapshot) => {
-                  let friendlist = [];
+                  let myfriend = [];
                   querySnapshot.forEach((doc) => {
-                    // if 有填資料再進來
-                    if (doc.data().avatar) {
-                      // cant see self as a friend
-                      if (doc.id !== UserData.authUser.uid) {
-                        console.log(doc.id, " => ", doc.data());
-                        friendlist.push(doc.data().id);
-                      }
-                    }
-                  });
+                    console.log('myfriend', doc.id, " => ", doc.data());
+                    myfriend.push(doc.data().id);
+                  })
+                  console.log('myfriend', myfriend);
                   // console.log('friendlist', friendlist);
                   // console.log(deleteIntersection(friendlist, myfriend));
                   let loaded = 0;
@@ -158,7 +159,6 @@ class HomeBase extends Component {
   }
   render() {
     console.log('home', this.state);
-    const { friendlist } = this.state
     const { error, isLoaded, referlist } = this.state;
     if (this.state.goToHome) {
       return <Redirect to="/" />
@@ -548,7 +548,7 @@ class FriendRequests extends Component {
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                   Go Back
                   </div>
-                <button onClick={this.confirmFriend.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Chat</button>
+                <button onClick={this.confirmFriend.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Confirm</button>
               </div>
             </div>
           ) : null}
@@ -606,6 +606,25 @@ class DiscoverFriend extends Component {
     return (
       <div className="view">
         <h3>Discover new friends here!</h3>
+        <br/>
+        {/* <hr/> */}
+        <FormControl className="choose-interest">
+          <InputLabel id="demo-customized-select-label">Select by Interests</InputLabel>
+          <Select
+            labelId="demo-customized-select-label"
+            id="demo-customized-select"
+            // value={age}
+            // onChange={handleChange}
+            // input={<BootstrapInput />}
+          >
+            <MenuItem value="">
+              <em>None</em>
+            </MenuItem>
+            <MenuItem value={10}>Ten</MenuItem>
+            <MenuItem value={20}>Twenty</MenuItem>
+            <MenuItem value={30}>Thirty</MenuItem>
+          </Select>
+        </FormControl>
         <div className="container">
           {this.props.referlist.map(item => (
             <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
@@ -621,13 +640,10 @@ class DiscoverFriend extends Component {
               {/* <p>Language: {item.language}</p> */}
               <p>
                 {/* <b>{item.interest}</b> */}
-                {/* <b>Interest: {item.interest}</b> */}
                 {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
               </p>
-              {/* <button key={item.id} onClick={this.handleSubmit.bind(this, item.id, item.username, item.avatar)}>Add Friend</button> */}
             </div>
           ))}
-          {/* { this.state.showCard ? <ShowCard clickWhom={this.state.clickWhom} closeCard = {this.closeCard.bind(this)} />: null } */}
         </div>
         {showCard ? (
           <div className="show-card">
@@ -690,26 +706,5 @@ class DiscoverFriend extends Component {
     )
   }
 }
-// class ShowCard extends Component {
-//   constructor(props) {
-//     super(props);
-//     this.changeToClose = this.changeToClose.bind(this);
-//   }
-//   changeToClose() {
-//     this.props.closeCard();
-//     console.log(this.props);
-//   }
-//   render() {
-//     console.log('showcard', this.props);
-//     return (
-
-//       <div className="showCard">
-//         ShowCard
-//         <button onClick={this.changeToClose}>Go Back</button>
-//         <button >Add Friend</button>
-//       </div>
-//     )
-//   }
-// }
 
 export default Home;

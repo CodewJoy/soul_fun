@@ -79,7 +79,15 @@
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+    flex-direction: column;
     width: 85%;
+    padding: 2% 5% 0 0;
+}
+/* .home>.main>.view>h3 {
+    width: 100%;
+} */
+.home>.main>.view>.choose-interest {
+    width: 35%;
     padding: 2% 5% 0 0;
 }
 .home>.main>.view>.container{
