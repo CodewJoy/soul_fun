@@ -4,8 +4,7 @@ import LogIn from './LogIn';
 // import { LogInForm, LogInFormBase } from './LogIn';
 import '../../common.css';
 import './landing.css';
-import Logo from '../img/logo.svg';
-// import Navigation from '../App/navigation.js';
+import { NavLogo_Landing } from '../Header';
 import Soulfun from '../img/funsoul_logo.svg';
 
 const LandingPage = () => (
@@ -41,10 +40,7 @@ class Landing extends Component {
     return (
       <div className="landing">
         <div className="navbar">
-          <div className="logo">
-            <img className="logo-img" src={Logo} alt="Logo" />
-            <h3>SOULFUN</h3>
-          </div>
+          <NavLogo_Landing />
           <button className="log-in" onClick={this.ShowLogIn}>LOG IN</button>
         </div>
         <div className="main">

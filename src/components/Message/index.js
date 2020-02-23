@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import './message.css';
-import Logo from '../img/logo.svg';
-import Navigation from '../App/navigation.js';
+import Navbar from '../Header';
 import Loading from '../img/loading.gif';
 import SendMessage from '../img/send_message.svg';
 
@@ -354,19 +353,7 @@ class Conversation extends Component {
 //   }
 // }
 
-class Navbar extends Component {
-  render() {
-    return (
-      <div className="navbar">
-        <div className="logo">
-          <img className="logo-img" src={Logo} alt="Logo" />
-          <h3>SOULFUN</h3>
-        </div>
-        <Navigation />
-      </div>
-    )
-  }
-}
+
 
 
 export default Message;

@@ -6,7 +6,7 @@ import './account.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import { INTERESTS } from '../../constants/factor.js';
-import Logo from '../img/logo.svg';
+import { Navbar_Account } from '../Header';
 import AddIcon from '@material-ui/icons/Add';
 
 
@@ -34,35 +34,10 @@ class AccountBase extends Component {
   render() {
     return (
       <div className="account">
-        <Navbar />
-
+        <Navbar_Account />
         <Setting username={this.props.UserData.userInfo.username} />
-        {/* <Setting changeProfile={this.changeProfile.bind(this)} username={this.props.UserData.userInfo.username}
-            addToInterest={this.addToInterest.bind(this)} userInfo={this.state} /> */}
-
-        {/* <ul>
-          {this.state.items.map((item, i) =>
-            <li key={i}>
-              {item.text}
-              <input type="checkbox" onChange={this.onToggle.bind(this, i)} />
-            </li>
-          )}
-        </ul> */}
       </div>
     );
-  }
-}
-
-class Navbar extends Component {
-  render() {
-    return (
-      <div className="navbar">
-        <div className="logo">
-          <img className="logo-img" src={Logo} alt="Logo" />
-          <h3>SOULFUN</h3>
-        </div>
-      </div>
-    )
   }
 }
 
@@ -172,11 +147,10 @@ class Setting extends Component {
     console.log('account:', this.props);
     return (
       <div className="main">
-        <br/>
-        {/* <h3>Welcome {this.props.username}! Share more about you :)</h3> */}
         <div className="view">
           <div className="setting-1">
             <div className="upload">
+            <h4>Hey {this.props.username}! Share more about you :)</h4>
               <div className="border">
                 <div className="avatar">
                   <AddIcon style={{ size: 60 }} />
@@ -185,7 +159,7 @@ class Setting extends Component {
               {/* <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" /> */}
               <p>
                 <sub>
-                  *Upload a picture that represents you.
+                  *Upload a picture that represents you as your avatar.
               </sub>
               </p>
             </div>
@@ -204,6 +178,14 @@ class Setting extends Component {
                 <sub>*You must be at least 18 years old to use SOULFUN.</sub>
               </p>
             </form>
+            <div className="language">
+              <p><b>what kind of language do you speak?</b></p>
+              <Select options={options} onChange={this.onChange} />
+              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.onChange} /> */}
+            </div>
+            <br />
+          </div>
+          <div className="setting-2">
             <div className="country">
               <p><b>Where are you from?</b></p>
               <form>
@@ -216,7 +198,6 @@ class Setting extends Component {
               </form>
               {/* <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/> */}
             </div>
-            <br />
             <div className="location">
               <p><b>Where do you primarily live?</b></p>
               <form>
@@ -228,14 +209,6 @@ class Setting extends Component {
                 </select>
               </form>
               {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/> */}
-            </div>
-            <br />
-          </div>
-          <div className="setting-2">
-            <div className="language">
-              <p><b>what kind of language do you speak?</b></p>
-              <Select options={options} onChange={this.onChange} />
-              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.onChange} /> */}
             </div>
             <br />
             <p><b>Pick some topics you are interested in.</b></p>
@@ -254,10 +227,9 @@ class Setting extends Component {
                 </div>
               ))}
             </form>
-            <br />
             <form>
               <p><b>About Me</b></p>
-              <textarea name="bio" value={this.state.bio} rows="10" cols="60" onChange={this.onChange}></textarea>
+              <textarea name="bio" value={this.state.bio} rows="8" cols="80" onChange={this.onChange}></textarea>
               <br />
               {/* <input type="submit" value="Save" /> */}
             </form>

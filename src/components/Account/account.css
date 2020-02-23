@@ -3,29 +3,6 @@
     /* background: #63cdda; */
 }
 
-.account>.navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #63cdda;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-}
-
-.account>.navbar>.logo {
-    margin: 1% 2%;
-    display: inline-flex;
-    align-items: center;
-}
-
-.account>.navbar>.log-in {
-    margin: 1% 2%;
-}
-
-.account>.navbar>.logo>.logo-img {
-    height: 40px;
-    width: 40px;
-}
-
 .account>.main {
     width: 100%;
     /* padding: 20px; */
@@ -38,16 +15,19 @@
     width: 100%;
     display: flex;
     flex-direction: row;
+    /* flex-wrap: wrap; */
+    justify-content: center
+
 }
 
 .account>.main>.view>.setting-1 {
-    padding: 3%; 
-    width: 50%;
+    padding: 2%; 
+    width: 38%;
 }
 
 .account>.main>.view>.setting-2 {
-    padding: 3%; 
-    width: 50%;
+    padding: 2%; 
+    width: 38%;
 }
 
 .account>.main>.view>.setting-1>.upload {
@@ -102,8 +82,8 @@
     background-color: #f1f2f6;
     border-radius: 25px;
     cursor: pointer;
-    padding: 8px 12px;
-    margin: 5px;
+    padding: 7px 11px;
+    margin: 5px 5px 5px 0;
 }
 
 .account>.main>.view>.setting-2>.interest>div>input[type="checkbox"]:checked+label {

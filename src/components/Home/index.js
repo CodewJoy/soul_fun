@@ -1,11 +1,10 @@
 /* eslint-disable no-undef */
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
-import Navigation from '../App/navigation.js';
 import './home.css';
+import Navbar from '../Header';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
-import Logo from '../img/logo.svg';
 import Loading from '../img/loading.gif';
 import { Redirect } from 'react-router-dom';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
@@ -170,13 +169,7 @@ class HomeBase extends Component {
     } else {
       return (
         <div className="home">
-          <div className="navbar">
-            <div className="logo">
-              <img className="logo-img" src={Logo} alt="Logo" />
-              <h3>SOULFUN</h3>
-            </div>
-            <Navigation />
-          </div>
+          <Navbar />
           <div className="main">
             <ul className="sideNav">
               <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>

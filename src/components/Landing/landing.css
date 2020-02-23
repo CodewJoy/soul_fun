@@ -10,18 +10,10 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
-.landing>.navbar>.logo {
-    margin: 1% 2%;
-    display: inline-flex;   
-    align-items: center;
-}
 .landing>.navbar>.log-in{
     margin: 1% 2%;
 }
-.landing>.navbar>.logo>.logo-img {
-    height: 40px;
-    width: 40px;
-}
+
 .landing>.main {
     width: 100%;
     /* margin: 2% 0%; */

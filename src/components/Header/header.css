@@ -1,0 +1,30 @@
+.navbar {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #63cdda;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+.navbar>.logo {
+    margin: 3px 25px;
+    display: inline-flex;
+    align-items: center;
+}
+.navbar>.logo>.logo-img {
+    height: 40px;
+    width: 40px;
+}
+.navbar>.member-navbar {
+    width: 30%;
+    /* margin: 1% 2%; */
+}
+.navbar>.member-navbar>ul {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    list-style: none;
+}
+ .navbar>.member-navbar>ul>li>button {
+    min-width: 110px;
+}
