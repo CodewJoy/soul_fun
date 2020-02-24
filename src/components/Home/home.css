@@ -141,8 +141,9 @@
 .home>.main>.view>.confirm-friend>.confirm-box>.avatar {
     width: 90px;
 }
-
-
+.home>.main>.view>.MuiAutocomplete-root {
+    width: 300px;
+}
 @media (max-width: 500px) {
     .home>.main>.view>.container{
         width: 98%;

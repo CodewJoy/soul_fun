@@ -35,8 +35,9 @@ button {
     cursor: pointer; /* Add a pointer cursor on mouse-over */
     /* background-color: #ffd32a; */
     background-color: #546de5;
+    /* background-color: black; */
     margin: 2%;
-    border-radius: 20px;
+    border-radius: 3px;
   }
   
 button:hover {

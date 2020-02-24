@@ -29,166 +29,38 @@ class HomeBase extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      goToHome: false,
-      error: null,
-      isLoaded: false,
-      isLoaded_friend: false,
-      // myfriend: [],
-      // friendlist: [],
-      referlist: [],
       selected: 'discover',
     }
-    this.addFriend = this.addFriend.bind(this);
-    this.referFriends = this.referFriends.bind(this);
     this.sideNav = this.sideNav.bind(this);
   }
 
-  // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
-  componentDidMount() {
-    const { UserData, firebase } = this.props;
-    const { isLoaded } = this.state;
-    if (UserData.authUser) {
-      this.referFriends(UserData, firebase, isLoaded);
-    }
-  }
-  // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
-  componentDidUpdate() {
-    const { UserData, firebase } = this.props;
-    const { isLoaded } = this.state;
-    this.referFriends(UserData, firebase, isLoaded);
-  }
-  referFriends(UserData, firebase, isLoaded) {
-    // 加個鎖不然會無限 loading
-    if (!isLoaded) {
-      // 取得目前用戶列表
-      // firebase.db.collection("Users")
-      firebase.db.collection("Users").where('interest', "array-contains", 'Movies')
-        // .orderBy("timestamp")
-        .limit(20)
-        .get()
-        .then(
-          (querySnapshot) => {
-            let friendlist = [];
-            querySnapshot.forEach((doc) => {
-              // if 有填資料再進來
-              if (doc.data().avatar) {
-                // cant see self as a friend
-                if (doc.id !== UserData.authUser.uid) {
-                  console.log(doc.id, " => ", doc.data());
-                  friendlist.push(doc.data().id);
-                }
-              }
-            });
-            // 先取得我的朋友列表
-            firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
-              .onSnapshot(
-                (querySnapshot) => {
-                  let myfriend = [];
-                  querySnapshot.forEach((doc) => {
-                    console.log('myfriend', doc.id, " => ", doc.data());
-                    myfriend.push(doc.data().id);
-                  })
-                  console.log('myfriend', myfriend);
-                  // console.log('friendlist', friendlist);
-                  // console.log(deleteIntersection(friendlist, myfriend));
-                  let loaded = 0;
-                  let refer = deleteIntersection(friendlist, myfriend);
-                  let referlist = [];
-                  for (let i = 0; i < refer.length; i++) {
-                    firebase.db.collection("Users").doc(refer[i])
-                      .onSnapshot(
-                        (doc) => {
-                          console.log("Document data:", doc.data());
-                          referlist.push(doc.data());
-                          loaded++;
-                          if (loaded === refer.length) {
-                            // console.log("document_try", document);
-                            this.setState({ isLoaded: true, referlist, myfriend });
-                          }
-                        },
-                        (error) => {
-                          console.log(error)
-                        }
-                      )
-                  }
-                },
-                (error) => {
-                  console.log(error)
-                  this.setState({
-                    isLoaded: true,
-                    error
-                  })
-                }
-              )
-          },
-          (error) => {
-            console.log(error)
-          }
-        )
-    }
-  }
-  addFriend(id, name, avatar) {
-    const { firebase, UserData } = this.props;
-    console.log(UserData);
-    // modify my list
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
-      .set(
-        {
-          id: id,
-          name: name,
-          avatar: avatar,
-          status: "waitHisConfirm"
-        }
-      );
-    // modify invited friend's list
-    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
-      .set(
-        {
-          id: UserData.authUser.uid,
-          name: UserData.userInfo.username,
-          avatar: UserData.userInfo.avatar,
-          status: "askUrConfirm"
-        }
-      )
-  }
   sideNav(name) {
     this.setState({ selected: name });
   }
   render() {
-    console.log('home', this.state);
-    const { error, isLoaded, referlist } = this.state;
-    if (this.state.goToHome) {
-      return <Redirect to="/" />
-    }
-    if (error) {
-      return <div>Error: {error.message}</div>
-    } else if (!isLoaded) {
-      return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    } else {
-      return (
-        <div className="home">
-          <Navbar />
-          <div className="main">
-            <ul className="sideNav">
-              <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-                <Link to='/home'>Discover Friends</Link>
-              </li>
-              <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-                <Link to='/home/friend-requests'>Friend Requests</Link>
-              </li>
-              <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
-                <Link to='/home/my-friend'>My Friend</Link>
-              </li>
-            </ul>
-            <Switch>
-              <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
-              <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
-              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
-            </Switch>
-          </div>
+    return (
+      <div className="home">
+        <Navbar />
+        <div className="main">
+          <ul className="sideNav">
+            <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+              <Link to='/home'>Discover Friends</Link>
+            </li>
+            <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+              <Link to='/home/friend-requests'>Friend Requests</Link>
+            </li>
+            <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
+              <Link to='/home/my-friend'>My Friend</Link>
+            </li>
+          </ul>
+          <Switch>
+            <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
+            <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+          </Switch>
         </div>
-      )
-    }
+      </div>
+    )
   }
 }
 class MyFriend extends Component {
@@ -574,16 +446,166 @@ class DiscoverFriend extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      goToHome: false,
+      error: null,
+      isLoaded: false,
+      isLoaded_friend: false,
+      // myfriend: [],
+      // friendlist: [],
+      referlist: [],
       showCard: false,
       clickWhom: '',
       interest: ''
     }
+    this.addFriend = this.addFriend.bind(this);
+    this.referFriends = this.referFriends.bind(this);
     this.closeCard = this.closeCard.bind(this);
     this.getInterest = this.getInterest.bind(this);
+    this.filterFriend = this.filterFriend.bind(this);
+  }
+  // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
+  componentDidMount() {
+    const { UserData, firebase } = this.props.props;
+    const { isLoaded, interest } = this.state;
+    if (UserData.authUser) {
+      if (!isLoaded) {
+        this.referFriends(interest, UserData, firebase);
+        this.setState({ isLoaded: true});
+      }
+    }
+  }
+  // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
+  componentDidUpdate() {
+    const { UserData, firebase } = this.props.props;
+    const { isLoaded, interest } = this.state;
+    // 加個鎖不然會無限 loading
+    if (!isLoaded) {
+      this.referFriends(interest, UserData, firebase);
+      this.setState({ isLoaded: true});
+    }
+  }
+  referFriends(interest, UserData, firebase) {
+      // 取得目前用戶列表
+      if (interest === '') {
+        firebase.db.collection("Users")
+          // .orderBy("timestamp")
+          .limit(20)
+          .get()
+          .then(
+            (querySnapshot) => {
+              let friendlist = [];
+              querySnapshot.forEach((doc) => {
+                // if 有填資料再進來
+                if (doc.data().avatar) {
+                  // cant see self as a friend
+                  if (doc.id !== UserData.authUser.uid) {
+                    console.log(doc.id, " => ", doc.data());
+                    friendlist.push(doc.data().id);
+                  }
+                }
+              });
+              this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
+      } else {
+        firebase.db.collection("Users").where('interest', "array-contains", interest)
+          // .orderBy("timestamp")
+          .limit(20)
+          .get()
+          .then(
+            (querySnapshot) => {
+              let friendlist = [];
+              querySnapshot.forEach((doc) => {
+                // if 有填資料再進來
+                if (doc.data().avatar) {
+                  // cant see self as a friend
+                  if (doc.id !== UserData.authUser.uid) {
+                    console.log(doc.id, " => ", doc.data());
+                    friendlist.push(doc.data().id);
+                  }
+                }
+              });
+              this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+            },
+            (error) => {
+              console.log(error)
+            }
+          )
+      }
+  }
+  filterFriend(firebase, id, friendlist) {
+    // 先取得我的朋友列表
+    firebase.db.collection("Users").doc(id).collection("friends")
+      .onSnapshot(
+        (querySnapshot) => {
+          let myfriend = [];
+          querySnapshot.forEach((doc) => {
+            console.log('myfriend', doc.id, " => ", doc.data());
+            myfriend.push(doc.data().id);
+          })
+          console.log('myfriend', myfriend);
+          // console.log('friendlist', friendlist);
+          // console.log(deleteIntersection(friendlist, myfriend));
+          let loaded = 0;
+          let refer = deleteIntersection(friendlist, myfriend);
+          let referlist = [];
+          for (let i = 0; i < refer.length; i++) {
+            firebase.db.collection("Users").doc(refer[i])
+              .onSnapshot(
+                (doc) => {
+                  console.log("Document data:", doc.data());
+                  referlist.push(doc.data());
+                  loaded++;
+                  if (loaded === refer.length) {
+                    // console.log("document_try", document);
+                    this.setState({ referlist, myfriend });
+                  }
+                },
+                (error) => {
+                  console.log(error)
+                }
+              )
+          }
+        },
+        (error) => {
+          console.log(error)
+          this.setState({
+            isLoaded: true,
+            error
+          })
+        }
+      )
+  }
+  addFriend(id, name, avatar) {
+    const { firebase, UserData } = this.props.props;
+    console.log(UserData);
+    // modify my list
+    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
+      .set(
+        {
+          id: id,
+          name: name,
+          avatar: avatar,
+          status: "waitHisConfirm"
+        }
+      );
+    // modify invited friend's list
+    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+      .set(
+        {
+          id: UserData.authUser.uid,
+          name: UserData.userInfo.username,
+          avatar: UserData.userInfo.avatar,
+          status: "askUrConfirm"
+        }
+      )
   }
   handleSubmit(id, name, avatar) {
     // console.log(id, name, avatar);
-    this.props.addFriend(id, name, avatar);
+    this.addFriend(id, name, avatar);
     this.setState({ showCard: !this.state.showCard })
   }
   showCard(item) {
@@ -600,108 +622,120 @@ class DiscoverFriend extends Component {
     // console.log(e.target.textContent)
     // console.log(e.target.label)
     // console.log(e.target.name)
+    const { UserData, firebase } = this.props.props;
+    this.referFriends(e.target.textContent, UserData, firebase);
     this.setState({ interest: e.target.textContent }, () => {
       console.log(this.state)
     });
+    
   }
   render() {
     const { showCard, clickWhom } = this.state;
     console.log('referfriend', this.props);
-    return (
-      <div className="view">
-        <h3>Discover new friends here!</h3>
-        <br />
-        {/* <hr/> */}
-        <Autocomplete
-          value={this.state.interest}
-          // name="location"
-          onChange={this.getInterest}
-          options={INTERESTS}
-          //{INTERESTS}
-          id="select-by-interest"
-          autoComplete
-          includeInputInList
-          renderInput={params => <TextField {...params} label="Select by Interest" margin="normal" />}
-        />
-        <div className="container">
-          {this.props.referlist.map(item => (
-            <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
-              {/* <div key={item.id} className="friend-box"> */}
-              <img className="avatar" src={item.avatar} alt="avatar" />
-              <p>
-                <b>{item.username}</b>
-              </p>
-              <p>{item.country}</p>
-              {/* <p>Country: {item.country}</p> */}
-              <hr />
-              <p>{item.language}</p>
-              {/* <p>Language: {item.language}</p> */}
-              <p>
-                {/* <b>{item.interest}</b> */}
-                {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
-              </p>
-            </div>
-          ))}
-        </div>
-        {showCard ? (
-          <div className="show-card">
-            <div className="center">
-              <img className="avatar" src={clickWhom.avatar} alt="avatar" />
-              <p>
-                <b>{clickWhom.username}</b>
-              </p>
-            </div>
-            <p>
-              <b>Intro</b>
-            </p>
-            <p>{clickWhom.bio}</p>
-            <div className="container">
-              <div className="container-1">
+    console.log('home', this.state);
+    const { error, isLoaded, referlist } = this.state;
+    if (this.state.goToHome) {
+      return <Redirect to="/" />
+    }
+    if (error) {
+      return <div>Error: {error.message}</div>
+    } else if (!isLoaded) {
+      return <div className="loading"><img src={Loading} alt="Loading" /></div>
+    } else {
+      return (
+        <div className="view">
+          <h3>Discover new friends here!</h3>
+          <Autocomplete
+            value={this.state.interest}
+            // name="location"
+            onChange={this.getInterest}
+            options={INTERESTS}
+            //{INTERESTS}
+            id="select-by-interest"
+            autoComplete
+            includeInputInList
+            renderInput={params => <TextField {...params} label="Select by Interest" margin="normal" />}
+          />
+          <div className="container">
+            {referlist.map(item => (
+              <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
+                {/* <div key={item.id} className="friend-box"> */}
+                <img className="avatar" src={item.avatar} alt="avatar" />
                 <p>
-                  <b>Age&ensp;</b>
+                  <b>{item.username}</b>
                 </p>
+                <p>{item.country}</p>
+                {/* <p>Country: {item.country}</p> */}
+                <hr />
+                <p>{item.language}</p>
+                {/* <p>Language: {item.language}</p> */}
                 <p>
-                  <b>Star-Sign&ensp;</b>
-                </p>
-                <p>
-                  <b>Gender&ensp;</b>
-                  {clickWhom.gender}
+                  {/* <b>{item.interest}</b> */}
+                  {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
                 </p>
               </div>
-              {/* <div className="line"></div> */}
-              <div className="container-2">
-                <p>
-                  <b>Last online&ensp;</b>
-                </p>
-                <p>
-                  <b>Country&ensp;</b>
-                  {clickWhom.country}
-                </p>
-                <p>
-                  <b>Location&ensp;</b>
-                  {clickWhom.location}
-                </p>
-              </div>
-            </div>
-            <p>
-              <b>Interest&ensp;</b>
-              {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
-            </p>
-            <p>
-              <b>Language&ensp;</b>
-              {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
-            </p>
-            <div className="container">
-              <div className="go-back" onClick={this.closeCard}>
-                <ArrowBackSharpIcon style={{ fontSize: 40 }} />
-                Go Back
-                </div>
-              <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Add Friend</button>
-            </div>
+            ))}
           </div>
-        ) : null}
-      </div>
-    )
+          {showCard ? (
+            <div className="show-card">
+              <div className="center">
+                <img className="avatar" src={clickWhom.avatar} alt="avatar" />
+                <p>
+                  <b>{clickWhom.username}</b>
+                </p>
+              </div>
+              <p>
+                <b>Intro</b>
+              </p>
+              <p>{clickWhom.bio}</p>
+              <div className="container">
+                <div className="container-1">
+                  <p>
+                    <b>Age&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Star-Sign&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Gender&ensp;</b>
+                    {clickWhom.gender}
+                  </p>
+                </div>
+                {/* <div className="line"></div> */}
+                <div className="container-2">
+                  <p>
+                    <b>Last online&ensp;</b>
+                  </p>
+                  <p>
+                    <b>Country&ensp;</b>
+                    {clickWhom.country}
+                  </p>
+                  <p>
+                    <b>Location&ensp;</b>
+                    {clickWhom.location}
+                  </p>
+                </div>
+              </div>
+              <p>
+                <b>Interest&ensp;</b>
+                {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
+              </p>
+              <p>
+                <b>Language&ensp;</b>
+                {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
+              </p>
+              <div className="container">
+                <div className="go-back" onClick={this.closeCard}>
+                  <ArrowBackSharpIcon style={{ fontSize: 40 }} />
+                  Go Back
+                  </div>
+                <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Add Friend</button>
+              </div>
+            </div>
+          ) : null}
+        </div>
+      )
+    }
   }
 }
 
