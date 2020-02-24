@@ -31,9 +31,9 @@ class SignOutButtonBase extends Component {
             return <Redirect to="/" />;
         }
         return (
-            <button type="button" onClick={this.signOut}>
+            <div onClick={this.signOut}>
                 Log Out
-            </button>
+            </div>
         )
     }
 

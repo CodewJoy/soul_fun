@@ -36,7 +36,7 @@ class ProfileBase extends Component {
       confirmfriend: []
     }
   }
-  
+
   render() {
     // const { confirmfriend } = this.state
     // const { isLoaded_friend, confirmfriend } = this.state
@@ -48,7 +48,15 @@ class ProfileBase extends Component {
       <div className="profile">
         <Navbar />
         <div className="main">
-          <SignOutButton />
+          <ul className="sideNav">
+            <li>
+              Setting
+            </li>
+            <li>
+              <SignOutButton/>
+            </li>
+          </ul>
+
           {/* <ul className="sideNav">
             <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
               <Link to='/home'>Discover Friends</Link>
@@ -62,81 +70,81 @@ class ProfileBase extends Component {
             <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
             <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
           </Switch> */}
-          <Display userInfo={this.props.UserData.userInfo} />
-          <Setting userInfo={this.props.UserData.userInfo} />
-          {/* <ConfirmFriend />
+              <Display userInfo={this.props.UserData.userInfo} />
+              <Setting userInfo={this.props.UserData.userInfo} />
+              {/* <ConfirmFriend />
             <ConfirmFriend confirmfriend={confirmfriend}
               confirmFriend={this.confirmFriend.bind(this)}
             /> */}
         </div>
-        <div className="center-button">
-          <button>Edit</button>
-        </div>
+            <div className="center-button">
+              <button>Edit</button>
+            </div>
       </div>
-    );
-  }
-}
-
+          );
+        }
+      }
+      
 class Display extends Component {
-  constructor(props) {
-    super(props);
-    // this.onChange = this.onChange.bind(this);
-  }
+            constructor(props) {
+            super(props);
+          // this.onChange = this.onChange.bind(this);
+        }
   // onChange(event) {
-  //   this.props.changeProfile({ [event.target.name]: event.target.value });
-  // }
-  render() {
+            //   this.props.changeProfile({ [event.target.name]: event.target.value });
+            // }
+            render() {
     return (
       <div className="display">
-        {/* <img className="avatar" src={AvatarImage} alt="avatar" /> */}
-        <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
-        <h4>Hey {this.props.userInfo.username}!</h4>
-        <p className="age">age</p>
-        <p className="star-sign">star-sign</p>
-      </div>
-    )
-  }
-}
-
+            {/* <img className="avatar" src={AvatarImage} alt="avatar" /> */}
+            <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
+            <h4>Hey {this.props.userInfo.username}!</h4>
+            <p className="age">age</p>
+            <p className="star-sign">star-sign</p>
+          </div>
+          )
+        }
+      }
+      
 class Setting extends Component {
-  constructor(props) {
-    super(props);
-  }
+            constructor(props) {
+            super(props);
+        }
   render() {
     // console.log(this.props.userInfo.interest)
-    const { gender, birthday, country, location, language, interest, bio } = this.props.userInfo;
-    return (
+    const {gender, birthday, country, location, language, interest, bio} = this.props.userInfo;
+          return (
       <div className="setting">
-        <h3>My profile</h3>
-        <p className="gender">
-          Gender: {gender}
-        </p>
-        <p className="birthday">
-          Birthday: {birthday}
-        </p>
-        <p className="country">
-          Country: {country}
-        </p>
-        <p className="location">
-          Location: {location}
-        </p>
-        <p className="language">
-          Language: {language}
-        </p>
-        <p className="interest">
-          Interest: {interest}
-          {/* {this.props.userInfo.interest.map(item => (
+            <h3>My profile</h3>
+            <p className="gender">
+              Gender: {gender}
+            </p>
+            <p className="birthday">
+              Birthday: {birthday}
+            </p>
+            <p className="country">
+              Country: {country}
+            </p>
+            <p className="location">
+              Location: {location}
+            </p>
+            <p className="language">
+              Language: {language}
+            </p>
+            <p className="interest">
+              Interest: {interest.map(int => (<span key={int}>{int}&ensp;</span>))}
+              {/* {this.props.userInfo.interest.map(item => (
             // <div key={item.index} >
               <p>{item.value}</p>
             // </div>
           ))} */}
-        </p>
-        <p className="bio">
-          Intro: {bio}
-        </p>
-      </div>
-    )
-  }
-}
-
+            </p>
+            <p className="bio">
+              Intro: {bio}
+            </p>
+          </div>
+          )
+        }
+      }
+      
 export default Profile;

@@ -73,7 +73,7 @@
 .home>.main>.view>.container>.friend-box>.avatar{
     vertical-align: middle;
     border-radius: 50%;
-    border: 2px #ffd32a solid;
+    border: 2px white solid;
     width: 80px;
     height: 80px;
     margin: 1%;
@@ -92,7 +92,7 @@
 .home>.main>.view>.show-card>.center>.avatar{
     vertical-align: middle;
     border-radius: 50%;
-    border: 2px #ffd32a solid;
+    border: 2px white solid;
     width: 80px;
     height: 80px;
     margin: 1%;
