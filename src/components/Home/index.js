@@ -8,11 +8,9 @@ import { AuthUserContext } from '../Session';
 import Loading from '../img/loading.gif';
 import { Redirect } from 'react-router-dom';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
-
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { INTERESTS } from '../../constants/factor.js';
 
 const Home = () => (
   <>
@@ -65,8 +63,8 @@ class HomeBase extends Component {
       // 取得目前用戶列表
       // firebase.db.collection("Users")
       firebase.db.collection("Users").where('interest', "array-contains", 'Movies')
-      // .orderBy("timestamp")
-      .limit(20)
+        // .orderBy("timestamp")
+        .limit(20)
         .get()
         .then(
           (querySnapshot) => {
@@ -577,9 +575,11 @@ class DiscoverFriend extends Component {
     super(props);
     this.state = {
       showCard: false,
-      clickWhom: ''
+      clickWhom: '',
+      interest: ''
     }
     this.closeCard = this.closeCard.bind(this);
+    this.getInterest = this.getInterest.bind(this);
   }
   handleSubmit(id, name, avatar) {
     // console.log(id, name, avatar);
@@ -593,31 +593,36 @@ class DiscoverFriend extends Component {
   closeCard() {
     this.setState({ showCard: !this.state.showCard })
   }
+  getInterest(e) {
+    // console.log(e.target);
+    // console.log(e.target.value)
+    // console.log(e.target.id)
+    // console.log(e.target.textContent)
+    // console.log(e.target.label)
+    // console.log(e.target.name)
+    this.setState({ interest: e.target.textContent }, () => {
+      console.log(this.state)
+    });
+  }
   render() {
     const { showCard, clickWhom } = this.state;
     console.log('referfriend', this.props);
     return (
       <div className="view">
         <h3>Discover new friends here!</h3>
-        <br/>
+        <br />
         {/* <hr/> */}
-        <FormControl className="choose-interest">
-          <InputLabel id="demo-customized-select-label">Select by Interests</InputLabel>
-          <Select
-            labelId="demo-customized-select-label"
-            id="demo-customized-select"
-            // value={age}
-            // onChange={handleChange}
-            // input={<BootstrapInput />}
-          >
-            <MenuItem value="">
-              <em>None</em>
-            </MenuItem>
-            <MenuItem value={10}>Ten</MenuItem>
-            <MenuItem value={20}>Twenty</MenuItem>
-            <MenuItem value={30}>Thirty</MenuItem>
-          </Select>
-        </FormControl>
+        <Autocomplete
+          value={this.state.interest}
+          // name="location"
+          onChange={this.getInterest}
+          options={INTERESTS}
+          //{INTERESTS}
+          id="select-by-interest"
+          autoComplete
+          includeInputInList
+          renderInput={params => <TextField {...params} label="Select by Interest" margin="normal" />}
+        />
         <div className="container">
           {this.props.referlist.map(item => (
             <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>

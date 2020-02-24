@@ -89,3 +89,11 @@
 .account>.main>.view>.setting-2>.interest>div>input[type="checkbox"]:checked+label {
     background-color: #ffd32a;
 }
+
+.account>.main>.view>.setting-2>.bio>textarea {
+    size: 18px;
+    resize: none;
+    border-radius: 3px;
+    border: lightgray 1px solid;
+    width: 100%;
+}

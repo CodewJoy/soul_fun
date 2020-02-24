@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
-// import Navigation from '../App/navigation.js';
 import { Redirect } from 'react-router-dom';
-import Select from 'react-select'
 import './account.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import { INTERESTS } from '../../constants/factor.js';
+import { COUNTRIES } from '../../constants/factor.js';
+import { LANGUAGES } from '../../constants/factor.js';
 import { Navbar_Account } from '../Header';
 import AddIcon from '@material-ui/icons/Add';
 
+
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import TextField from '@material-ui/core/TextField';
+
+// import DateFnsUtils from '@date-io/date-fns';
+// import {
+//   MuiPickersUtilsProvider,
+//   KeyboardDatePicker,
+// } from '@material-ui/pickers';
 
 const Account = () => (
   <>
@@ -27,15 +36,13 @@ const Account = () => (
 class AccountBase extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
-
   }
-
   render() {
+    console.log(this.props);
     return (
       <div className="account">
         <Navbar_Account />
-        <Setting username={this.props.UserData.userInfo.username} />
+        <Setting userInfo={this.props.UserData.userInfo} firebase={this.props.firebase} />
       </div>
     );
   }
@@ -47,45 +54,42 @@ const INITIAL_STATE = {
   birthday: "1995-01-01",
   location: '',
   country: '',
-  language: '',
+  language: 'Franch',
   avatar: '',
   bio: '',
+  // interest checked record
   hobby: {
     'Travel': false, 'Diving': false, 'Hiking': false, 'Movies': false, 'Art': false, 'Photography': false, 'Music': false, 'Animals': false,
     'Nature': false, 'Reading': false, 'Writing': false, 'Sports': false, 'Fitness': false, 'Language': false, 'Cooking': false, 'Coding': false, 'Gaming': false, 'Fashion': false,
     'Psychology': false, 'Philosophy': false, 'Investing': false, 'Career': false, 'Coffee': false, 'Tea': false, 'Wine': false
   },
+  // used to render
   interest: [],
   isLoaded: false,
   fin_acc: false
 };
-const options = [
-  { value: 'english', label: 'English' },
-  { value: 'franch', label: 'Franch' },
-  { value: 'chinese', label: 'Chinese' }
-]
 
 class Setting extends Component {
   constructor(props) {
     super(props);
     this.state = { ...INITIAL_STATE };
-    this.addToInterest = this.addToInterest.bind(this);
     this.saveToDB = this.saveToDB.bind(this);
-    this.onChange = this.onChange.bind(this);
-    // this.onAddInterest = this.onAddInterest.bind(this);
-    this.AddHobby = this.AddHobby.bind(this);
+    this.getValue = this.getValue.bind(this);
+    this.addInterest = this.addInterest.bind(this);
+    this.getSelectValue = this.getSelectValue.bind(this);
+    this.getLocationValue = this.getLocationValue.bind(this);
+    this.getLanValue = this.getLanValue.bind(this);
   }
   saveToDB() {
-    const { gender, birthday, location, country, language, avatar, bio, interest } = this.state;
-
-    console.log(this.props.UserData.authUser.uid);
-    console.log(this.props.firebase.db);
-    this.props.firebase.db.collection("Users").doc(`${this.props.UserData.authUser.uid}`).update(
-      // this.state
+    const { gender, birthday, location, country, language, avatar, bio, interest, hobby } = this.state;
+    // console.log(this.props.UserData.authUser.uid);
+    // console.log(this.props.firebase.db);
+    
+    this.props.firebase.db.collection("Users").doc(`${this.props.userInfo.id}`).update(
       {
-        gender: gender, birthday, location,
+        gender, birthday, location,
         country, language, avatar,
-        bio, interest
+        bio, hobby, interest
       }
     )
       .then(() => {
@@ -97,16 +101,43 @@ class Setting extends Component {
       })
   }
 
-  onChange(event) {
+  getValue(event) {
     // console.log(event.target.name);
     // console.log(event.target.value);
     this.setState({ [event.target.name]: event.target.value }, () => {
       console.log(this.state)
     });
-    // console.log(this.props)
-    // this.props.changeProfile({ [event.target.name]: event.target.value });
   }
-  AddHobby(e) {
+  // used for autocomplete
+  getSelectValue(e) {
+    // console.log(e.target);
+    // console.log(e.target.value)
+    // console.log(e.target.id)
+    // console.log(e.target.textContent)
+    // console.log(e.target.label)
+    // console.log(e.target.label)
+    // console.log(e.target.name)
+    this.setState({ country: e.target.textContent }, () => {
+      console.log(this.state)
+    });
+  }
+  getLocationValue(e) {
+    this.setState({ location: e.target.textContent }, () => {
+      console.log(this.state)
+    });
+  }
+  getLanValue(e) {
+    // console.log(e.target);
+    // console.log(e.target.value)
+    // console.log(e.target.id)
+    // console.log(e.target.textContent)
+    // console.log(e.target.label)
+    // console.log(e.target.name)
+    this.setState({ language: e.target.textContent }, () => {
+      console.log(this.state)
+    });
+  }
+  addInterest(e) {
     const key = e.target.value;
     console.log('hobby', key);
     console.log('hobby', this.state);
@@ -117,25 +148,18 @@ class Setting extends Component {
         ...state.hobby,
         [key]: !state.hobby[key]
       }
-    }))
-    this.addToInterest()
-  }
-  addToInterest() {
-    let interest = [];
-    let hobby = this.state.hobby;
-    for (const key in hobby) {
-      if (hobby[key]) {
-        interest.push[key];
+    }), () => {
+      let interest = [];
+      let hobby = this.state.hobby;
+      for (const key in hobby) {
+        if (hobby[key]) {
+          // console.log(key)
+          interest.push(key);
+        }
       }
-    }
-    console.log(interest)
-    console.log(this.state.interest)
-    // this.setState(state => {
-    //   let interest = state.interest.concat(value);
-    //   return { interest };
-    // }, () => {
-    //   console.log(this.state);
-    // });
+      console.log(interest)
+      this.setState({ interest: interest })
+    })
   }
   render() {
     console.log(this.props)
@@ -150,7 +174,7 @@ class Setting extends Component {
         <div className="view">
           <div className="setting-1">
             <div className="upload">
-            <h4>Hey {this.props.username}! Share more about you :)</h4>
+              <h4>Hey {this.props.userInfo.username}! Share more about you :)</h4>
               <div className="border">
                 <div className="avatar">
                   <AddIcon style={{ size: 60 }} />
@@ -165,50 +189,117 @@ class Setting extends Component {
             </div>
             <p><b>Gender</b></p>
             <form className="gender line">
-              <input type="radio" name="gender" value="male" checked={this.state.gender === "male"} onChange={this.onChange} />Male&emsp;<br />
-              <input type="radio" name="gender" value="female" checked={this.state.gender === "female"} onChange={this.onChange} /> Female&emsp;<br />
-              <input type="radio" name="gender" value="non-binary" checked={this.state.gender === "non-binary"} onChange={this.onChange} /> Non-binary&emsp;<br />
+              <input type="radio" name="gender" value="male" checked={this.state.gender === "male"} onChange={this.getValue} />Male&emsp;<br />
+              <input type="radio" name="gender" value="female" checked={this.state.gender === "female"} onChange={this.getValue} /> Female&emsp;<br />
+              <input type="radio" name="gender" value="non-binary" checked={this.state.gender === "non-binary"} onChange={this.getValue} /> Non-binary&emsp;<br />
               {/* <input type="submit" value="Save" /> */}
             </form>
             <br />
             <form className="birthday" >
               <p><b>When is your birthday?</b></p>
-              <input type="date" name="birthday" value={this.state.birthday} onChange={this.onChange} required />
+              {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <KeyboardDatePicker
+                  disableToolbar
+                  variant="inline"
+                  format="MM/dd/yyyy"
+                  margin="normal"
+                  id="date-picker-inline"
+                  label="Date picker inline"
+                  // value={selectedDate}
+                  // onChange={handleDateChange}
+                  KeyboardButtonProps={{
+                    'aria-label': 'change date',
+                  }}
+                />
+              </MuiPickersUtilsProvider> */}
+
+              <input type="date" name="birthday" value={this.state.birthday} onChange={this.getValue} required />
               <p>
                 <sub>*You must be at least 18 years old to use SOULFUN.</sub>
               </p>
             </form>
             <div className="language">
               <p><b>what kind of language do you speak?</b></p>
-              <Select options={options} onChange={this.onChange} />
-              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.onChange} /> */}
+                <Autocomplete
+                  // is value here meaningful?
+                  // value='Taiwan'
+                  value={this.state.language}
+                  // name="location"
+                  onChange={this.getLanValue}
+                  id="language"
+                  options={LANGUAGES}
+                  getOptionLabel={LANGUAGES =>LANGUAGES}
+                  style={{ width: 300 }}
+                  renderInput={params => <TextField {...params} label="Language" variant="outlined" />}
+                />
+              {/* <Autocomplete
+                multiple
+                onChange={this.getLanValue}
+                id="tags-outlined"
+                options={LANGUAGES}
+                getOptionLabel={option => option}
+                // defaultValue={this.state.birthday}
+                filterSelectedOptions
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    variant="outlined"
+                    label="Languages"
+                    // placeholder="Favorites"
+                  />
+                )}
+              /> */}
+              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.getValue} /> */}
             </div>
             <br />
           </div>
           <div className="setting-2">
             <div className="country">
               <p><b>Where are you from?</b></p>
-              <form>
-                <select value={this.state.country} name="country" onChange={this.onChange}>
+              <Autocomplete
+                // is value here meaningful?
+                // value='Taiwan'
+                value={this.state.country}
+                name="country"
+                onChange={this.getSelectValue}
+                id="country"
+                options={COUNTRIES}
+                getOptionLabel={COUNTRIES => COUNTRIES}
+                style={{ width: 300 }}
+                renderInput={params => <TextField {...params} label="Country" variant="outlined" />}
+              />
+              {/* <form>
+                <select value={this.state.country} name="country" onChange={this.getValue}>
                   <option value="Taiwan">Taiwan</option>
                   <option value="U.S.">U.S.</option>
                   <option value="France">France</option>
                   <option value="Japan">Japan</option>
                 </select>
-              </form>
-              {/* <input className="key-in" type="text" placeholder="country" name="country" onChange={this.onChange}/> */}
+              </form> */}
             </div>
             <div className="location">
               <p><b>Where do you primarily live?</b></p>
-              <form>
-                <select value={this.state.location} name="location" onChange={this.onChange}>
+              <Autocomplete
+                // is value here meaningful?
+                // value='Taiwan'
+                value={this.state.location}
+                // name="location"
+                onChange={this.getLocationValue}
+                id="location"
+                options={COUNTRIES}
+                getOptionLabel={COUNTRIES => COUNTRIES}
+                style={{ width: 300 }}
+                renderInput={params => <TextField {...params} label="Location" variant="outlined" />}
+              />
+              {/* <form>
+                <select value={this.state.location} name="location" onChange={this.getValue}>
                   <option value="Taiwan">Taiwan</option>
                   <option value="U.S.">U.S.</option>
                   <option value="France">France</option>
                   <option value="Japan">Japan</option>
                 </select>
-              </form>
-              {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.onChange}/> */}
+              </form> */}
+              {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.getValue}/> */}
             </div>
             <br />
             <p><b>Pick some topics you are interested in.</b></p>
@@ -218,7 +309,7 @@ class Setting extends Component {
             <form className='interest line'>
               {INTERESTS.map(item => (
                 <div key={item}>
-                  <input type="checkbox" name={item} id={item} value={item} onChange={this.AddHobby} checked={this.state.hobby[item]} />
+                  <input type="checkbox" name={item} id={item} value={item} onChange={this.addInterest} checked={this.state.hobby[item]} />
                   <label htmlFor={item}>
                     <div className='interest-tag'>
                       <b>{item}</b>
@@ -227,9 +318,9 @@ class Setting extends Component {
                 </div>
               ))}
             </form>
-            <form>
+            <form className='bio'>
               <p><b>About Me</b></p>
-              <textarea name="bio" value={this.state.bio} rows="8" cols="80" onChange={this.onChange}></textarea>
+              <textarea name="bio" value={this.state.bio} rows="8" cols="80" onChange={this.getValue}></textarea>
               <br />
               {/* <input type="submit" value="Save" /> */}
             </form>
