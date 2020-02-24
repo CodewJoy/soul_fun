@@ -66,7 +66,9 @@ const INITIAL_STATE = {
   // used to render
   interest: [],
   isLoaded: false,
-  fin_acc: false
+  fin_acc: false,
+  image: null,
+  // progress:0
 };
 
 class Setting extends Component {
@@ -79,12 +81,14 @@ class Setting extends Component {
     this.getSelectValue = this.getSelectValue.bind(this);
     this.getLocationValue = this.getLocationValue.bind(this);
     this.getLanValue = this.getLanValue.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+    // this.handleUpload = this.handleUpload.bind(this);
   }
   saveToDB() {
     const { gender, birthday, location, country, language, avatar, bio, interest, hobby } = this.state;
     // console.log(this.props.UserData.authUser.uid);
     // console.log(this.props.firebase.db);
-    
+
     this.props.firebase.db.collection("Users").doc(`${this.props.userInfo.id}`).update(
       {
         gender, birthday, location,
@@ -161,6 +165,51 @@ class Setting extends Component {
       this.setState({ interest: interest })
     })
   }
+  handleChange(e) {
+    const { firebase } = this.props;
+    console.log(e.target)
+    console.log(e.target.files)
+    console.log(this.props)
+    // console.log(e.target.files[0])
+    if (e.target.files[0]) {
+      // Get file
+      const image = e.target.files[0];
+      // Create a storage ref
+      let storageRef = firebase.storage.ref('avatar_'+ image.name);
+      // Upload file
+      let task = storageRef.put(image);
+
+      task.on('state_changed', function(snapshot){
+        // Observe state change events such as progress, pause, and resume
+        // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        console.log('Upload is ' + progress + '% done');
+        // switch (snapshot.state) {
+        //   case firebase.storage.TaskState.PAUSED: // or 'paused'
+        //     console.log('Upload is paused');
+        //     break;
+        //   case firebase.storage.TaskState.RUNNING: // or 'running'
+        //     console.log('Upload is running');
+        //     break;
+        // }
+      }, function(error) {
+        console.log(error);
+      }, () => {
+        // Handle successful uploads on complete
+        // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+        task.snapshot.ref.getDownloadURL().then((downloadURL) => {
+          console.log('File available at', downloadURL);
+          this.setState({ image: image, avatar:downloadURL}, () => {
+            console.log(this.state)
+          });
+        });
+      });
+    }
+  }
+  // handleUpload() {
+  //   const { image } = this.state;
+  //   const uploadTask = this.props.firebase.ref(`images/${image.name}`).put(image);
+  // }
   render() {
     console.log(this.props)
     console.log(this.state)
@@ -176,16 +225,25 @@ class Setting extends Component {
             <div className="upload">
               <h4>Hey {this.props.userInfo.username}! Share more about you :)</h4>
               <div className="border">
-                <div className="avatar">
-                  <AddIcon style={{ size: 60 }} />
-                </div>
+                <input type="file"
+                  id="avatar" name="avatar" onChange={this.handleChange}/>
+                <label htmlFor='avatar'>
+                  {this.state.avatar=== "" ? (
+                  <div className="avatar">
+                    <AddIcon style={{ size: 60 }} />
+                  </div>) :
+                  (<div className="avatar">
+                    <img src={this.state.avatar} alt="avatar"/>
+                  </div>)}
+                </label>
               </div>
               {/* <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" /> */}
               <p>
                 <sub>
                   *Upload a picture that represents you as your avatar.
-              </sub>
+                </sub>
               </p>
+              {/* <button onClick={this.handleUpload}>Save Picture</button> */}
             </div>
             <p><b>Gender</b></p>
             <form className="gender line">
@@ -220,18 +278,18 @@ class Setting extends Component {
             </form>
             <div className="language">
               <p><b>what kind of language do you speak?</b></p>
-                <Autocomplete
-                  // is value here meaningful?
-                  // value='Taiwan'
-                  value={this.state.language}
-                  // name="location"
-                  onChange={this.getLanValue}
-                  id="language"
-                  options={LANGUAGES}
-                  getOptionLabel={LANGUAGES =>LANGUAGES}
-                  style={{ width: 300 }}
-                  renderInput={params => <TextField {...params} label="Language" variant="outlined" />}
-                />
+              <Autocomplete
+                // is value here meaningful?
+                // value='Taiwan'
+                value={this.state.language}
+                // name="location"
+                onChange={this.getLanValue}
+                id="language"
+                options={LANGUAGES}
+                getOptionLabel={LANGUAGES => LANGUAGES}
+                style={{ width: 300 }}
+                renderInput={params => <TextField {...params} label="Language" variant="outlined" />}
+              />
               {/* <Autocomplete
                 multiple
                 onChange={this.getLanValue}
@@ -327,7 +385,7 @@ class Setting extends Component {
           </div>
         </div>
         <div className="center-button">
-          <button onClick={this.saveToDB} >Save</button>
+          <button onClick={this.saveToDB}>Save Profile</button>
         </div>
       </div>
     )

@@ -43,15 +43,21 @@ class HomeBase extends Component {
         <Navbar />
         <div className="main">
           <ul className="sideNav">
-            <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-              <Link to='/home'>Discover Friends</Link>
-            </li>
-            <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-              <Link to='/home/friend-requests'>Friend Requests</Link>
-            </li>
-            <li className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
-              <Link to='/home/my-friend'>My Friend</Link>
-            </li>
+            <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+              <li>
+                Discover Friends
+              </li>
+            </Link>
+            <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+              <li>
+                Friend Requests
+              </li>
+            </Link>
+            <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
+              <li>
+                My Friend
+              </li>
+            </Link>
           </ul>
           <Switch>
             <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
@@ -470,7 +476,7 @@ class DiscoverFriend extends Component {
     if (UserData.authUser) {
       if (!isLoaded) {
         this.referFriends(interest, UserData, firebase);
-        this.setState({ isLoaded: true});
+        this.setState({ isLoaded: true });
       }
     }
   }
@@ -481,60 +487,60 @@ class DiscoverFriend extends Component {
     // 加個鎖不然會無限 loading
     if (!isLoaded) {
       this.referFriends(interest, UserData, firebase);
-      this.setState({ isLoaded: true});
+      this.setState({ isLoaded: true });
     }
   }
   referFriends(interest, UserData, firebase) {
-      // 取得目前用戶列表
-      if (interest === '') {
-        firebase.db.collection("Users")
-          // .orderBy("timestamp")
-          .limit(20)
-          .get()
-          .then(
-            (querySnapshot) => {
-              let friendlist = [];
-              querySnapshot.forEach((doc) => {
-                // if 有填資料再進來
-                if (doc.data().avatar) {
-                  // cant see self as a friend
-                  if (doc.id !== UserData.authUser.uid) {
-                    console.log(doc.id, " => ", doc.data());
-                    friendlist.push(doc.data().id);
-                  }
+    // 取得目前用戶列表
+    if (interest === '') {
+      firebase.db.collection("Users")
+        // .orderBy("timestamp")
+        .limit(20)
+        .get()
+        .then(
+          (querySnapshot) => {
+            let friendlist = [];
+            querySnapshot.forEach((doc) => {
+              // if 有填資料再進來
+              if (doc.data().avatar) {
+                // cant see self as a friend
+                if (doc.id !== UserData.authUser.uid) {
+                  console.log(doc.id, " => ", doc.data());
+                  friendlist.push(doc.data().id);
                 }
-              });
-              this.filterFriend(firebase, UserData.authUser.uid, friendlist)
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
-      } else {
-        firebase.db.collection("Users").where('interest', "array-contains", interest)
-          // .orderBy("timestamp")
-          .limit(20)
-          .get()
-          .then(
-            (querySnapshot) => {
-              let friendlist = [];
-              querySnapshot.forEach((doc) => {
-                // if 有填資料再進來
-                if (doc.data().avatar) {
-                  // cant see self as a friend
-                  if (doc.id !== UserData.authUser.uid) {
-                    console.log(doc.id, " => ", doc.data());
-                    friendlist.push(doc.data().id);
-                  }
+              }
+            });
+            this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+    } else {
+      firebase.db.collection("Users").where('interest', "array-contains", interest)
+        // .orderBy("timestamp")
+        .limit(20)
+        .get()
+        .then(
+          (querySnapshot) => {
+            let friendlist = [];
+            querySnapshot.forEach((doc) => {
+              // if 有填資料再進來
+              if (doc.data().avatar) {
+                // cant see self as a friend
+                if (doc.id !== UserData.authUser.uid) {
+                  console.log(doc.id, " => ", doc.data());
+                  friendlist.push(doc.data().id);
                 }
-              });
-              this.filterFriend(firebase, UserData.authUser.uid, friendlist)
-            },
-            (error) => {
-              console.log(error)
-            }
-          )
-      }
+              }
+            });
+            this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+    }
   }
   filterFriend(firebase, id, friendlist) {
     // 先取得我的朋友列表
@@ -627,7 +633,7 @@ class DiscoverFriend extends Component {
     this.setState({ interest: e.target.textContent }, () => {
       console.log(this.state)
     });
-    
+
   }
   render() {
     const { showCard, clickWhom } = this.state;

@@ -45,11 +45,23 @@
     justify-content: center;
     align-items: center;
 }
+.account>.main>.view>.setting-1>.upload>.border>input[type="file"] {
+    display: none;
+}
 
-.account>.main>.view>.setting-1>.upload>.border>.avatar {
+.account>.main>.view>.setting-1>.upload>.border>label>.avatar {
     width: 200px;
     height: 200px;
     background-color: #f1f2f6;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.account>.main>.view>.setting-1>.upload>.border>label>.avatar>img {
+    width: 200px;
+    height: 200px;
     border-radius: 10px;
     cursor: pointer;
     display: flex;

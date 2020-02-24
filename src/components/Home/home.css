@@ -17,27 +17,24 @@
     /* position: fixed; */
     height: 100%;
     overflow: auto;
+    list-style-type:none;
   }
   
-  .home>.main>.sideNav>li {
+  .home>.main>.sideNav>a {
     padding: 2%;
     display: block;
     color: black;
     padding: 16px;
-    text-decoration: none;
-  }
-  .home>.main>.sideNav>li>a {
     font-size: 18px;
-    padding: 2%;
   }
   /* add active classname */
-  .home>.main>.sideNav>li.active {
+  .home>.main>.sideNav>a.active {
     background-color: #63cdda;
     color: white;
     /* background-color: #ffd32a; */
   }
   
-  .home>.main>.sideNav>li:hover:not(.active) {
+  .home>.main>.sideNav>a:hover:not(.active) {
     background-color: #555;
     color: white;
   }
