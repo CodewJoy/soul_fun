@@ -153,7 +153,7 @@ class MyFriend extends Component {
               <img className="avatar" src={item.avatar} alt="avatar" />
               <div className="center friend-box-text">
                 <h4>{item.name}</h4>
-                <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
+                <button onClick={this.showCard.bind(this, item.id)}>See more</button>
               </div>
             </div>
           ))}
@@ -362,7 +362,7 @@ class FriendRequests extends Component {
                 <img className="avatar" src={item.avatar} alt="avatar" />
                 <div className="center friend-box-text">
                   <h4>{item.name}</h4>
-                  <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
+                  <button onClick={this.showCard.bind(this, item.id)}>See more</button>
                 </div>
               </div>
             ))}
@@ -669,7 +669,7 @@ class DiscoverFriend extends Component {
           />
           <div className="container">
             {referlist.map(item => (
-              <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
+              <div key={item.id} className="friend-box">
                 {/* <div key={item.id} className="friend-box"> */}
                 <img className="avatar" src={item.avatar} alt="avatar" />
                 <div className="friend-box-text">
@@ -687,6 +687,7 @@ class DiscoverFriend extends Component {
                       {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
                     </p>
                   </div>
+                  <button onClick={this.showCard.bind(this, item)}>See more</button>
                 </div>
               </div>
             ))}

@@ -245,8 +245,7 @@ class Setting extends Component {
                 <sub>
                   *Upload a picture that represents you as your avatar.
                 </sub>
-              </p>
-              <p>
+                <br/>
                 <sub>
                   *The ideal image shape should be square look.
                 </sub>
