@@ -1,3 +1,14 @@
+.interest-tag-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+}
+.interest-tag-home {
+    background-color: #ffd32a;
+    border-radius: 25px;
+    padding: 5px 8px;
+    margin: 5px 5px 5px 0;
+}
+
 .home {
     width: 100%;
     /* background: whitesmoke; */
@@ -61,29 +72,41 @@
     flex-wrap: wrap;
     justify-content: center;
 }
+.interest-box {
+    width: 100%;
+}
+.interest-ellipsis {
+    overflow:hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; 
+}
+.friend-box-text {
+    margin:3%;
+}
 .home>.main>.view>.container>.friend-box{
     margin: 1%;
-    padding: 1%;
-    width: 20%;
+    /* padding: 1%; */
+    width: 16vw;
     text-align: center;
     /* background: white; */
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 5px;
+    border-radius: 8px;
+    overflow: hidden;
 }
 .home>.main>.view>.container>.friend-box>.avatar{
-    vertical-align: middle;
-    border-radius: 50%;
-    border: 2px white solid;
-    width: 80px;
-    height: 80px;
-    margin: 1%;
-    text-align: center;
+    width: 16vw;
+    height:16vw;
+    object-fit: cover;
+
 }
+
 .home>.main>.view>.show-card{
     position: fixed;
+    left: 30vw;
     top: 80px;
     background-color: white;
-    width: 40%;
+    width: 40vw;
+    min-height: 70vh;
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     border-radius: 5px;
     padding: 2%;
@@ -93,9 +116,9 @@
     vertical-align: middle;
     border-radius: 50%;
     border: 2px white solid;
-    width: 80px;
-    height: 80px;
-    margin: 1%;
+    width: 100px;
+    height: 100px;
+    /* margin: 1%; */
     text-align: center;
 }
 .home>.main>.view>.show-card>.container {
@@ -103,12 +126,12 @@
     display: flex;
     justify-content: space-between;
 }
-.home>.main>.view>.show-card>.container>.container1 {
-    display: flex;
+.home>.main>.view>.show-card>.container>.container-1 {
+    /* display: flex; */
     width: 50%;
 }
-.home>.main>.view>.show-card>.container>.container2 {
-    display: flex;
+.home>.main>.view>.show-card>.container>.container-2 {
+    /* display: flex; */
     width: 50%;
 }
 .home>.main>.view>.show-card>.center {

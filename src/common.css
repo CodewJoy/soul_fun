@@ -31,7 +31,7 @@ button {
     font-size: 16px;
     border: none; /* Remove borders */
     color: white; /* Add a text color */
-    padding: 12px 20px; /* Add some padding */
+    padding: 12px 25px; /* Add some padding */
     cursor: pointer; /* Add a pointer cursor on mouse-over */
     /* background-color: #ffd32a; */
     background-color: #546de5;

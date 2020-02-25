@@ -46,9 +46,11 @@ class LogInFormBase extends Component {
         this.props.firebase.doSignInWithEmailAndPassword(email, pwd)
             .then(() => {
                 console.log('YA');
+                console.log(this.props);
                 this.setState({
                     logedIn: true
                 });
+
                 // this.props.history.push(ROUTES.ACCOUNT);
             })
             .catch(error => {

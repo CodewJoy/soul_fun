@@ -151,7 +151,7 @@ class MyFriend extends Component {
           {this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
               <img className="avatar" src={item.avatar} alt="avatar" />
-              <div className="center">
+              <div className="center friend-box-text">
                 <h4>{item.name}</h4>
                 <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
               </div>
@@ -198,13 +198,16 @@ class MyFriend extends Component {
                 </p>
               </div>
             </div>
-            <p>
+            <div>
               <b>Interest&ensp;</b>
-              {clickWhom.interest.map(int => (<span key={int}>{int}&ensp;</span>))}
-            </p>
+              <div className='interest-tag-wrapper'>
+                {clickWhom.interest.map(int => (<span className='interest-tag-home' key={int}>{int}</span>))}
+              </div>
+            </div>
             <p>
               <b>Language&ensp;</b>
-              {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))}
+              {clickWhom.language}
+              {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
             </p>
             <div className="container">
               <div className="go-back" onClick={this.closeCard}>
@@ -357,7 +360,7 @@ class FriendRequests extends Component {
             {confirmfriend.map(item => (
               <div className="friend-box" key={item.id}>
                 <img className="avatar" src={item.avatar} alt="avatar" />
-                <div className="center">
+                <div className="center friend-box-text">
                   <h4>{item.name}</h4>
                   <button onClick={this.showCard.bind(this, item.id)}>Click to see more</button>
                 </div>
@@ -404,13 +407,16 @@ class FriendRequests extends Component {
                   </p>
                 </div>
               </div>
-              <p>
+              <div>
                 <b>Interest&ensp;</b>
-                {clickWhom.interest.map(int => (<span key={int}>{int}&ensp;</span>))}
-              </p>
+                <div className='interest-tag-wrapper'>
+                  {clickWhom.interest.map(int => (<span className='interest-tag-home' key={int}>{int}</span>))}
+                </div>
+              </div>
               <p>
                 <b>Language&ensp;</b>
-                {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))}
+                {clickWhom.language}
+                {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
               </p>
               <div className="container">
                 <div className="go-back" onClick={this.closeCard}>
@@ -461,7 +467,7 @@ class DiscoverFriend extends Component {
       referlist: [],
       showCard: false,
       clickWhom: '',
-      interest: ''
+      // interest: ''
     }
     this.addFriend = this.addFriend.bind(this);
     this.referFriends = this.referFriends.bind(this);
@@ -472,10 +478,10 @@ class DiscoverFriend extends Component {
   // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
   componentDidMount() {
     const { UserData, firebase } = this.props.props;
-    const { isLoaded, interest } = this.state;
+    const { isLoaded } = this.state;
     if (UserData.authUser) {
       if (!isLoaded) {
-        this.referFriends(interest, UserData, firebase);
+        this.referFriends('', UserData, firebase);
         this.setState({ isLoaded: true });
       }
     }
@@ -483,10 +489,10 @@ class DiscoverFriend extends Component {
   // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
   componentDidUpdate() {
     const { UserData, firebase } = this.props.props;
-    const { isLoaded, interest } = this.state;
+    const { isLoaded } = this.state;
     // 加個鎖不然會無限 loading
     if (!isLoaded) {
-      this.referFriends(interest, UserData, firebase);
+      this.referFriends('', UserData, firebase);
       this.setState({ isLoaded: true });
     }
   }
@@ -494,7 +500,7 @@ class DiscoverFriend extends Component {
     // 取得目前用戶列表
     if (interest === '') {
       firebase.db.collection("Users")
-        // .orderBy("timestamp")
+        .orderBy("timestamp","desc")
         .limit(20)
         .get()
         .then(
@@ -518,7 +524,7 @@ class DiscoverFriend extends Component {
         )
     } else {
       firebase.db.collection("Users").where('interest', "array-contains", interest)
-        // .orderBy("timestamp")
+        // .orderBy("timestamp","desc")
         .limit(20)
         .get()
         .then(
@@ -630,10 +636,9 @@ class DiscoverFriend extends Component {
     // console.log(e.target.name)
     const { UserData, firebase } = this.props.props;
     this.referFriends(e.target.textContent, UserData, firebase);
-    this.setState({ interest: e.target.textContent }, () => {
-      console.log(this.state)
-    });
-
+    // this.setState({ interest: e.target.textContent }, () => {
+    //   console.log(this.state)
+    // });
   }
   render() {
     const { showCard, clickWhom } = this.state;
@@ -667,18 +672,22 @@ class DiscoverFriend extends Component {
               <div key={item.id} className="friend-box" onClick={this.showCard.bind(this, item)}>
                 {/* <div key={item.id} className="friend-box"> */}
                 <img className="avatar" src={item.avatar} alt="avatar" />
-                <p>
-                  <b>{item.username}</b>
-                </p>
-                <p>{item.country}</p>
-                {/* <p>Country: {item.country}</p> */}
-                <hr />
-                <p>{item.language}</p>
-                {/* <p>Language: {item.language}</p> */}
-                <p>
-                  {/* <b>{item.interest}</b> */}
-                  {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
-                </p>
+                <div className="friend-box-text">
+                  <p>
+                    <b>{item.username}</b>
+                  </p>
+                  <p>{item.country}</p>
+                  {/* <p>Country: {item.country}</p> */}
+                  <hr />
+                  <p>{item.language}</p>
+                  {/* <p>Language: {item.language}</p> */}
+                  <div className="interest-box">
+                    <p className="interest-ellipsis">
+                      {/* <b>{item.interest}</b> */}
+                      {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
+                    </p>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
@@ -722,10 +731,12 @@ class DiscoverFriend extends Component {
                   </p>
                 </div>
               </div>
-              <p>
+              <div>
                 <b>Interest&ensp;</b>
-                {clickWhom.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
-              </p>
+                <div className='interest-tag-wrapper'>
+                  {clickWhom.interest.map(int => (<b key={int} className='interest-tag-home'>{int}</b>))}
+                </div>
+              </div>
               <p>
                 <b>Language&ensp;</b>
                 {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}

@@ -51,7 +51,7 @@ class AppBase extends Component {
                 // console.log("Current data: ", doc.data())
                 if (doc.exists) {
                   console.log("Document data:", doc.data());
-                  this.setState({ authUser: authUser, userInfo: doc.data() })
+                  this.setState({ authUser: authUser, userInfo: doc.data() });
                 } else {
                   // doc.data() will be undefined in this case
                   console.log("No such document!");
@@ -60,6 +60,10 @@ class AppBase extends Component {
               (error) => {
                 console.log(error)
               }
+            )
+          this.props.firebase.db.collection("Users").doc(authUser.uid)
+            .update(
+              {timestamp: Date.now()}
             )
         }
         else {

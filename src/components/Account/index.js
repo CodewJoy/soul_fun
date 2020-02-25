@@ -50,11 +50,11 @@ class AccountBase extends Component {
 
 const INITIAL_STATE = {
   // username: 
-  gender: 'male',
-  birthday: "1995-01-01",
+  gender: '',
+  birthday: '',
   location: '',
   country: '',
-  language: 'Franch',
+  language: '',
   avatar: '',
   bio: '',
   // interest checked record
@@ -88,21 +88,24 @@ class Setting extends Component {
     const { gender, birthday, location, country, language, avatar, bio, interest, hobby } = this.state;
     // console.log(this.props.UserData.authUser.uid);
     // console.log(this.props.firebase.db);
-
-    this.props.firebase.db.collection("Users").doc(`${this.props.userInfo.id}`).update(
-      {
-        gender, birthday, location,
-        country, language, avatar,
-        bio, hobby, interest
-      }
-    )
-      .then(() => {
-        console.log('fin_acc');
-        this.setState({
-          fin_acc: true
-        });
-        //this.props.history.push(ROUTES.ACCOUNT);
-      })
+    if ( gender==='' || birthday === '' || location === ''|| country === '' || language === '' || avatar === '' || bio === '' || interest === []) {
+      alert('You have not finished the form.');
+    } else {
+      this.props.firebase.db.collection("Users").doc(`${this.props.userInfo.id}`).update(
+        {
+          gender, birthday, location,
+          country, language, avatar,
+          bio, hobby, interest
+        }
+      )
+        .then(() => {
+          console.log('fin_acc');
+          this.setState({
+            fin_acc: true
+          });
+          //this.props.history.push(ROUTES.ACCOUNT);
+        })
+    }
   }
 
   getValue(event) {
@@ -241,6 +244,11 @@ class Setting extends Component {
               <p>
                 <sub>
                   *Upload a picture that represents you as your avatar.
+                </sub>
+              </p>
+              <p>
+                <sub>
+                  *The ideal image shape should be square look.
                 </sub>
               </p>
               {/* <button onClick={this.handleUpload}>Save Picture</button> */}
