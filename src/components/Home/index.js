@@ -42,6 +42,7 @@ class HomeBase extends Component {
     this.setState({ selected: name });
   }
   render() {
+    // console.log('lalala',this.props);
     return (
       <div className="home">
         <Navbar />
@@ -55,7 +56,7 @@ class HomeBase extends Component {
             </Link>
             <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
               <li>
-                <Badge badgeContent={99} color="secondary">
+                <Badge badgeContent={ this.props.UserData.f_invitation } color="secondary">
                   <img src={Invitation} alt="invitation" className="home-icon" />
                 </Badge>
                 &emsp;Friend Requests
