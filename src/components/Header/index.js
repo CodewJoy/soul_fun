@@ -10,7 +10,7 @@ class Navbar extends Component {
             <div className="navbar">
                 <div className="logo">
                     <img className="logo-img" src={Logo} alt="Logo" />
-                    <h2>&nbsp;SouLFun</h2>
+                    <h3>&nbsp;SouLFun</h3>
                 </div>
                 <Navigation />
             </div>
@@ -24,7 +24,7 @@ class Navbar_Account extends Component {
             <div className="navbar">
                 <div className="logo">
                     <img className="logo-img" src={Logo} alt="Logo" />
-                    <h2>&nbsp;SouLFun</h2>
+                    <h3>&nbsp;SouLFun</h3>
                 </div>
             </div>
         )
@@ -36,7 +36,7 @@ class NavLogo_Landing extends Component {
         return (
             <div className="logo">
                 <img className="logo-img" src={Logo} alt="Logo" />
-                <h2>&nbsp;SouLFun</h2>
+                <h3>&nbsp;SouLFun</h3>
             </div>
         )
     }

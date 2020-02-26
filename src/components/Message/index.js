@@ -125,7 +125,7 @@ class MessageBase extends Component {
     console.log('dialogue', this.state.document);
     console.log('dialogue', UserData.userInfo);
     let roomID = createRoomID(UserData.authUser.uid, frinendID)
-    firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp")
+    firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
       .onSnapshot(
         (querySnapshot) => {
           let chat = [];
@@ -186,6 +186,7 @@ class MessageBase extends Component {
     } else {
       console.log("chat", this.state)
       console.log("chat", this.state.chat)
+      console.log("chat", this.props)
       // console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
 
@@ -198,6 +199,7 @@ class MessageBase extends Component {
               <div className="main">
                 <div className='chat-room'>
                   <div className="my-chat">
+                    {/* <img src={this.props.userInfo.avatar} alt="user-avatar"/> */}
                     <h2>Chats</h2>
                   </div>
                   {this.state.document.map(item => (
@@ -218,7 +220,7 @@ class MessageBase extends Component {
 
                 <div className='conversation'>
                   <Conversation chat={this.state.chat} talkToWhom={this.state.talkToWhom} />
-                  <div className="input-box">
+                  <div className="input-box" id="input-box" >
                     <form onSubmit={this.handleSubmit}>
                       <input className='input-message' type="text" placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
                       {/* <input className='input-click' type="submit" value="Enter" /> */}

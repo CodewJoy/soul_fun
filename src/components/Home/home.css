@@ -110,6 +110,11 @@
     overflow: hidden;
 }
 
+.home>.main>.view>.container>.friend-box>.bottom-line {
+    width: 100%;
+    height: 5px;
+    background-color: #ffdd59;
+}
 .home>.main>.view>.container>.friend-box>.avatar {
     width: 100%;
     height: 18vw;

@@ -4,12 +4,14 @@
     position: absolute;
     /* background: #63cdda; */
 }
+
 .message>.main {
     width: 100%;
     /* height: 90%; */
     height: calc(100% - 70px);
     display: flex;
 }
+
 .message>.main>.chat-room {
     width: 22%;
     max-height: 100%;
@@ -17,35 +19,43 @@
     /* display: flex;
     align-content: center; */
 }
+
 .message>.main>.chat-room>.chat-box>input[type="radio"] {
     display: none;
 }
-.message>.main>.chat-room>.chat-box>input[type="radio"] + label {
+
+.message>.main>.chat-room>.chat-box>input[type="radio"]+label {
     cursor: pointer;
 }
-.message>.main>.chat-room>.chat-box>input[type="radio"] + label:hover {
+
+.message>.main>.chat-room>.chat-box>input[type="radio"]+label:hover {
     background-color: #f1f2f6;
 }
-.message>.main>.chat-room>.chat-box>input[type="radio"]:checked + label {
+
+.message>.main>.chat-room>.chat-box>input[type="radio"]:checked+label {
     background-color: #f1f2f6;
 }
+
 .message>.main>.chat-room>.my-chat {
     text-align: center;
     /* margin: 1%;
     width: 98%; */
 }
+
 .message>.main>.chat-room>.chat-box {
     margin: 1%;
     width: 98%;
     min-height: 60px;
 }
-.message>.main>.chat-room>.chat-box>label{
+
+.message>.main>.chat-room>.chat-box>label {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-wrap: wrap;
 }
+
 .message>.main>.chat-room>.chat-box>label>.avatar {
     vertical-align: middle;
     border-radius: 50%;
@@ -55,10 +65,12 @@
     margin: 3%;
     /* flex: none; */
 }
+
 .message>.main>.chat-room>.chat-box>label>.container {
     width: calc(80% - 50px);
     /* flex: auto; */
 }
+
 .message>.main>.chat-room>.chat-box>label>.container>.word {
     width: 100%;
     white-space: nowrap;
@@ -68,6 +80,7 @@
     color: grey;
     font-size: 14px;
 }
+
 .message>.main>.conversation {
     width: 80%;
     height: 100%;
@@ -75,20 +88,26 @@
     font-size: 18px;
     padding-bottom: 100px;
 }
+
 .message>.main>.conversation>.talks {
     overflow-y: scroll;
     /* max-height: 86%; */
     height: 86%;
     width: 100%;
+    display: flex;
+    flex-direction: column-reverse;
 }
+
 .message>.main>.conversation>.input-box {
     height: 10%;
     width: 100%;
 }
+
 .message>.main>.headerDivider {
     border-left: 1px solid lightgray;
     height: 100%;
 }
+
 .message>.main>.conversation>.talks>.adm-dialog {
     font-size: 14px;
     color: gray;
@@ -96,18 +115,21 @@
 }
 
 /* need to fix: long message use div, short message use span */
+
 .message>.main>.conversation>.talks>.fri-dialog {
     /* text-align: left; */
     display: flex;
     justify-content: flex-start;
-    margin: 2% 0%;
+    margin: 0.5% 0%;
 }
+
 .message>.main>.conversation>.talks>.my-dialog {
     /* text-align: right; */
     display: flex;
     justify-content: flex-end;
-    margin: 2% 0%;
+    margin: 0.5% 0%;
 }
+
 .message>.main>.conversation>.talks>.fri-dialog>div {
     width: 60%;
     background-color: #ffd32a;
@@ -115,6 +137,7 @@
     font-size: 16px;
     padding: 1% 2%;
 }
+
 .message>.main>.conversation>.talks>.my-dialog>div {
     width: 60%;
     background-color: #f1f2f6;
@@ -122,6 +145,7 @@
     font-size: 16px;
     padding: 1% 2%;
 }
+
 .message>.main>.conversation>.input-box>form {
     border: 2px solid #ffd32a;
     width: 96%;
@@ -132,21 +156,26 @@
     justify-content: center;
     align-items: center;
 }
-.message>.main>.conversation>.input-box>form> textarea:focus, input:focus {
+
+.message>.main>.conversation>.input-box>form>textarea:focus, input:focus {
     outline: none;
 }
+
 .message>.main>.conversation>.input-box>form>.input-message {
-    width: calc(95% - 40px);;
+    width: calc(95% - 40px);
+    ;
     border-radius: 30px;
     border: none;
     height: 40px;
     color: grey;
     font-size: 16px;
 }
+
 .message>.main>.conversation>.input-box>form>.input-click {
     width: 40px;
     height: auto;
 }
+
 /* .message>.main>.pick-friend {
     padding: 1%; 
     width: 20%;
@@ -163,3 +192,20 @@
 .message>.main>.pick-friend>.pick-box>.avatar {
     width: 60px;
 } */
+
+@media (max-width: 500px) {
+    .message>.main {
+        width: 100%;
+        display: block;
+        /* justify-content: center;
+        align-items: center; */
+    }
+    .message>.main>.chat-room {
+        padding: 5%;
+        width: 90%;
+    }
+    .message>.main>.conversation {
+        padding: 2%;
+        width: 96%;
+    }
+}

@@ -699,6 +699,7 @@ class DiscoverFriend extends Component {
                   </div>
                   <button onClick={this.showCard.bind(this, item)}>See more</button>
                 </div>
+                <div className="bottom-line"></div>
               </div>
             ))}
           </div>
