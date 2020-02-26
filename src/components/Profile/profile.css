@@ -27,8 +27,10 @@
     cursor: pointer;
 }
 .profile>.main>.sideNav>li:hover {
-    background-color: #63cdda;
-    color: white;
+    /* background-color: #63cdda; */
+    /* background-color: #ffc629; */
+    background-color: #ffdd59;
+    color: black;
     /* background-color: #ffd32a; */
 }
 .profile {

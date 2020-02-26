@@ -1,13 +1,12 @@
 .landing {
     width: 100%;
-    background: #63cdda;
 }
 .landing>.navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: white;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
 .landing>.navbar>.log-in{
@@ -19,17 +18,29 @@
     /* margin: 2% 0%; */
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+}
+.landing>.main>.container {
+    display: flex;
+    justify-content: center;
     align-items: center;
+    background-color: #ffdd59;
+    width: 98%;
+    border: 0 1vw white solid;
 }
-.landing>.main>.web-intro {
-    padding: 2%; 
-    width: 36%;
+.landing>.main>.container>.web-intro {
+    padding: 5%; 
+    width: 50vw;
+    /* height: 100%; */
+    /* border: 10px white solid; */
 }
-.landing>.main>.graphics {
-    padding: 1%; 
+.landing>.main>.container>.graphics {
+    /* padding: 1%;  */
+    width: 50vw;
     width: 50%;
+    border: 1% white solid;
 }
-.landing>.main>.graphics>.soulfun {
+.landing>.main>.container>.graphics>.soulfun {
     width: 100%;
 }
 .landing>.sign-up {

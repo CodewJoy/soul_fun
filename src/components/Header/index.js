@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import Logo from '../img/logo.svg';
+import Logo from '../img/logo_3.svg';
 import Navigation from '../App/navigation.js';
 import './header.css';
-import LogIn from '../App/navigation.js';
 
 // other page used
 class Navbar extends Component {
@@ -11,7 +10,7 @@ class Navbar extends Component {
             <div className="navbar">
                 <div className="logo">
                     <img className="logo-img" src={Logo} alt="Logo" />
-                    <h3>SOULFUN</h3>
+                    <h2>&nbsp;SouLFun</h2>
                 </div>
                 <Navigation />
             </div>
@@ -25,7 +24,7 @@ class Navbar_Account extends Component {
             <div className="navbar">
                 <div className="logo">
                     <img className="logo-img" src={Logo} alt="Logo" />
-                    <h3>SOULFUN</h3>
+                    <h2>&nbsp;SouLFun</h2>
                 </div>
             </div>
         )
@@ -37,7 +36,7 @@ class NavLogo_Landing extends Component {
         return (
             <div className="logo">
                 <img className="logo-img" src={Logo} alt="Logo" />
-                <h3>SOULFUN</h3>
+                <h2>&nbsp;SouLFun</h2>
             </div>
         )
     }

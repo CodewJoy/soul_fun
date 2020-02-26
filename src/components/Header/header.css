@@ -3,8 +3,12 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #63cdda;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    /* background-color: #63cdda; */
+    /* background-color: #ffd32a; */
+    /* background-color: #ffc629; */
+    background-color: #ffdd59;
+    /* opacity:0.8; */
+    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 .navbar>.logo {
     margin: 3px 25px;
@@ -12,8 +16,8 @@
     align-items: center;
 }
 .navbar>.logo>.logo-img {
-    height: 40px;
-    width: 40px;
+    height: 35px;
+    width: 35px;
 }
 .navbar>.member-navbar {
     width: 30%;

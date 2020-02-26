@@ -7,6 +7,7 @@ import PeopleSharpIcon from '@material-ui/icons/PeopleSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 import ChatIcon from '@material-ui/icons/Chat';
 import NotificationsSharpIcon from '@material-ui/icons/NotificationsSharp';
+import { Badge } from '@material-ui/core';
 
 // only member can see this nav
 const Navigation = () => (
@@ -22,17 +23,21 @@ const Navigation = () => (
 const NavigationAuth = () => (
   <ul>
     <li>
-      <Link to={ROUTES.HOME}><PeopleSharpIcon style={{ fontSize: 35 }}/></Link>
+      <Link to={ROUTES.HOME}>
+        <Badge badgeContent={99} color="secondary">
+          <PeopleSharpIcon style={{ fontSize: 30 }} />
+        </Badge>
+      </Link>
     </li>
     <li>
-      <Link to={ROUTES.MESSAGE}><ChatIcon style={{ fontSize: 35 }}/></Link>
+      <Link to={ROUTES.MESSAGE}><ChatIcon style={{ fontSize: 30 }} /></Link>
     </li>
     <li>
-      <Link to={ROUTES.PROFILE}><AccountCircleSharpIcon style={{ fontSize: 35 }}/></Link>
+      <Link to={ROUTES.PROFILE}><AccountCircleSharpIcon style={{ fontSize: 30 }} /></Link>
     </li>
     <li>
       {/* <Link to={ROUTES.MESSAGE}> */}
-        <NotificationsSharpIcon style={{ fontSize: 35 }}/>
+      <NotificationsSharpIcon style={{ fontSize: 30 }} />
       {/* </Link> */}
     </li>
     {/* <li>

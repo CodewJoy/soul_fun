@@ -11,6 +11,10 @@ import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { INTERESTS } from '../../constants/factor.js';
+import Discover from '../img/discover.svg';
+import Invitation from '../img/invitation.svg';
+import Myfriend from '../img/my_friend.svg';
+import { Badge } from '@material-ui/core';
 
 const Home = () => (
   <>
@@ -45,17 +49,22 @@ class HomeBase extends Component {
           <ul className="sideNav">
             <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
               <li>
-                Discover Friends
+                <img src={Discover} alt="discover" className="home-icon" />
+                &emsp;Discover Friends
               </li>
             </Link>
             <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
               <li>
-                Friend Requests
+                <Badge badgeContent={99} color="secondary">
+                  <img src={Invitation} alt="invitation" className="home-icon" />
+                </Badge>
+                &emsp;Friend Requests
               </li>
             </Link>
             <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
               <li>
-                My Friend
+                <img src={Myfriend} alt="myfriend" className="home-icon" />
+                &emsp;My Friend
               </li>
             </Link>
           </ul>
@@ -146,7 +155,7 @@ class MyFriend extends Component {
     }
     return (
       <div className="view">
-        <h3>Your Friends</h3>
+        <h2>Your Friends</h2>
         <div className="container">
           {this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
@@ -322,6 +331,7 @@ class FriendRequests extends Component {
       );
     // update context
     // this.setState({ goToChat: true, friendID: id });
+    // () => {this.setState({ goToChat: true })};
     this.setState({ goToChat: true });
   }
   showCard(id) {
@@ -355,7 +365,7 @@ class FriendRequests extends Component {
     } else {
       return (
         <div className="view">
-          <h3>Your Friend Requests</h3>
+          <h2>Your Friend Requests</h2>
           <div className="container">
             {confirmfriend.map(item => (
               <div className="friend-box" key={item.id}>
@@ -500,7 +510,7 @@ class DiscoverFriend extends Component {
     // 取得目前用戶列表
     if (interest === '') {
       firebase.db.collection("Users")
-        .orderBy("timestamp","desc")
+        .orderBy("timestamp", "desc")
         .limit(20)
         .get()
         .then(
@@ -655,7 +665,7 @@ class DiscoverFriend extends Component {
     } else {
       return (
         <div className="view">
-          <h3>Discover new friends here!</h3>
+          <h2>Discover new friends here!</h2>
           <Autocomplete
             value={this.state.interest}
             // name="location"
@@ -676,10 +686,9 @@ class DiscoverFriend extends Component {
                   <p>
                     <b>{item.username}</b>
                   </p>
-                  <p>{item.country}</p>
+                  <p>{item.country},&nbsp;{item.language}</p>
                   {/* <p>Country: {item.country}</p> */}
                   <hr />
-                  <p>{item.language}</p>
                   {/* <p>Language: {item.language}</p> */}
                   <div className="interest-box">
                     <p className="interest-ellipsis">
