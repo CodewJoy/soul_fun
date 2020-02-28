@@ -59,7 +59,7 @@ export const withFirebase = Component => props => (
     </FirebaseContext.Consumer>
 );
 export { FirebaseContext };
-export default Firebase;
+// export default Firebase;
 
 // const FirebaseContext = React.createContext(null);
 // ReactDOM.render(

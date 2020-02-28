@@ -43,7 +43,7 @@ class NavigationAuth extends Component {
         </li>
         <li>
           {/* <Link to={ROUTES.MESSAGE}> */}
-          <NotificationsSharpIcon style={{ fontSize: 30 }} />
+          {/* <NotificationsSharpIcon style={{ fontSize: 30 }} /> */}
           {/* </Link> */}
         </li>
         {/* <li>

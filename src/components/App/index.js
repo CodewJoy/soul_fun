@@ -7,9 +7,11 @@ import {
 import * as ROUTES from '../../constants/routes';
 import LandingPage from '../Landing';
 import HomePage from '../Home';
+import { FriendRequests, MyFriend } from '../Home';
 import AccountPage from '../Account';
 import MessagePage from '../Message';
 import ProfilePage from '../Profile';
+import EditPage from '../Edit';
 import Loading from '../img/loading.gif';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
@@ -38,7 +40,7 @@ class AppBase extends Component {
       authUser: "",
       userInfo: '',
       updateUserData: this.updateUserData,
-      f_invitation:''
+      f_invitation: ''
     };
   }
   componentDidMount() {
@@ -52,7 +54,7 @@ class AppBase extends Component {
               (doc) => {
                 // console.log("Current data: ", doc.data())
                 if (doc.exists) {
-                  console.log("Document data:", doc.data());
+                  // console.log("Document data:", doc.data());
                   this.setState({ authUser: authUser, userInfo: doc.data() });
                 } else {
                   // doc.data() will be undefined in this case
@@ -69,21 +71,20 @@ class AppBase extends Component {
             )
           this.props.firebase.db.collection("Users").doc(authUser.uid).collection("friends")
             .where("status", "==", "askUrConfirm")
-            .get()
-            .then(
+            .onSnapshot(
               (querySnapshot) => {
                 let count = 0;
-                querySnapshot.forEach(function(doc) {
-                    if (doc) {
-                      count+=1;
-                    }
-                    // doc.data() is never undefined for query doc snapshots
-                    // console.log('requests', doc.id, " => ", doc.data());
-                    // console.log('requests', doc);
+                querySnapshot.forEach(function (doc) {
+                  if (doc) {
+                    count += 1;
+                  }
+                  // doc.data() is never undefined for query doc snapshots
+                  // console.log('requests', doc.id, " => ", doc.data());
+                  // console.log('requests', doc);
                 });
                 console.log(count);
                 this.setState({ f_invitation: count });
-            }
+              }
             )
             .catch(function (error) {
               console.log("Error getting documents: ", error)
@@ -140,6 +141,33 @@ class AppBase extends Component {
                 return (<ProfilePage />)
               }
             }} />
+            <Route path={ROUTES.EDIT} render={() => {
+              if (this.state.authUser === "") {
+                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+              } else if (this.state.authUser === null) {
+                return (<LandingPage />)
+              } else {
+                return (<EditPage />)
+              }
+            }} />
+            {/* <Route path={ROUTES.FRIEND_REQUESTS} render={() => {
+              if (this.state.authUser === "") {
+                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+              } else if (this.state.authUser === null) {
+                return (<LandingPage />)
+              } else {
+                return (<FriendRequests />)
+              }
+            }} />
+            <Route path={ROUTES.MY_FRIEND} render={() => {
+              if (this.state.authUser === "") {
+                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+              } else if (this.state.authUser === null) {
+                return (<LandingPage />)
+              } else {
+                return (<MyFriend />)
+              }
+            }} /> */}
           </Switch>
         </Router>
       </AuthUserContext.Provider>

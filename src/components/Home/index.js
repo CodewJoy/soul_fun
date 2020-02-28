@@ -44,38 +44,40 @@ class HomeBase extends Component {
   render() {
     // console.log('lalala',this.props);
     return (
-      <div className="home">
-        <Navbar />
-        <div className="main">
-          <ul className="sideNav">
-            <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-              <li>
-                <img src={Discover} alt="discover" className="home-icon" />
-                &emsp;Discover Friends
+      <Router>
+        <div className="home">
+          <Navbar />
+          <div className="main">
+            <ul className="sideNav">
+              <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+                <li>
+                  <img src={Discover} alt="discover" className="home-icon" />
+                  &emsp;Discover Friends
               </li>
-            </Link>
-            <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-              <li>
-                <Badge badgeContent={ this.props.UserData.f_invitation } color="secondary">
-                  <img src={Invitation} alt="invitation" className="home-icon" />
-                </Badge>
-                &emsp;Friend Requests
+              </Link>
+              <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+                <li>
+                  <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
+                    <img src={Invitation} alt="invitation" className="home-icon" />
+                  </Badge>
+                  &emsp;Friend Requests
               </li>
-            </Link>
-            <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
-              <li>
-                <img src={Myfriend} alt="myfriend" className="home-icon" />
-                &emsp;My Friend
+              </Link>
+              <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
+                <li>
+                  <img src={Myfriend} alt="myfriend" className="home-icon" />
+                  &emsp;My Friend
               </li>
-            </Link>
-          </ul>
-          <Switch>
-            <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
-            <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
-            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
-          </Switch>
+              </Link>
+            </ul>
+            <Switch>
+              <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
+              <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+            </Switch>
+          </div>
         </div>
-      </div>
+      </Router>
     )
   }
 }
@@ -769,3 +771,4 @@ class DiscoverFriend extends Component {
 }
 
 export default Home;
+export { FriendRequests, MyFriend };
