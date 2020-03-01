@@ -41,14 +41,6 @@ class NavigationAuth extends Component {
         <li>
           <Link to={ROUTES.PROFILE}><AccountCircleSharpIcon style={{ fontSize: 30 }} /></Link>
         </li>
-        <li>
-          {/* <Link to={ROUTES.MESSAGE}> */}
-          {/* <NotificationsSharpIcon style={{ fontSize: 30 }} /> */}
-          {/* </Link> */}
-        </li>
-        {/* <li>
-      <SignOutButton />
-    </li> */}
       </ul>
     );
   }

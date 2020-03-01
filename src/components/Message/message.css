@@ -90,7 +90,7 @@
 .message>.main>.conversation>.talks {
     overflow-y: scroll;
     /* max-height: 86%; */
-    height: 86%;
+    height: 90%;
     width: 100%;
     display: flex;
     flex-direction: column-reverse;
@@ -161,7 +161,6 @@
 
 .message>.main>.conversation>.input-box>form>.input-message {
     width: calc(95% - 40px);
-    ;
     border-radius: 30px;
     border: none;
     height: 40px;

@@ -105,8 +105,9 @@ class MessageBase extends Component {
                   // console.log("loaded", loaded);
                   if (loaded === document.length) {
                     // console.log("document_try", document);
-                    this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
-                    this.setState({ document: document, talkToWhom: document[0].friendInfo.uid });
+                    // this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
+                    this.setState({ document: document });
+                    // this.setState({ document: document, talkToWhom: document[0].friendInfo.uid });
                   }
                 },
                 (error) => {
@@ -192,7 +193,7 @@ class MessageBase extends Component {
 
       // state 更新後 document 有值再進來
       if (this.state.document.length > 0) {
-        if (this.state.chat.length > 0) {
+        // if (this.state.chat.length > 0) {
           return (
             <div className="message">
               <Navbar />
@@ -234,9 +235,9 @@ class MessageBase extends Component {
               </div>
             </div>
           );
-        } else {
-          return <div className="loading"><img src={Loading} alt="Loading" /></div>
-        }
+        // } else {
+        //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
+        // }
       } else {
         // return <div className="loading"><img src={Loading} alt="Loading" /></div>
         return (

@@ -160,7 +160,7 @@ class MyFriend extends Component {
       <div className="view">
         <h2>Your Friends</h2>
         <div className="container">
-          {this.state.myfriend.map(item => (
+          { this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
               <img className="avatar" src={item.avatar} alt="avatar" />
               <div className="center friend-box-text">

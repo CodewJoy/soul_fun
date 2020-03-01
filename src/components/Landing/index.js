@@ -67,7 +67,7 @@ class Landing extends Component {
           <div className="center-button">
             <h2>Share your passion to the world.</h2>
           </div>
-          <div className="container">
+          <div className="container reverse">
             <div className="web-intro tag">
               <h3>Use Interest Tags to find the friends with the same hobbies with you.</h3>
               <form className='interest line'>

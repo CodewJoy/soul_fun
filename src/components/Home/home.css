@@ -37,7 +37,6 @@
 }
 
 .home>.main>.sideNav>a {
-    padding: 2%;
     display: block;
     color: black;
     padding: 16px;
@@ -117,7 +116,7 @@
 }
 .home>.main>.view>.container>.friend-box>.avatar {
     width: 100%;
-    height: 18vw;
+    height: 17vw;
     object-fit: cover;
 }
 
@@ -209,4 +208,20 @@
         padding: 1%;
         width: 44%;
     }
+    .home>.main>.sideNav {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        font-size: 0px;
+        height: auto;
+        margin: 0;
+    }
+    .home>.main>.sideNav>a {
+        padding: 16px;
+        font-size: 16px;
+    }
+    
 }
