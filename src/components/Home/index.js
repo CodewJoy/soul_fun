@@ -44,7 +44,7 @@ class HomeBase extends Component {
   render() {
     // console.log('lalala',this.props);
     return (
-      <Router>
+      // <Router>
         <div className="home">
           <Navbar />
           <div className="main">
@@ -77,7 +77,7 @@ class HomeBase extends Component {
             </Switch>
           </div>
         </div>
-      </Router>
+      // </Router>
     )
   }
 }

@@ -74,11 +74,6 @@
     align-items: center;
 }
 
-.account>.main>.view>.setting-2>.line {
-    display: inline-flex;
-    align-items: center;
-}
-
 .account>.main>.view>.setting-2>.interest {
     width: 100%;
     display: flex;

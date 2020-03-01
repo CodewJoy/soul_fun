@@ -66,6 +66,4 @@ class EditBase extends Component {
     }
 }
 
-// function a 
-
 export default Edit;

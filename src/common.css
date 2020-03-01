@@ -60,3 +60,7 @@ button:hover {
   width: 150px;
   height: auto;
 }
+
+.gray-font {
+  color: dimgray;
+}

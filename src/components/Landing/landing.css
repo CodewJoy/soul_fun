@@ -24,24 +24,54 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    /* flex-wrap: wrap; */
     background-color: #ffdd59;
     width: 98%;
     border: 0 1vw white solid;
 }
 .landing>.main>.container>.web-intro {
-    padding: 5%; 
-    width: 50vw;
-    /* height: 100%; */
-    /* border: 10px white solid; */
+    padding: 5%;
+    width: 50%; 
 }
 .landing>.main>.container>.graphics {
-    /* padding: 1%;  */
-    width: 50vw;
     width: 50%;
-    border: 1% white solid;
 }
-.landing>.main>.container>.graphics>.soulfun {
+.landing>.main>.container>.graphics {
+    background: white;
+}
+.landing>.main>.container>.graphics>img {
     width: 100%;
+
+}
+.landing>.main>.container>.web-intro>.line {
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.landing>.main>.container>.web-intro>.interest>div>input[type="checkbox"] {
+    display: none;
+}
+
+.landing>.main>.container>.web-intro>.interest>div>input[type="checkbox"]+label {
+    display: inline-block;
+    background-color: #f1f2f6;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 7px 11px;
+    margin: 5px 5px 5px 0;
+}
+
+.landing>.main>.container>.web-intro>.interest>div>input[type="checkbox"]:checked+label {
+    background-color: #ffd32a;
+}
+
+.landing>.main>.container>.tag {
+    background-color: white;
+    padding: 0 2%;
+}
+.landing>.main>.container>.interest-intro {
+    background-color: #ffdd59;
+    padding: 0 2%;
 }
 .landing>.sign-up {
     position: fixed;
@@ -84,20 +114,49 @@
 .landing>.log-in>.line>.close-button {
     width: 40px;
 }
+.landing>.main>.footer {
+    margin: 2%;
+    text-align: center;
+}
 
-@media (max-width: 500px) {
+@media (max-width: 1400px) { 
+    .landing>.main>.container>.web-intro {
+        padding: 5%;
+        width: 50%; 
+    }
+    .landing>.main>.container>.graphics {
+        width: 50%;
+    }
+    .landing>.main>.container>.graphics>img {
+        /* width: 100%; */
+        height: 50vw;
+        /* border: 1% white solid; */
+        object-fit: cover;
+    }
+}
+@media (max-width: 700px) {
     .landing>.main {
         width: 100%;
         display: block;
         /* justify-content: center;
         align-items: center; */
     }
-    .landing>.main>.web-intro {
-        padding: 5%; 
+    .landing>.main>.container {
+        width: 100%;
+        flex-wrap: wrap-reverse;
+    }
+    .landing>.main>.container>.web-intro {
+        border: 1vw white solid;
         width: 90%;
     }
-    .landing>.main>.graphics {
-        padding: 2%; 
-        width: 96%;
+    .landing>.main>.container>.graphics{
+        border: 1vw white solid;
+        width: 100%;
+ 
+    }
+    .landing>.main>.container>.graphics>img {
+        width: 100%;
+        height: auto;
+        /* object-fit: none; */
     }
 }

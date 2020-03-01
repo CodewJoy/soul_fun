@@ -61,7 +61,7 @@
 
 .home>.main>.view {
     display: flex;
-    justify-content: center;
+    /* justify-content: center; */
     flex-wrap: wrap;
     flex-direction: column;
     width: 85%;
@@ -82,7 +82,7 @@
     padding: 0% 2% 2% 0;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
+    /* justify-content: space-between; */
 }
 
 .interest-box {
@@ -100,9 +100,9 @@
 }
 
 .home>.main>.view>.container>.friend-box {
-    margin: 1vw 0 1vw 0;
+    margin: 1% 1% 1% 0;
     /* padding: 1%; */
-    width: 18vw;
+    width: 17vw;
     text-align: center;
     /* background: white; */
     box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
@@ -209,21 +209,4 @@
         padding: 1%;
         width: 44%;
     }
-    .home>.main>.sideNav {
-        /* position: fixed;
-        bottom: 0px;
-        display: inline-flex;
-        flex-wrap: wrap; */
-        /* width: 15%;
-        padding: 3% 0 0 3%;
-        margin: 3%;
-        padding: 0;
-        width: 200px;
-        background-color: #f1f1f1; */
-        /* position: fixed; */
-        /* height: 100%;
-        overflow: auto;
-        list-style-type: none; */
-    }
-    
 }

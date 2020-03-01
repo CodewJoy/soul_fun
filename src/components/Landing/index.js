@@ -5,10 +5,9 @@ import LogIn from './LogIn';
 import '../../common.css';
 import './landing.css';
 import { NavLogo_Landing } from '../Header';
-// import Soulfun from '../img/funsoul_logo.svg';
-// import Soulfun from '../img/landing.jpg';
 import Soulfun from '../img/group-of-people-having-fun-together-under-the-sun-708392.jpg';
-// import Soulfun from '../img/jump-shot-photography-of-two-women-2597365.jpg';
+// import Soulfun from '../img/backlit-dawn-foggy-friendship-697243.jpg';
+import { INTERESTS } from '../../constants/factor.js';
 
 const LandingPage = () => (
   <>
@@ -22,7 +21,12 @@ class Landing extends Component {
     super(props);
     this.state = {
       showsignup: false,
-      showlogin: false
+      showlogin: false,
+      hobby: {
+        'Travel': true, 'Diving': false, 'Hiking': true, 'Movies': false, 'Art': true, 'Photography': false, 'Music': true, 'Animals': false,
+        'Nature': true, 'Reading': false, 'Writing': true, 'Sports': false,'Fitness': true, 'Language': false, 'Cooking': true, 'Coding':  false,'Gaming':true, 'Fashion': false,
+        'Psychology': true, 'Philosophy': false, 'Investing': true, 'Career': false, 'Coffee': true, 'Tea': false, 'Wine': true,
+      },
     };
     this.ShowSignUp = this.ShowSignUp.bind(this);
     this.ShowLogIn = this.ShowLogIn.bind(this);
@@ -51,8 +55,7 @@ class Landing extends Component {
             <div className="web-intro">
               <h2>SOULFUN - Meet fun souls here!</h2>
               <p>SOULFUN lets you meet friends with common interests and exchange thoughts on the same passion.</p>
-
-              <p>By clicking Sign Up, you agree to our Terms, including our Privacy Policy and Cookie Policy.</p>
+              <sub>*By clicking Sign Up, you agree to our Terms, including our Privacy Policy and Cookie Policy.</sub>
               <div className="center-button">
                 <button onClick={this.ShowSignUp}>SIGN UP</button>
               </div>
@@ -61,17 +64,33 @@ class Landing extends Component {
               <img className="soulfun" src={Soulfun} alt="Soulfun" />
             </div>
           </div>
-          <h2>We are not just for dating anymore.</h2>
+          <div className="center-button">
+            <h2>Share your passion to the world.</h2>
+          </div>
           <div className="container">
-            <div className="intro-3">
+            <div className="web-intro tag">
+              <h3>Use Interest Tags to find the friends with the same hobbies with you.</h3>
+              <form className='interest line'>
+                {INTERESTS.map(item => (
+                  <div key={item}>
+                    <input type="checkbox" name={item} id={item} value={item} checked={this.state.hobby[item]} />
+                    <label htmlFor={item}>
+                      <div className='interest-tag'>
+                        <b>{item}</b>
+                      </div>
+                    </label>
+                  </div>
+                ))}
+              </form>
             </div>
-            <div className="intro-3">
-            </div>
-            <div className="intro-3">
+            <div className="graphics interest-intro">
+              <p>Matches are based on language & commonly interested topics. Practice a language, exchange thoughts on the same passion.</p>
             </div>
           </div>
-          <footer>
-            Copyright @2019 Winter
+          <footer className="footer">
+            Special Thanks&emsp;|&emsp;Email Support
+            <br/>
+            <p className="gray-font">© SouLFun. All Rights Reserved</p>
           </footer>
         </div>
         {this.state.showsignup ? <SignUp closeSignup={this.closeSignup.bind(this)} /> : null}
