@@ -57,7 +57,7 @@
     font-size: 18px;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 650px) {
     .profile>.main {
         display: flex;
         flex-wrap: wrap;

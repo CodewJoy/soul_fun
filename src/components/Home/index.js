@@ -45,38 +45,38 @@ class HomeBase extends Component {
     // console.log('lalala',this.props);
     return (
       // <Router>
-        <div className="home">
-          <Navbar />
-          <div className="main">
-            <ul className="sideNav">
-              <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-                <li>
-                  <img src={Discover} alt="discover" className="home-icon" />
-                  &emsp;Discover Friends
+      <div className="home">
+        <Navbar />
+        <div className="main">
+          <ul className="sideNav">
+            <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
+              <li>
+                <img src={Discover} alt="discover" className="home-icon" />
+                <p className="home-sidenav">&emsp;Discover Friends</p>
               </li>
-              </Link>
-              <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-                <li>
-                  <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
-                    <img src={Invitation} alt="invitation" className="home-icon" />
-                  </Badge>
-                  &emsp;Friend Requests
+            </Link>
+            <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
+              <li>
+                <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
+                  <img src={Invitation} alt="invitation" className="home-icon" />
+                </Badge>
+                <p className="home-sidenav">&emsp;Friend Requests</p>
               </li>
-              </Link>
-              <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
-                <li>
-                  <img src={Myfriend} alt="myfriend" className="home-icon" />
-                  &emsp;My Friend
+            </Link>
+            <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
+              <li>
+                <img src={Myfriend} alt="myfriend" className="home-icon" />
+                <p className="home-sidenav">&emsp;My Friend</p>
               </li>
-              </Link>
-            </ul>
-            <Switch>
-              <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
-              <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
-              <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
-            </Switch>
-          </div>
+            </Link>
+          </ul>
+          <Switch>
+            <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
+            <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
+          </Switch>
         </div>
+      </div>
       // </Router>
     )
   }
@@ -160,7 +160,7 @@ class MyFriend extends Component {
       <div className="view">
         <h2>Your Friends</h2>
         <div className="container">
-          { this.state.myfriend.map(item => (
+          {this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
               <img className="avatar" src={item.avatar} alt="avatar" />
               <div className="center friend-box-text">
@@ -311,7 +311,7 @@ class FriendRequests extends Component {
     // createRoomID(uid1, uid2)
     let roomID = createRoomID(id, UserData.authUser.uid);
     console.log(roomID);
-
+    let timestamp = Date.now();
     // 同時設定文件欄位又設定他的子集合兩件事並不衝突
     firebase.db.collection("Room").doc(roomID)
       .set(
@@ -319,7 +319,7 @@ class FriendRequests extends Component {
           uid: [UserData.authUser.uid, id],
           user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username },
           user2: { uid: id, avatar: avatar, name: name },
-          timestamp: Date.now()
+          timestamp: timestamp
         }
       )
 
@@ -329,7 +329,7 @@ class FriendRequests extends Component {
         {
           sender: "admin",
           content: "You both are friends now. Let's message your friend.",
-          timestamp: Date.now()
+          timestamp: timestamp
         }
       );
     // update context
@@ -435,13 +435,14 @@ class FriendRequests extends Component {
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                   Go Back
-                  </div>
+                    </div>
                 <button onClick={this.confirmFriend.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Confirm</button>
               </div>
             </div>
           ) : null}
         </div>
       )
+
     }
   }
 }
@@ -701,7 +702,7 @@ class DiscoverFriend extends Component {
                   </div>
                   <button onClick={this.showCard.bind(this, item)}>See more</button>
                 </div>
-                <div className="bottom-line"></div>
+                {/* <div className="bottom-line"></div> */}
               </div>
             ))}
           </div>

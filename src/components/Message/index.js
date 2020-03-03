@@ -26,8 +26,8 @@ class MessageBase extends Component {
     console.log(props);
     this.state = {
       isLoaded: false,
-      talkToWhom: '',
-      document: [],
+      currentRoom: null,
+      roomPool: [],
       chat: [],
       // room: []
       value: '',
@@ -60,24 +60,23 @@ class MessageBase extends Component {
     }
   }
   loadRoom(firebase, UserData) {
-    //let document = [];
     // firebase.db.collection("Room").doc().collection("message").doc()
     firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
           // console.log(doc.id, " => ", doc.data());
           // load chat room info
-          let document = [];
+          let roomPool = [];
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
             if (doc.data().user1.uid !== UserData.authUser.uid) {
-              document.push({
+              roomPool.push({
                 roomDoc: doc.id,
                 timestamp: doc.data().timestamp,
                 friendInfo: doc.data().user1
               });
             } else if (doc.data().user2.uid !== UserData.authUser.uid) {
-              document.push({
+              roomPool.push({
                 roomDoc: doc.id,
                 timestamp: doc.data().timestamp,
                 friendInfo: doc.data().user2
@@ -85,29 +84,27 @@ class MessageBase extends Component {
             }
           })
           // sort the chat room with timestamp
-          document.sort(function (a, b) {
+          roomPool.sort(function (a, b) {
             return a.timestamp < b.timestamp ? 1 : -1;
           })
-          console.log('document', document);
+          console.log('roomPool', roomPool);
           // load message
           let loaded = 0;
-          for (let i = 0; i < document.length; i++) {
+          for (let i = 0; i < roomPool.length; i++) {
             // 每個 message 都取最近的值
-            // firebase.db.collection("Room").doc(document[i].roomDoc).collection("message").orderBy("timestamp")
-            firebase.db.collection("Room").doc(document[i].roomDoc).collection("message").orderBy("timestamp", "desc").limit(1)
+            firebase.db.collection("Room").doc(roomPool[i].roomDoc).collection("message").orderBy("timestamp", "desc").limit(1)
               .onSnapshot(
                 (querySnapshot) => {
                   querySnapshot.forEach((doc) => {
                     console.log(doc.id, " => ", doc.data());
-                    document[i].friendInfo.chat = (doc.data());
+                    roomPool[i].friendInfo.chat = (doc.data());
                   })
                   loaded++;
                   // console.log("loaded", loaded);
-                  if (loaded === document.length) {
-                    // console.log("document_try", document);
-                    // this.loadMessage(document[0].friendInfo.uid, firebase, UserData)
-                    this.setState({ document: document });
-                    // this.setState({ document: document, talkToWhom: document[0].friendInfo.uid });
+                  if (loaded === roomPool.length) {
+                    // this.loadMessage(roomPool[0].friendInfo.uid, firebase, UserData)
+                    this.setState({ roomPool: roomPool });
+                    // this.setState({ roomPool: roomPool, currentRoom: roomPool[0].friendInfo.uid });
                   }
                 },
                 (error) => {
@@ -123,7 +120,7 @@ class MessageBase extends Component {
   }
   loadMessage(frinendID, firebase, UserData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
-    console.log('dialogue', this.state.document);
+    console.log('dialogue', this.state.roomPool);
     console.log('dialogue', UserData.userInfo);
     let roomID = createRoomID(UserData.authUser.uid, frinendID)
     firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
@@ -141,100 +138,143 @@ class MessageBase extends Component {
         }
       )
   }
-  clickRoom(frinendID) {
+  clickRoom(frinendID, avatar, name) {
     const { firebase, UserData } = this.props;
-    this.setState({ talkToWhom: frinendID });
+    this.setState({
+      currentRoom:
+      {
+        frinendID: frinendID,
+        avatar: avatar,
+        name: name
+      }
+    });
     this.loadMessage(frinendID, firebase, UserData);
   }
   handleChange(event) {
     // this.setState({value: event.target.value});
-    (() => this.setState({ value: event.target.value }))(console.log(this.state.value));
+    let input = event.target.value;
+    const { currentRoom } = this.state;
+    this.setState (prevState => {
+      if (!currentRoom) {
+        return prevState;
+      }
+      return { 
+        value: { 
+          ...prevState.value,
+          [currentRoom.friendID]: input
+        }
+      };
+    });
+    // if (!currentRoom) {
+    //   return
+    // }
+    // (() => this.setState({
+    //   value: {
+    //     [currentRoom.frinendID]: event.target.value
+    //   }
+    // }))(console.log(this.state.value));
   }
   handleSubmit(event) {
     // console.log(this.state.value);
-    // console.log('talktowhom', this.state.talkToWhom);
+    // console.log('currentRoom', this.state.currentRoom);
     event.preventDefault();
     const { firebase, UserData } = this.props;
+    const { currentRoom } = this.state;
     // 要有資料防護機制 在還沒 load 完之前不能按？
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
-    console.log('input', this.state.document[0].friendInfo.uid);
-    if (this.state.value !== '') {
-      let roomID = createRoomID(UserData.authUser.uid, this.state.talkToWhom)
-      // let roomID = createRoomID(UserData.authUser.uid, this.state.document[0].friendInfo.uid)
-      firebase.db.collection("Room").doc(roomID).collection("message").doc()
-        .set(
-          {
-            sender: UserData.userInfo.id,
-            content: this.state.value,
-            timestamp: Date.now()
-          }
-        )
-        .then(
-          () => { this.setState({ value: '' }) }
-        )
-      firebase.db.collection("Room").doc(roomID)
-        .update(
-          {
-            timestamp: Date.now()
-          }
-        )
+    console.log('input', this.state.roomPool[0].friendInfo.uid);
+    if (this.state.value === '' || !currentRoom) {
+      return
     }
+    let roomID = createRoomID(UserData.authUser.uid, this.state.currentRoom.frinendID)
+    // let roomID = createRoomID(UserData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
+    firebase.db.collection("Room").doc(roomID).collection("message").doc()
+      .set(
+        {
+          sender: UserData.userInfo.id,
+          content: this.state.value,
+          timestamp: Date.now()
+        }
+      )
+      .then(
+        () => { this.setState({ value: '' }) }
+      )
+    firebase.db.collection("Room").doc(roomID)
+      .update(
+        {
+          timestamp: Date.now()
+        }
+      )
   }
   render() {
-    // console.log("render", this.state.document);
+    const { UserData } = this.props;
+    const { roomPool, currentRoom, value } = this.state;
+   
+    // console.log("render", this.state.roomPool);
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
     } else {
       console.log("chat", this.state)
       console.log("chat", this.state.chat)
+      console.log("currentRoom", this.state.currentRoom)
       console.log("chat", this.props)
-      // console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
 
-      // state 更新後 document 有值再進來
-      if (this.state.document.length > 0) {
+      // state 更新後 roomPool 有值再進來
+      if (this.state.roomPool.length > 0) {
         // if (this.state.chat.length > 0) {
-          return (
-            <div className="message">
-              <Navbar />
-              <div className="main">
-                <div className='chat-room'>
-                  <div className="my-chat">
-                    {/* <img src={this.props.userInfo.avatar} alt="user-avatar"/> */}
-                    <h2>Chats</h2>
-                  </div>
-                  {this.state.document.map(item => (
-                    <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid)}>
-                      <input type="radio" id={item.friendInfo.name} name="chatroom" value={item.friendInfo.name} />
-                      <label htmlFor={item.friendInfo.name}>
-                        <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
-                        <div className="container">
-                          <b className="name">{item.friendInfo.name}</b>
-                          <br />
-                          <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
-                        </div>
-                      </label>
-                    </div>
-                  ))}
+        
+        return (
+          <div className="message">
+            <Navbar />
+            <div className="main">
+              <div className='chat-room'>
+                <div className="my-chat center box-bottom">
+                  {UserData ?
+                    (<div className="center">
+                      <img className="avatar" alt="my-avatar" src={UserData.userInfo.avatar} />
+                      {/* <b>{this.props.UserData.userInfo.username}</b> */}
+                    </div>) : ""}
+                  <h2>Chats</h2>
                 </div>
-                <div className="headerDivider"></div>
-
-                <div className='conversation'>
-                  <Conversation chat={this.state.chat} talkToWhom={this.state.talkToWhom} />
-                  <div className="input-box" id="input-box" >
-                    <form onSubmit={this.handleSubmit}>
-                      <input className='input-message' type="text" placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
-                      {/* <input className='input-click' type="submit" value="Enter" /> */}
-                      <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
-                    </form>
+                {roomPool.map(item => (
+                  <div className="chat-box" key={item.friendInfo.uid} onClick={this.clickRoom.bind(this, item.friendInfo.uid, item.friendInfo.avatar, item.friendInfo.name)}>
+                    <input type="radio" id={item.friendInfo.name} name="chatroom" value={item.friendInfo.name} />
+                    <label htmlFor={item.friendInfo.name}>
+                      <img className="avatar" src={item.friendInfo.avatar} alt="avatar" />
+                      <div className="container">
+                        <b className="name">{item.friendInfo.name}</b>
+                        <br />
+                        <span className="word">{item.friendInfo.chat.content ? item.friendInfo.chat.content : ""}</span>
+                      </div>
+                    </label>
                   </div>
-                </div>
-                {/* <div className="headerDivider"></div>  */}
-                {/* <ChatRoom friend={this.state.friend} /> */}
-                {/* <friendProfile friendList={this.state.friendList}/> */}
+                ))}
               </div>
+              <div className="headerDivider"></div>
+              <div className='conversation'>
+                {/* {this.state.currentRoom ? .name || ""} */}
+                {currentRoom ?
+                  (<div className="center box-bottom toolbar">
+                    <img className="avatar" alt="friend-avatar" src={currentRoom.avatar} />
+                    <b>{currentRoom.name}</b>
+                  </div>) : (
+                    <div className="toolbar"></div>
+                  )}
+                <Conversation chat={this.state.chat} currentRoom={currentRoom} />
+                <div className="input-box" id="input-box" >
+                  <form onSubmit={this.handleSubmit}>
+                    <input className='input-message' type="text" placeholder="Start chatting..."  value={this.state.value} onChange={this.handleChange} />
+                    <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
+                  </form>
+                </div>
+              </div>
+              {/* <div className="headerDivider"></div>  */}
+              {/* <ChatRoom friend={this.state.friend} /> */}
+              {/* <friendProfile friendList={this.state.friendList}/> */}
             </div>
-          );
+          </div>
+        );
         // } else {
         //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
         // }
@@ -297,22 +337,13 @@ function createRoomID(uid1, uid2) {
 
 class Conversation extends Component {
   render() {
-    // console.log('conversation', this.props.talkToWhom);
+    // console.log('conversation', this.props.currentRoom);
     // console.log('conversation', this.props.chat);
     // console.log('conversation', this.props.chat[0].sender);
     return (
       <div className="talks">
-        {/* <div className="adm-dialog">
-          <p>You both are friends now</p>
-        </div>
-        <div className="fri-dialog">
-          <div>Hello</div>
-        </div>
-        <div className="my-dialog">
-          <div>在第5版中將地圖添加到ECMA-262標準中； 因此，它可能並不存在於該標準的所有實現中。 您可以通過在腳本的開頭插入以下代碼來解決此問題，從而允許在本身不支持它的實現中使用map。 假設Object</div>
-        </div> */}
         {this.props.chat.map((item, index) => {
-          console.log(item.sender);
+          // console.log(item.sender);
           if (item.sender === "admin") {
             return (
               <div className="adm-dialog" key={index}>
@@ -320,7 +351,7 @@ class Conversation extends Component {
                 <div>{Date(item.timestamp).substring(0, 24)}</div>
               </div>
             )
-          } else if (item.sender === this.props.talkToWhom) {
+          } else if (item.sender === this.props.currentRoom.frinendID) {
             return (
               <div className="fri-dialog" key={index}>
                 <div>{item.content}</div>

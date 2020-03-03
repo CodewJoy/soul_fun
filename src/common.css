@@ -64,3 +64,7 @@ button:hover {
 .gray-font {
   color: dimgray;
 }
+.center {
+  display: flex;
+  align-items: center;
+}

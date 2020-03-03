@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Logo from '../img/logo_3.svg';
 import Navigation from '../App/navigation.js';
 import './header.css';
-import DehazeIcon from '@material-ui/icons/Dehaze';
 
 // other page used
 class Navbar extends Component {
@@ -13,8 +12,9 @@ class Navbar extends Component {
                     <img className="logo-img" src={Logo} alt="Logo" />
                     <h3>&nbsp;SouLFun</h3>
                 </div>
-                <Navigation />
-                {/* <DehazeIcon className="hamburger" style={{ fontSize: 30 }} /> */}
+                <div className="dropdown">
+                    <Navigation />
+                </div>
             </div>
         )
     }

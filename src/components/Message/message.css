@@ -35,13 +35,19 @@
 .message>.main>.chat-room>.chat-box>input[type="radio"]:checked+label {
     background-color: #f1f2f6;
 }
-
 .message>.main>.chat-room>.my-chat {
-    text-align: center;
-    /* margin: 1%;
-    width: 98%; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
+.message>.main>.chat-room>.my-chat>.center>.avatar {
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 2px white solid;
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+}
 .message>.main>.chat-room>.chat-box {
     margin: 1%;
     width: 98%;
@@ -83,14 +89,31 @@
 
 .message>.main>.conversation {
     width: 80%;
-    padding: 1%;
+    /* padding: 1%; */
     font-size: 18px;
+}
+.message>.main>.conversation>.toolbar {
+    height: 77px;
+}
+.box-bottom {
+    border-bottom: 1px solid lightgray;
+}
+/* .message>.main>.conversation>.box-bottom {
+    border-bottom: 1px solid lightgray;
+} */
+.message>.main>.conversation>.center>.avatar {
+    vertical-align: middle;
+    border-radius: 50%;
+    border: 2px white solid;
+    width: 50px;
+    height: 50px;
+    margin: 1%;
 }
 
 .message>.main>.conversation>.talks {
     overflow-y: scroll;
     /* max-height: 86%; */
-    height: 90%;
+    height: calc(90% - 77px);
     width: 100%;
     display: flex;
     flex-direction: column-reverse;

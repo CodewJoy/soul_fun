@@ -6,15 +6,14 @@ import { AuthUserContext } from '../Session';
 import PeopleSharpIcon from '@material-ui/icons/PeopleSharp';
 import AccountCircleSharpIcon from '@material-ui/icons/AccountCircleSharp';
 import ChatIcon from '@material-ui/icons/Chat';
-import NotificationsSharpIcon from '@material-ui/icons/NotificationsSharp';
 import { Badge } from '@material-ui/core';
 
 // only member can see this nav
 const Navigation = () => (
   <div className="member-navbar">
     <AuthUserContext.Consumer>
-      { UserData =>
-       <NavigationAuth UserData={UserData}/>
+      {UserData =>
+        <NavigationAuth UserData={UserData} />
       }
       {/* {authUser =>
         authUser ? <NavigationAuth /> : <NavigationNonAuth />
@@ -27,10 +26,10 @@ class NavigationAuth extends Component {
   render() {
     console.log('yoyoyo', this.props);
     return (
-      <ul>
+      <ul className="dropdown-content">
         <li>
           <Link to={ROUTES.HOME}>
-            <Badge badgeContent={ this.props.UserData.f_invitation } color="secondary">
+            <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
               <PeopleSharpIcon style={{ fontSize: 30 }} />
             </Badge>
           </Link>
