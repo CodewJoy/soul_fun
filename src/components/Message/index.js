@@ -30,7 +30,7 @@ class MessageBase extends Component {
       roomPool: [],
       chat: [],
       // room: []
-      value: '',
+      inputMessage: '',
       message: []
 
     }
@@ -118,11 +118,11 @@ class MessageBase extends Component {
         }
       )
   }
-  loadMessage(frinendID, firebase, UserData) {
+  loadMessage(friendID, firebase, UserData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
     console.log('dialogue', this.state.roomPool);
     console.log('dialogue', UserData.userInfo);
-    let roomID = createRoomID(UserData.authUser.uid, frinendID)
+    let roomID = createRoomID(UserData.authUser.uid, friendID)
     firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
       .onSnapshot(
         (querySnapshot) => {
@@ -138,44 +138,40 @@ class MessageBase extends Component {
         }
       )
   }
-  clickRoom(frinendID, avatar, name) {
+  clickRoom(friendID, avatar, name) {
     const { firebase, UserData } = this.props;
     this.setState({
       currentRoom:
       {
-        frinendID: frinendID,
+        friendID: friendID,
         avatar: avatar,
         name: name
       }
     });
-    this.loadMessage(frinendID, firebase, UserData);
+    this.loadMessage(friendID, firebase, UserData);
   }
   handleChange(event) {
-    // this.setState({value: event.target.value});
-    let input = event.target.value;
-    const { currentRoom } = this.state;
-    this.setState (prevState => {
-      if (!currentRoom) {
-        return prevState;
-      }
-      return { 
-        value: { 
-          ...prevState.value,
-          [currentRoom.friendID]: input
-        }
-      };
-    });
+    // this.setState({ inputMessage: event.target.value });
+    // let input = event.target.value;
+    // const { currentRoom } = this.state;
+    // this.setState (prevState => {
+    //   if (!currentRoom) {
+    //     return prevState;
+    //   }
+    //   return { 
+    //     inputMessage: { 
+    //       ...prevState.inputMessage,
+    //       [currentRoom.friendID]: input
+    //     }
+    //   };
+    // });
     // if (!currentRoom) {
     //   return
     // }
-    // (() => this.setState({
-    //   value: {
-    //     [currentRoom.frinendID]: event.target.value
-    //   }
-    // }))(console.log(this.state.value));
+    (() => this.setState({ inputMessage: event.target.value }))(console.log(this.state.inputMessage));
   }
   handleSubmit(event) {
-    // console.log(this.state.value);
+    // console.log(this.state.inputMessage);
     // console.log('currentRoom', this.state.currentRoom);
     event.preventDefault();
     const { firebase, UserData } = this.props;
@@ -183,21 +179,21 @@ class MessageBase extends Component {
     // 要有資料防護機制 在還沒 load 完之前不能按？
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
     console.log('input', this.state.roomPool[0].friendInfo.uid);
-    if (this.state.value === '' || !currentRoom) {
+    if (this.state.inputMessage === '' || !currentRoom) {
       return
     }
-    let roomID = createRoomID(UserData.authUser.uid, this.state.currentRoom.frinendID)
+    let roomID = createRoomID(UserData.authUser.uid, this.state.currentRoom.friendID)
     // let roomID = createRoomID(UserData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
           sender: UserData.userInfo.id,
-          content: this.state.value,
+          content: this.state.inputMessage,
           timestamp: Date.now()
         }
       )
       .then(
-        () => { this.setState({ value: '' }) }
+        () => { this.setState({ inputMessage: '' }) }
       )
     firebase.db.collection("Room").doc(roomID)
       .update(
@@ -208,22 +204,21 @@ class MessageBase extends Component {
   }
   render() {
     const { UserData } = this.props;
-    const { roomPool, currentRoom, value } = this.state;
+    const { roomPool, currentRoom, inputMessage } = this.state;
    
     // console.log("render", this.state.roomPool);
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
     } else {
       console.log("chat", this.state)
-      console.log("chat", this.state.chat)
-      console.log("currentRoom", this.state.currentRoom)
+      console.log("chat-check", this.state.chat)
+      console.log("currentRoom", currentRoom)
       console.log("chat", this.props)
       // console.log('friendID', this.props.UserData.friendID)
 
       // state 更新後 roomPool 有值再進來
-      if (this.state.roomPool.length > 0) {
+      if (roomPool.length > 0) {
         // if (this.state.chat.length > 0) {
-        
         return (
           <div className="message">
             <Navbar />
@@ -261,10 +256,10 @@ class MessageBase extends Component {
                   </div>) : (
                     <div className="toolbar"></div>
                   )}
-                <Conversation chat={this.state.chat} currentRoom={currentRoom} />
+                <Conversation chat={this.state.chat} currentRoom={currentRoom}/>
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..."  value={this.state.value} onChange={this.handleChange} />
+                    <input className='input-message' type="text" placeholder="Start chatting..."  value={inputMessage} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>
@@ -294,8 +289,7 @@ class MessageBase extends Component {
                 <div className="talks"></div>
                 <div className="input-box">
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..." value={this.state.value} onChange={this.handleChange} />
-                    {/* <input className='input-click' type="submit" value="Enter" /> */}
+                    <input className='input-message' type="text" placeholder="Start chatting..." value={inputMessage} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>
@@ -351,7 +345,7 @@ class Conversation extends Component {
                 <div>{Date(item.timestamp).substring(0, 24)}</div>
               </div>
             )
-          } else if (item.sender === this.props.currentRoom.frinendID) {
+          } else if (item.sender === this.props.currentRoom.friendID) {
             return (
               <div className="fri-dialog" key={index}>
                 <div>{item.content}</div>
