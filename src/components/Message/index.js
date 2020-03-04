@@ -156,14 +156,14 @@ class MessageBase extends Component {
 
     const { currentRoom } = this.state;
 
-    this.setState (prevState => {
+    this.setState(prevState => {
       if (!currentRoom) {
         return prevState;
       } 
       return { 
-        currentRoom: { 
-          ...prevState.currentRoom,
-          input : input
+        inputMessage: { 
+          ...prevState.inputMessage,
+          [currentRoom.friendID] : input
         }
       };
     });
@@ -179,7 +179,7 @@ class MessageBase extends Component {
     //     }
     //   };
     // });
-    
+
     // (() => this.setState({ inputMessage: event.target.value }))(console.log(this.state.inputMessage));
   }
   handleSubmit(event) {
@@ -196,12 +196,13 @@ class MessageBase extends Component {
     }
     let roomID = createRoomID(UserData.authUser.uid, this.state.currentRoom.friendID)
     // let roomID = createRoomID(UserData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
+    let timestamp = Date.now();
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
           sender: UserData.userInfo.id,
           content: this.state.inputMessage,
-          timestamp: Date.now()
+          timestamp: timestamp
         }
       )
       .then(
@@ -210,7 +211,7 @@ class MessageBase extends Component {
     firebase.db.collection("Room").doc(roomID)
       .update(
         {
-          timestamp: Date.now()
+          timestamp: timestamp
         }
       )
   }
@@ -271,7 +272,7 @@ class MessageBase extends Component {
                 <Conversation chat={this.state.chat} currentRoom={currentRoom}/>
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..." value={currentRoom? currentRoom.input : ""} onChange={this.handleChange} />
+                    <input className='input-message' type="text" placeholder="Start chatting..." value={currentRoom? (inputMessage[currentRoom.friendID]) : ""} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>
