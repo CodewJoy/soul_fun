@@ -159,11 +159,11 @@ class MessageBase extends Component {
     this.setState(prevState => {
       if (!currentRoom) {
         return prevState;
-      } 
-      return { 
-        inputMessage: { 
+      }
+      return {
+        inputMessage: {
           ...prevState.inputMessage,
-          [currentRoom.friendID] : input
+          [currentRoom.friendID]: input
         }
       };
     });
@@ -187,38 +187,51 @@ class MessageBase extends Component {
     // console.log('currentRoom', this.state.currentRoom);
     event.preventDefault();
     const { firebase, UserData } = this.props;
-    const { currentRoom } = this.state;
-    // 要有資料防護機制 在還沒 load 完之前不能按？
+    const { currentRoom, inputMessage } = this.state;
+    // 要有資料防護機制 在還沒 load 完之前不能按
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
     console.log('input', this.state.roomPool[0].friendInfo.uid);
-    if (this.state.inputMessage === '' || !currentRoom) {
+    if (!currentRoom || !inputMessage[currentRoom.friendID]) {
       return
     }
-    let roomID = createRoomID(UserData.authUser.uid, this.state.currentRoom.friendID)
+    let roomID = createRoomID(UserData.authUser.uid, currentRoom.friendID)
+    let time = Date.now();
     // let roomID = createRoomID(UserData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
-    let timestamp = Date.now();
+    // send room's message > clean room's message > update room's timestamp
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
           sender: UserData.userInfo.id,
-          content: this.state.inputMessage,
-          timestamp: timestamp
+          content: inputMessage[currentRoom.friendID],
+          timestamp: time
         }
       )
       .then(
-        () => { this.setState({ inputMessage: '' }) }
-      )
-    firebase.db.collection("Room").doc(roomID)
-      .update(
-        {
-          timestamp: timestamp
+        () => {
+          this.setState(prevState => {
+            return {
+              inputMessage: {
+                ...prevState.inputMessage,
+                [currentRoom.friendID]: ""
+              }
+            }
+          },
+            () => {
+              firebase.db.collection("Room").doc(roomID)
+                .update(
+                  {
+                    timestamp: time
+                  }
+                );
+            }
+          );
         }
       )
   }
   render() {
     const { UserData } = this.props;
     const { roomPool, currentRoom, inputMessage } = this.state;
-   
+
     // console.log("render", this.state.roomPool);
     if (!this.state.isLoaded) {
       return <div className="loading"><img src={Loading} alt="Loading" /></div>
@@ -269,10 +282,10 @@ class MessageBase extends Component {
                   </div>) : (
                     <div className="toolbar"></div>
                   )}
-                <Conversation chat={this.state.chat} currentRoom={currentRoom}/>
+                <Conversation chat={this.state.chat} currentRoom={currentRoom} />
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..." value={currentRoom? (inputMessage[currentRoom.friendID]) : ""} onChange={this.handleChange} />
+                    <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Choose a room and start chatting...")} value={currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : ""} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>
@@ -301,8 +314,8 @@ class MessageBase extends Component {
               <div className='conversation'>
                 <div className="talks"></div>
                 <div className="input-box">
-                  <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..." value={inputMessage} onChange={this.handleChange} />
+                  <form>
+                    <input className='input-message' type="text" placeholder="Create a room and start chatting..." />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>

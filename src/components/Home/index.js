@@ -322,20 +322,25 @@ class FriendRequests extends Component {
           timestamp: timestamp
         }
       )
+      .then(
+        // 這段是要設給已經收到邀請後 confirm to chat 的頁面
+        firebase.db.collection("Room").doc(roomID).collection("message").doc()
+          .set(
+            {
+              sender: "admin",
+              content: "You both are friends now. Let's message your friend.",
+              timestamp: timestamp
+            }
+          )
+          .then(
+            this.setState({ goToChat: true })
+          )
+      )
 
-    // 這段是要設給已經收到邀請後 confirm to chat 的頁面
-    firebase.db.collection("Room").doc(roomID).collection("message").doc()
-      .set(
-        {
-          sender: "admin",
-          content: "You both are friends now. Let's message your friend.",
-          timestamp: timestamp
-        }
-      );
     // update context
     // this.setState({ goToChat: true, friendID: id });
     // () => {this.setState({ goToChat: true })};
-    this.setState({ goToChat: true });
+  
   }
   showCard(id) {
     console.log('personinfo', id);
