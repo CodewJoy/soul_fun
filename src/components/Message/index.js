@@ -152,23 +152,35 @@ class MessageBase extends Component {
   }
   handleChange(event) {
     // this.setState({ inputMessage: event.target.value });
-    // let input = event.target.value;
-    // const { currentRoom } = this.state;
+    let input = event.target.value;
+
+    const { currentRoom } = this.state;
+
+    this.setState (prevState => {
+      if (!currentRoom) {
+        return prevState;
+      } 
+      return { 
+        currentRoom: { 
+          ...prevState.currentRoom,
+          input : input
+        }
+      };
+    });
+
     // this.setState (prevState => {
     //   if (!currentRoom) {
     //     return prevState;
-    //   }
+    //   } 
     //   return { 
-    //     inputMessage: { 
-    //       ...prevState.inputMessage,
-    //       [currentRoom.friendID]: input
+    //     currentRoom: { 
+    //       ...prevState.currentRoom,
+    //       input : input
     //     }
     //   };
     // });
-    // if (!currentRoom) {
-    //   return
-    // }
-    (() => this.setState({ inputMessage: event.target.value }))(console.log(this.state.inputMessage));
+    
+    // (() => this.setState({ inputMessage: event.target.value }))(console.log(this.state.inputMessage));
   }
   handleSubmit(event) {
     // console.log(this.state.inputMessage);
@@ -259,7 +271,7 @@ class MessageBase extends Component {
                 <Conversation chat={this.state.chat} currentRoom={currentRoom}/>
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder="Start chatting..."  value={inputMessage} onChange={this.handleChange} />
+                    <input className='input-message' type="text" placeholder="Start chatting..." value={currentRoom? currentRoom.input : ""} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>
