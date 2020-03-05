@@ -36,7 +36,7 @@ class Navbar_Account extends Component {
 class NavLogo_Landing extends Component {
     render() {
         return (
-            <div className="logo">
+            <div className="logo-landing">
                 <img className="logo-img" src={Logo} alt="Logo" />
                 <h3>&nbsp;SouLFun</h3>
             </div>

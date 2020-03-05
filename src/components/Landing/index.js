@@ -11,7 +11,6 @@ import { INTERESTS } from '../../constants/factor.js';
 
 const LandingPage = () => (
   <>
-    {/* <Navigation /> */}
     <Landing />
   </>
 );
@@ -46,7 +45,7 @@ class Landing extends Component {
   render() {
     return (
       <div className="landing">
-        <div className="navbar">
+        <div className="navbar-landing">
           <NavLogo_Landing />
           <button className="log-in" onClick={this.ShowLogIn}>LOG IN</button>
         </div>

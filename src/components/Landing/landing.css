@@ -1,15 +1,27 @@
 .landing {
     width: 100%;
 }
-.landing>.navbar {
+
+.landing>.navbar-landing {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: white;
-    /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
-.landing>.navbar>.log-in{
+.landing>.navbar-landing>.logo-landing {
+    margin: 3px 25px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.landing>.navbar-landing>.logo-landing>.logo-img {
+    height: 35px;
+    width: 35px;
+}
+
+.landing>.navbar-landing>.log-in {
     margin: 1% 2%;
 }
 
@@ -20,6 +32,7 @@
     justify-content: center;
     flex-wrap: wrap;
 }
+
 .landing>.main>.container {
     display: flex;
     justify-content: center;
@@ -29,25 +42,30 @@
     width: 98%;
     border: 0 1vw white solid;
 }
+
 .landing>.main>.container>.web-intro {
     padding: 4%;
-    width: 50%; 
+    width: 50%;
 }
+
 .landing>.main>.container>.graphics {
     width: 50%;
 }
+
 .landing>.main>.container>.graphics {
     background: white;
 }
+
 .landing>.main>.container>.graphics>img {
     width: 100%;
-
 }
+
 .landing>.main>.container>.web-intro>.line {
     display: inline-flex;
     flex-wrap: wrap;
     align-items: center;
 }
+
 .landing>.main>.container>.web-intro>.interest>div>input[type="checkbox"] {
     display: none;
 }
@@ -69,62 +87,67 @@
     background-color: white;
     padding: 0 2%;
 }
+
 .landing>.main>.container>.interest-intro {
     background-color: #ffdd59;
     padding: 0 2%;
 }
+
 .landing>.sign-up {
     position: fixed;
-    top: 15vh;
-    max-height: 80vh;
-    left: 27%;
-    width: 35%;
-    margin : 3%; 
+    top: calc(50vh - 215px);
+    left: calc(50vw - 165px);
+    height: 370px;
+    width: 270px;
     background-color: white;
     border-radius: 5px;
-    padding: 3%;
-    /* text-align: center; */
-
+    padding: 30px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 .landing>.sign-up>.line {
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .landing>.sign-up>.line>.close-button {
     width: 40px;
 }
+
 .landing>.log-in {
     position: fixed;
-    top: 15vh;
-    max-height: 80vh;
-    left: 27%;
-    width: 35%;
-    margin : 3%; 
+    top: calc(50vh - 150px);
+    left: calc(50vw - 165px);
+    height: 300px;
+    width: 290px;
     background-color: white;
     border-radius: 5px;
-    padding: 3%;
-    /* text-align: center; */
+    padding: 20px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
+
 .landing>.log-in>.line {
     width: 100%;
     display: inline-flex;
     justify-content: space-between;
     align-items: center;
 }
+
 .landing>.log-in>.line>.close-button {
     width: 40px;
 }
+
 .landing>.main>.footer {
     margin: 2%;
     text-align: center;
 }
 
-@media (max-width: 1400px) { 
+@media (max-width: 1400px) {
     .landing>.main>.container>.web-intro {
         padding: 4%;
-        width: 50%; 
+        width: 50%;
     }
     .landing>.main>.container>.graphics {
         width: 50%;
@@ -136,6 +159,7 @@
         object-fit: cover;
     }
 }
+
 @media (max-width: 700px) {
     .landing>.main {
         width: 100%;
@@ -155,10 +179,9 @@
         border: 1vw white solid;
         width: 90%;
     }
-    .landing>.main>.container>.graphics{
+    .landing>.main>.container>.graphics {
         border: 1vw white solid;
         width: 100%;
- 
     }
     .landing>.main>.container>.graphics>img {
         width: 100%;
