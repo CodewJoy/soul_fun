@@ -19,10 +19,10 @@ import { Badge } from '@material-ui/core';
 const Home = () => (
   <>
     <AuthUserContext.Consumer>
-      {UserData => (
+      {userData => (
         <FirebaseContext.Consumer>
           {(firebase) => <HomeBase
-            UserData={UserData} firebase={firebase} />}
+            userData={userData} firebase={firebase} />}
         </FirebaseContext.Consumer>
       )}
     </AuthUserContext.Consumer>
@@ -57,7 +57,7 @@ class HomeBase extends Component {
             </Link>
             <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
               <li>
-                <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
+                <Badge badgeContent={this.props.userData.friendInvitation} color="secondary">
                   <img src={Invitation} alt="invitation" className="home-icon" />
                 </Badge>
                 <p className="home-sidenav">&emsp;Friend Requests</p>
@@ -94,14 +94,14 @@ class MyFriend extends Component {
     this.closeCard = this.closeCard.bind(this);
   }
   componentDidMount() {
-    const { UserData } = this.props.props;
-    if (UserData.authUser) {
+    const { userData } = this.props.props;
+    if (userData.authUser) {
       this.myFriend();
     }
   }
   myFriend() {
-    const { firebase, UserData } = this.props.props;
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+    const { firebase, userData } = this.props.props;
+    firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends")
       .onSnapshot(
         (querySnapshot) => {
           let myfriend = [];
@@ -120,10 +120,10 @@ class MyFriend extends Component {
       )
   }
   handleSubmit(id) {
-    const { firebase, UserData } = this.props.props;
+    const { firebase, userData } = this.props.props;
     // 找到聊天室
     // createRoomID(uid1, uid2)
-    let roomID = createRoomID(id, UserData.authUser.uid);
+    let roomID = createRoomID(id, userData.authUser.uid);
     console.log(roomID);
     firebase.db.collection("Room").doc(roomID)
       .update(
@@ -244,31 +244,26 @@ class FriendRequests extends Component {
       goToChat: false,
       showCard: false,
       clickWhom: '',
-      // friendID still not used yet
-      // friendID: ''
     }
     this.friendInvite = this.friendInvite.bind(this);
     this.confirmFriend = this.confirmFriend.bind(this);
     this.closeCard = this.closeCard.bind(this);
   }
   componentDidMount() {
-    // console.log('confirmfriend', this.props)
-    // console.log('confirmfriend', this.props.props)
-    const { UserData } = this.props.props;
-    if (UserData.authUser) {
+    const { userData } = this.props.props;
+    if (userData.authUser) {
       this.friendInvite();
     }
   }
   componentDidUpdate() {
-    // console.log('confirmfriend', this.props)
     if (!this.state.isLoaded) {
       this.friendInvite();
       this.setState({ isLoaded: true });
     }
   }
   friendInvite() {
-    const { firebase, UserData } = this.props.props;
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends")
+    const { firebase, userData } = this.props.props;
+    firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends")
       // .get()
       // .then(
       // use .onSnapshot() instead of .get() to get notice immediately
@@ -291,17 +286,17 @@ class FriendRequests extends Component {
     // )
   }
   confirmFriend(id, name, avatar) {
-    const { firebase, UserData } = this.props.props;
-    console.log(UserData);
+    const { firebase, userData } = this.props.props;
+    console.log(userData);
     // modify my list
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
+    firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends").doc(id)
       .update(
         {
           status: "confirm"
         }
       );
     // modify invited friend's list
-    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+    firebase.db.collection("Users").doc(id).collection("friends").doc(userData.authUser.uid)
       .update(
         {
           status: "confirm"
@@ -309,15 +304,15 @@ class FriendRequests extends Component {
       )
     // 建立聊天室
     // createRoomID(uid1, uid2)
-    let roomID = createRoomID(id, UserData.authUser.uid);
+    let roomID = createRoomID(id, userData.authUser.uid);
     console.log(roomID);
     let timestamp = Date.now();
     // 同時設定文件欄位又設定他的子集合兩件事並不衝突
     firebase.db.collection("Room").doc(roomID)
       .set(
         {
-          uid: [UserData.authUser.uid, id],
-          user1: { uid: UserData.authUser.uid, avatar: UserData.userInfo.avatar, name: UserData.userInfo.username },
+          uid: [userData.authUser.uid, id],
+          user1: { uid: userData.authUser.uid, avatar: userData.userInfo.avatar, name: userData.userInfo.username },
           user2: { uid: id, avatar: avatar, name: name },
           timestamp: timestamp
         }
@@ -496,26 +491,26 @@ class DiscoverFriend extends Component {
   }
   // 拿 user id 取值，換 router 於此才會拿到更新 context 中的 user id
   componentDidMount() {
-    const { UserData, firebase } = this.props.props;
+    const { userData, firebase } = this.props.props;
     const { isLoaded } = this.state;
-    if (UserData.authUser) {
+    if (userData.authUser) {
       if (!isLoaded) {
-        this.referFriends('', UserData, firebase);
+        this.referFriends('', userData, firebase);
         this.setState({ isLoaded: true });
       }
     }
   }
   // 拿 user id 取值，重整畫面於此才會拿到更新 context 中的 user id
   componentDidUpdate() {
-    const { UserData, firebase } = this.props.props;
+    const { userData, firebase } = this.props.props;
     const { isLoaded } = this.state;
     // 加個鎖不然會無限 loading
     if (!isLoaded) {
-      this.referFriends('', UserData, firebase);
+      this.referFriends('', userData, firebase);
       this.setState({ isLoaded: true });
     }
   }
-  referFriends(interest, UserData, firebase) {
+  referFriends(interest, userData, firebase) {
     // 取得目前用戶列表
     if (interest === '') {
       firebase.db.collection("Users")
@@ -529,13 +524,13 @@ class DiscoverFriend extends Component {
               // if 有填資料再進來
               if (doc.data().avatar) {
                 // cant see self as a friend
-                if (doc.id !== UserData.authUser.uid) {
+                if (doc.id !== userData.authUser.uid) {
                   console.log(doc.id, " => ", doc.data());
                   friendlist.push(doc.data().id);
                 }
               }
             });
-            this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+            this.filterFriend(firebase, userData.authUser.uid, friendlist)
           },
           (error) => {
             console.log(error)
@@ -553,13 +548,13 @@ class DiscoverFriend extends Component {
               // if 有填資料再進來
               if (doc.data().avatar) {
                 // cant see self as a friend
-                if (doc.id !== UserData.authUser.uid) {
+                if (doc.id !== userData.authUser.uid) {
                   console.log(doc.id, " => ", doc.data());
                   friendlist.push(doc.data().id);
                 }
               }
             });
-            this.filterFriend(firebase, UserData.authUser.uid, friendlist)
+            this.filterFriend(firebase, userData.authUser.uid, friendlist)
           },
           (error) => {
             console.log(error)
@@ -611,10 +606,10 @@ class DiscoverFriend extends Component {
       )
   }
   addFriend(id, name, avatar) {
-    const { firebase, UserData } = this.props.props;
+    const { firebase, userData } = this.props.props;
     console.log(UserData);
     // modify my list
-    firebase.db.collection("Users").doc(UserData.authUser.uid).collection("friends").doc(id)
+    firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends").doc(id)
       .set(
         {
           id: id,
@@ -624,12 +619,12 @@ class DiscoverFriend extends Component {
         }
       );
     // modify invited friend's list
-    firebase.db.collection("Users").doc(id).collection("friends").doc(UserData.authUser.uid)
+    firebase.db.collection("Users").doc(id).collection("friends").doc(userData.authUser.uid)
       .set(
         {
-          id: UserData.authUser.uid,
-          name: UserData.userInfo.username,
-          avatar: UserData.userInfo.avatar,
+          id: userData.authUser.uid,
+          name: userData.userInfo.username,
+          avatar: userData.userInfo.avatar,
           status: "askUrConfirm"
         }
       )
@@ -653,8 +648,8 @@ class DiscoverFriend extends Component {
     // console.log(e.target.textContent)
     // console.log(e.target.label)
     // console.log(e.target.name)
-    const { UserData, firebase } = this.props.props;
-    this.referFriends(e.target.textContent, UserData, firebase);
+    const { userData, firebase } = this.props.props;
+    this.referFriends(e.target.textContent, userData, firebase);
     // this.setState({ interest: e.target.textContent }, () => {
     //   console.log(this.state)
     // });

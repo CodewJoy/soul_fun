@@ -23,10 +23,10 @@ const Account = () => (
   <>
     {/* <Navigation /> */}
     <AuthUserContext.Consumer>
-      {(UserData) => (
+      {(userData) => (
         <FirebaseContext.Consumer>
           {(firebase) => <AccountBase
-            UserData={UserData} firebase={firebase} />}
+            userData={userData} firebase={firebase} />}
         </FirebaseContext.Consumer>
       )}
     </AuthUserContext.Consumer>
@@ -42,7 +42,7 @@ class AccountBase extends Component {
     return (
       <div className="account">
         <Navbar_Account />
-        <Setting userInfo={this.props.UserData.userInfo} firebase={this.props.firebase} />
+        <Setting userInfo={this.props.userData.userInfo} firebase={this.props.firebase} />
       </div>
     );
   }
@@ -86,8 +86,6 @@ class Setting extends Component {
   }
   saveToDB() {
     const { gender, birthday, location, country, language, avatar, bio, interest, hobby } = this.state;
-    // console.log(this.props.UserData.authUser.uid);
-    // console.log(this.props.firebase.db);
     if ( gender==='' || birthday === '' || location === ''|| country === '' || language === '' || avatar === '' || bio === '' || interest === []) {
       alert('You have not finished the form.');
     } else {

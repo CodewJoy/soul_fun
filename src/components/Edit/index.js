@@ -7,9 +7,9 @@ import "babel-polyfill"
 const Edit = () => (
     <>
         <AuthUserContext.Consumer>
-            {(UserData) => (
+            {(userData) => (
                 <FirebaseContext.Consumer>
-                    {(firebase) => <EditBase UserData={UserData} firebase={firebase} />}
+                    {(firebase) => <EditBase userDataa={userData} firebase={firebase} />}
                 </FirebaseContext.Consumer>
             )}
         </AuthUserContext.Consumer>

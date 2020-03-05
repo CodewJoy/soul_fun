@@ -10,9 +10,9 @@ const Message = () => {
   return (
     <>
       <AuthUserContext.Consumer>
-        {(UserData) => (
+        {(userData) => (
           <FirebaseContext.Consumer>
-            {(firebase) => <MessageBase UserData={UserData} firebase={firebase} />}
+            {(firebase) => <MessageBase userData={userData} firebase={firebase} />}
           </FirebaseContext.Consumer>
         )}
       </AuthUserContext.Consumer>
@@ -29,10 +29,8 @@ class MessageBase extends Component {
       currentRoom: null,
       roomPool: [],
       chat: [],
-      // room: []
       inputMessage: '',
       message: []
-
     }
     this.loadRoom = this.loadRoom.bind(this);
     this.loadMessage = this.loadMessage.bind(this);
@@ -40,28 +38,25 @@ class MessageBase extends Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
-    const { firebase, UserData } = this.props;
+    const { firebase, userData } = this.props;
     const { isLoaded } = this.state;
-    if (UserData.authUser) {
+    
+    if (userData.authUser) {
       if (!isLoaded) {
-        this.loadRoom(firebase, UserData, isLoaded);
-        // this.loadMessage(firebase, UserData);
-        this.setState({ isLoaded: true });
+        this.loadRoom(firebase, userData, isLoaded);
       }
     }
   }
   componentDidUpdate() {
-    const { firebase, UserData } = this.props;
+    const { firebase, userData } = this.props;
     const { isLoaded } = this.state;
     if (!isLoaded) {
-      this.loadRoom(firebase, UserData);
-      // this.loadMessage(firebase, UserData);
-      this.setState({ isLoaded: true });
+      this.loadRoom(firebase, userData, isLoaded);
     }
   }
-  loadRoom(firebase, UserData) {
+  loadRoom(firebase, userData, isLoaded) {
     // firebase.db.collection("Room").doc().collection("message").doc()
-    firebase.db.collection("Room").where("uid", "array-contains", `${UserData.authUser.uid}`)
+    firebase.db.collection("Room").where("uid", "array-contains", `${userData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
           // console.log(doc.id, " => ", doc.data());
@@ -69,13 +64,13 @@ class MessageBase extends Component {
           let roomPool = [];
           querySnapshot.forEach((doc) => {
             console.log(doc.id, " => ", doc.data());
-            if (doc.data().user1.uid !== UserData.authUser.uid) {
+            if (doc.data().user1.uid !== userData.authUser.uid) {
               roomPool.push({
                 roomDoc: doc.id,
                 timestamp: doc.data().timestamp,
                 friendInfo: doc.data().user1
               });
-            } else if (doc.data().user2.uid !== UserData.authUser.uid) {
+            } else if (doc.data().user2.uid !== userData.authUser.uid) {
               roomPool.push({
                 roomDoc: doc.id,
                 timestamp: doc.data().timestamp,
@@ -100,10 +95,9 @@ class MessageBase extends Component {
                     roomPool[i].friendInfo.chat = (doc.data());
                   })
                   loaded++;
-                  // console.log("loaded", loaded);
                   if (loaded === roomPool.length) {
                     // this.loadMessage(roomPool[0].friendInfo.uid, firebase, UserData)
-                    this.setState({ roomPool: roomPool });
+                    this.setState({ roomPool: roomPool, isLoaded: true });
                     // this.setState({ roomPool: roomPool, currentRoom: roomPool[0].friendInfo.uid });
                   }
                 },
@@ -118,12 +112,13 @@ class MessageBase extends Component {
         }
       )
   }
-  loadMessage(friendID, firebase, UserData) {
+  loadMessage(friendID, firebase, userData) {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
     console.log('dialogue', this.state.roomPool);
-    console.log('dialogue', UserData.userInfo);
-    let roomID = createRoomID(UserData.authUser.uid, friendID)
+    console.log('dialogue', userData.userInfo);
+    let roomID = createRoomID(userData.authUser.uid, friendID)
     firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
+      .limit(100)
       .onSnapshot(
         (querySnapshot) => {
           let chat = [];
@@ -139,7 +134,7 @@ class MessageBase extends Component {
       )
   }
   clickRoom(friendID, avatar, name) {
-    const { firebase, UserData } = this.props;
+    const { firebase, userData } = this.props;
     this.setState({
       currentRoom:
       {
@@ -148,7 +143,7 @@ class MessageBase extends Component {
         name: name
       }
     });
-    this.loadMessage(friendID, firebase, UserData);
+    this.loadMessage(friendID, firebase, userData);
   }
   handleChange(event) {
     // this.setState({ inputMessage: event.target.value });
@@ -186,22 +181,21 @@ class MessageBase extends Component {
     // console.log(this.state.inputMessage);
     // console.log('currentRoom', this.state.currentRoom);
     event.preventDefault();
-    const { firebase, UserData } = this.props;
+    const { firebase, userData } = this.props;
     const { currentRoom, inputMessage } = this.state;
     // 要有資料防護機制 在還沒 load 完之前不能按
     // 需要兩個人的 uid 找到檔案名 再往下找 message 輸入
-    console.log('input', this.state.roomPool[0].friendInfo.uid);
     if (!currentRoom || !inputMessage[currentRoom.friendID]) {
       return
     }
-    let roomID = createRoomID(UserData.authUser.uid, currentRoom.friendID)
+    let roomID = createRoomID(userData.authUser.uid, currentRoom.friendID)
     let time = Date.now();
-    // let roomID = createRoomID(UserData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
+    // let roomID = createRoomID(userData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
     // send room's message > clean room's message > update room's timestamp
     firebase.db.collection("Room").doc(roomID).collection("message").doc()
       .set(
         {
-          sender: UserData.userInfo.id,
+          sender: userData.userInfo.id,
           content: inputMessage[currentRoom.friendID],
           timestamp: time
         }
@@ -229,7 +223,7 @@ class MessageBase extends Component {
       )
   }
   render() {
-    const { UserData } = this.props;
+    const { userData } = this.props;
     const { roomPool, currentRoom, inputMessage } = this.state;
 
     // console.log("render", this.state.roomPool);
@@ -240,7 +234,7 @@ class MessageBase extends Component {
       console.log("chat-check", this.state.chat)
       console.log("currentRoom", currentRoom)
       console.log("chat", this.props)
-      // console.log('friendID', this.props.UserData.friendID)
+      // console.log('friendID', this.props.userData.friendID)
 
       // state 更新後 roomPool 有值再進來
       if (roomPool.length > 0) {
@@ -251,10 +245,10 @@ class MessageBase extends Component {
             <div className="main">
               <div className='chat-room'>
                 <div className="my-chat center box-bottom">
-                  {UserData ?
+                  {userData ?
                     (<div className="center">
-                      <img className="avatar" alt="my-avatar" src={UserData.userInfo.avatar} />
-                      {/* <b>{this.props.UserData.userInfo.username}</b> */}
+                      <img className="avatar" alt="my-avatar" src={userData.userInfo.avatar} />
+                      {/* <b>{this.props.userData.userInfo.username}</b> */}
                     </div>) : ""}
                   <h2>Chats</h2>
                 </div>
@@ -285,7 +279,8 @@ class MessageBase extends Component {
                 <Conversation chat={this.state.chat} currentRoom={currentRoom} />
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Choose a room and start chatting...")} value={currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : ""} onChange={this.handleChange} />
+                    <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Choose a room and start chatting...")} 
+                      value={currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : ""} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
                 </div>

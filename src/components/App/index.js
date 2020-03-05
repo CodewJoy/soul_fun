@@ -25,13 +25,6 @@ const App = () => (
 class AppBase extends Component {
   constructor(props) {
     super(props);
-
-    // this.updateUserData = (authInfo) => {
-    //   this.setState(({
-    //     authInfo: authInfo
-    //   }))
-    // };
-
     this.updateUserData = (updateObject) => {
       this.setState(updateObject);
     };
@@ -40,7 +33,7 @@ class AppBase extends Component {
       authUser: "",
       userInfo: '',
       updateUserData: this.updateUserData,
-      f_invitation: ''
+      friendInvitation: ''
     };
   }
   componentDidMount() {
@@ -52,12 +45,9 @@ class AppBase extends Component {
           this.props.firebase.db.collection("Users").doc(authUser.uid)
             .onSnapshot(
               (doc) => {
-                // console.log("Current data: ", doc.data())
                 if (doc.exists) {
-                  // console.log("Document data:", doc.data());
                   this.setState({ authUser: authUser, userInfo: doc.data() });
                 } else {
-                  // doc.data() will be undefined in this case
                   console.log("No such document!");
                 }
               },
@@ -78,17 +68,11 @@ class AppBase extends Component {
                   if (doc) {
                     count += 1;
                   }
-                  // doc.data() is never undefined for query doc snapshots
-                  // console.log('requests', doc.id, " => ", doc.data());
-                  // console.log('requests', doc);
                 });
                 console.log(count);
-                this.setState({ f_invitation: count });
+                this.setState({ friendInvitation: count });
               }
             )
-            .catch(function (error) {
-              console.log("Error getting documents: ", error)
-            });
         }
         else {
           this.setState({ authUser: null });

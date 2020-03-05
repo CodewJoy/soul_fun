@@ -12,8 +12,8 @@ import { Badge } from '@material-ui/core';
 const Navigation = () => (
   <div className="member-navbar">
     <AuthUserContext.Consumer>
-      {UserData =>
-        <NavigationAuth UserData={UserData} />
+      {userData =>
+        <NavigationAuth userData={userData} />
       }
       {/* {authUser =>
         authUser ? <NavigationAuth /> : <NavigationNonAuth />
@@ -29,7 +29,7 @@ class NavigationAuth extends Component {
       <ul className="dropdown-content">
         <li>
           <Link to={ROUTES.HOME}>
-            <Badge badgeContent={this.props.UserData.f_invitation} color="secondary">
+            <Badge badgeContent={this.props.userData.friendInvitation} color="secondary">
               <PeopleSharpIcon style={{ fontSize: 30 }} />
             </Badge>
           </Link>

@@ -11,20 +11,14 @@ import SignOutButton from '../LogOut';
 const Profile = () => (
   <>
     <AuthUserContext.Consumer>
-      {(UserData) => (
+      {(userData) => (
         <FirebaseContext.Consumer>
-          {(firebase) => <ProfileBase UserData={UserData} firebase={firebase} />}
+          {(firebase) => <ProfileBase userData={userData} firebase={firebase} />}
         </FirebaseContext.Consumer>
       )}
     </AuthUserContext.Consumer>
   </>
 );
-
-// const options = [
-//   { value: 'english', label: 'English' },
-//   { value: 'franch', label: 'Franch' },
-//   { value: 'chinese', label: 'Chinese' }
-// ]
 
 class ProfileBase extends Component {
   constructor(props) {
@@ -70,8 +64,8 @@ class ProfileBase extends Component {
             <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
             <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
           </Switch> */}
-          <Display userInfo={this.props.UserData.userInfo} />
-          <Setting userInfo={this.props.UserData.userInfo} />
+          <Display userInfo={this.props.userData.userInfo} />
+          <Setting userInfo={this.props.userData.userInfo} />
           {/* <ConfirmFriend />
             <ConfirmFriend confirmfriend={confirmfriend}
               confirmFriend={this.confirmFriend.bind(this)}
