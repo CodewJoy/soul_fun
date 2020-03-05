@@ -15,9 +15,6 @@ const Navigation = () => (
       {userData =>
         <NavigationAuth userData={userData} />
       }
-      {/* {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth />
-      } */}
     </AuthUserContext.Consumer>
   </div>
 );
@@ -44,39 +41,5 @@ class NavigationAuth extends Component {
     );
   }
 }
-
-// const NavigationAuth = () => (
-//   <ul>
-//     <li>
-//       <Link to={ROUTES.HOME}>
-//         <Badge badgeContent={99} color="secondary">
-//           <PeopleSharpIcon style={{ fontSize: 30 }} />
-//         </Badge>
-//       </Link>
-//     </li>
-//     <li>
-//       <Link to={ROUTES.MESSAGE}><ChatIcon style={{ fontSize: 30 }} /></Link>
-//     </li>
-//     <li>
-//       <Link to={ROUTES.PROFILE}><AccountCircleSharpIcon style={{ fontSize: 30 }} /></Link>
-//     </li>
-//     <li>
-//       {/* <Link to={ROUTES.MESSAGE}> */}
-//       <NotificationsSharpIcon style={{ fontSize: 30 }} />
-//       {/* </Link> */}
-//     </li>
-//     {/* <li>
-//       <SignOutButton />
-//     </li> */}
-//   </ul>
-// );
-
-// const NavigationNonAuth = () => (
-//   <ul>
-//     <li>
-//       <Link to={ROUTES.LANDING}>Landing</Link>
-//     </li>
-//   </ul>
-// );
 
 export default Navigation;

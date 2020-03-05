@@ -42,21 +42,19 @@ class HomeBase extends Component {
     this.setState({ selected: name });
   }
   render() {
-    // console.log('lalala',this.props);
     return (
-      // <Router>
       <div className="home">
         <Navbar />
         <div className="main">
           <ul className="sideNav">
             <Link to='/home' className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-              <li>
+              <li className="center">
                 <img src={Discover} alt="discover" className="home-icon" />
                 <p className="home-sidenav">&emsp;Discover Friends</p>
               </li>
             </Link>
             <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-              <li>
+              <li className="center">
                 <Badge badgeContent={this.props.userData.friendInvitation} color="secondary">
                   <img src={Invitation} alt="invitation" className="home-icon" />
                 </Badge>
@@ -64,7 +62,7 @@ class HomeBase extends Component {
               </li>
             </Link>
             <Link to='/home/my-friend' className={this.state.selected === 'myfriend' ? "active" : "none"} onClick={() => this.sideNav('myfriend')}>
-              <li>
+              <li className="center">
                 <img src={Myfriend} alt="myfriend" className="home-icon" />
                 <p className="home-sidenav">&emsp;My Friend</p>
               </li>
@@ -77,7 +75,6 @@ class HomeBase extends Component {
           </Switch>
         </div>
       </div>
-      // </Router>
     )
   }
 }
@@ -163,7 +160,7 @@ class MyFriend extends Component {
           {this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
               <img className="avatar" src={item.avatar} alt="avatar" />
-              <div className="center friend-box-text">
+              <div className="friend-box-text">
                 <h4>{item.name}</h4>
                 <button onClick={this.showCard.bind(this, item.id)}>See more</button>
               </div>
@@ -331,11 +328,10 @@ class FriendRequests extends Component {
             this.setState({ goToChat: true })
           )
       )
-
     // update context
     // this.setState({ goToChat: true, friendID: id });
     // () => {this.setState({ goToChat: true })};
-  
+
   }
   showCard(id) {
     console.log('personinfo', id);
@@ -373,7 +369,7 @@ class FriendRequests extends Component {
             {confirmfriend.map(item => (
               <div className="friend-box" key={item.id}>
                 <img className="avatar" src={item.avatar} alt="avatar" />
-                <div className="center friend-box-text">
+                <div className="friend-box-text">
                   <h4>{item.name}</h4>
                   <button onClick={this.showCard.bind(this, item.id)}>See more</button>
                 </div>

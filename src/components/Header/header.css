@@ -3,12 +3,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* background-color: #63cdda; */
-    /* background-color: #ffd32a; */
-    /* background-color: #ffc629; */
     background-color: #ffdd59;
-    /* background-color: #ffc107; */
-    /* opacity:0.8; */
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
 
@@ -25,14 +20,16 @@
 
 .navbar>.dropdown>.member-navbar {
     width: 25%;
-    /* margin: 1% 2%; */
 }
 
 .navbar>.dropdown>.member-navbar>ul {
     display: flex;
     align-items: center;
-    justify-content: space-around;
     list-style: none;
+}
+
+.dropdown-content>li {
+    padding: 0 25px;
 }
 
 @media (max-width: 650px) {

@@ -1,17 +1,11 @@
 import React, { Component } from 'react';
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route
-} from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import LandingPage from '../Landing';
 import HomePage from '../Home';
-import { FriendRequests, MyFriend } from '../Home';
 import AccountPage from '../Account';
 import MessagePage from '../Message';
 import ProfilePage from '../Profile';
-import EditPage from '../Edit';
 import Loading from '../img/loading.gif';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
@@ -125,33 +119,6 @@ class AppBase extends Component {
                 return (<ProfilePage />)
               }
             }} />
-            <Route path={ROUTES.EDIT} render={() => {
-              if (this.state.authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<EditPage />)
-              }
-            }} />
-            {/* <Route path={ROUTES.FRIEND_REQUESTS} render={() => {
-              if (this.state.authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<FriendRequests />)
-              }
-            }} />
-            <Route path={ROUTES.MY_FRIEND} render={() => {
-              if (this.state.authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<MyFriend />)
-              }
-            }} /> */}
           </Switch>
         </Router>
       </AuthUserContext.Provider>
@@ -159,4 +126,3 @@ class AppBase extends Component {
   }
 }
 export default App;
-// export default withFirebase(App);
