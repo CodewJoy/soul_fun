@@ -95,13 +95,13 @@
 
 .landing>.sign-up {
     position: fixed;
-    top: calc(50vh - 215px);
-    left: calc(50vw - 165px);
-    height: 370px;
-    width: 270px;
+    top: 90px;
+    left: calc(50vw - 190px);
+    height: 360px;
+    width: 320px;
+    padding: 30px;
     background-color: white;
     border-radius: 5px;
-    padding: 30px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -118,13 +118,13 @@
 
 .landing>.log-in {
     position: fixed;
-    top: calc(50vh - 150px);
-    left: calc(50vw - 165px);
+    top: 90px;
+    left: calc(50vw - 190px);
     height: 300px;
-    width: 290px;
+    width: 320px;
+    padding: 20px;
     background-color: white;
     border-radius: 5px;
-    padding: 20px;
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
 }
 
@@ -187,5 +187,27 @@
         width: 100%;
         height: auto;
         /* object-fit: none; */
+    }
+    .landing>.sign-up {
+        position: fixed;
+        top: calc(50vh - 215px);
+        left: calc(50vw - 165px);
+        height: 370px;
+        width: 270px;
+        padding: 30px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    }
+    .landing>.log-in {
+        position: fixed;
+        top: calc(50vh - 150px);
+        left: calc(50vw - 165px);
+        height: 300px;
+        width: 290px;
+        padding: 20px;
+        background-color: white;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
     }
 }

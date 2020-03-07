@@ -155,21 +155,21 @@ class MyFriend extends Component {
     }
     return (
       <div className="view">
-        <h2>Your Friends</h2>
+        <h3>Your Friends</h3>
         <div className="container">
           {this.state.myfriend.map(item => (
             <div className="friend-box" key={item.id}>
               <img className="avatar" src={item.avatar} alt="avatar" />
               <div className="friend-box-text">
                 <h4>{item.name}</h4>
-                <button onClick={this.showCard.bind(this, item.id)}>See more</button>
+                <button className="see-more" onClick={this.showCard.bind(this, item.id)}>See more</button>
               </div>
             </div>
           ))}
         </div>
         {showCard ? (
           <div className="show-card">
-            <div className="center">
+            <div className="show-card-center">
               <img className="avatar" src={clickWhom.avatar} alt="avatar" />
               <p>
                 <b>{clickWhom.username}</b>
@@ -218,7 +218,7 @@ class MyFriend extends Component {
               {clickWhom.language}
               {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
             </p>
-            <div className="container">
+            <div className="container-button">
               <div className="go-back" onClick={this.closeCard}>
                 <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                 Go Back
@@ -364,21 +364,21 @@ class FriendRequests extends Component {
     } else {
       return (
         <div className="view">
-          <h2>Your Friend Requests</h2>
+          <h3>Your Friend Requests</h3>
           <div className="container">
             {confirmfriend.map(item => (
               <div className="friend-box" key={item.id}>
                 <img className="avatar" src={item.avatar} alt="avatar" />
                 <div className="friend-box-text">
                   <h4>{item.name}</h4>
-                  <button onClick={this.showCard.bind(this, item.id)}>See more</button>
+                  <button className="see-more" onClick={this.showCard.bind(this, item.id)}>See more</button>
                 </div>
               </div>
             ))}
           </div>
           {showCard ? (
             <div className="show-card">
-              <div className="center">
+              <div className="show-card-center">
                 <img className="avatar" src={clickWhom.avatar} alt="avatar" />
                 <p>
                   <b>{clickWhom.username}</b>
@@ -427,7 +427,7 @@ class FriendRequests extends Component {
                 {clickWhom.language}
                 {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
               </p>
-              <div className="container">
+              <div className="container-button">
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                   Go Back
@@ -665,7 +665,7 @@ class DiscoverFriend extends Component {
     } else {
       return (
         <div className="view">
-          <h2>Discover new friends here!</h2>
+          <h3>Discover new friends here!</h3>
           <Autocomplete
             value={this.state.interest}
             // name="location"
@@ -696,7 +696,7 @@ class DiscoverFriend extends Component {
                       {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
                     </p>
                   </div>
-                  <button onClick={this.showCard.bind(this, item)}>See more</button>
+                  <button className="see-more" onClick={this.showCard.bind(this, item)}>See more</button>
                 </div>
                 {/* <div className="bottom-line"></div> */}
               </div>
@@ -704,7 +704,7 @@ class DiscoverFriend extends Component {
           </div>
           {showCard ? (
             <div className="show-card">
-              <div className="center">
+              <div className="show-card-center">
                 <img className="avatar" src={clickWhom.avatar} alt="avatar" />
                 <p>
                   <b>{clickWhom.username}</b>
@@ -752,7 +752,7 @@ class DiscoverFriend extends Component {
                 <b>Language&ensp;</b>
                 {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
               </p>
-              <div className="container">
+              <div className="container-button">
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                   Go Back
