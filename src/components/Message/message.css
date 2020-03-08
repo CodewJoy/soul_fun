@@ -1,3 +1,9 @@
+/* global */
+
+.box-bottom {
+    border-bottom: 1px solid lightgray;
+}
+
 .message {
     width: 100%;
     height: 100%;
@@ -13,7 +19,7 @@
 }
 
 .message>.main>.chat-room {
-    width: 22%;
+    width: 330px;
     max-height: 100%;
     overflow-y: scroll;
     /* display: flex;
@@ -35,11 +41,13 @@
 .message>.main>.chat-room>.chat-box>input[type="radio"]:checked+label {
     background-color: #f1f2f6;
 }
+
 .message>.main>.chat-room>.my-chat {
     display: flex;
     align-items: center;
     justify-content: center;
 }
+
 .message>.main>.chat-room>.my-chat>.center>.avatar {
     vertical-align: middle;
     border-radius: 50%;
@@ -48,6 +56,7 @@
     height: 50px;
     margin: 5px;
 }
+
 .message>.main>.chat-room>.chat-box {
     margin: 1%;
     width: 98%;
@@ -76,6 +85,19 @@
     width: calc(80% - 50px);
     /* flex: auto; */
 }
+.message>.main>.chat-room>.chat-box>label>.fake-avatar {
+    border-radius: 50%;
+    border: 2px gray dashed;
+    width: 50px;
+    height: 50px;
+    margin: 3%;
+}
+.message>.main>.chat-room>.chat-box>label>.fake-container {
+    width: calc(80% - 50px);
+    border: 2px gray dashed;
+    height: 50px;
+    border-radius: 20px;
+}
 
 .message>.main>.chat-room>.chat-box>label>.container>.word {
     width: 100%;
@@ -92,15 +114,11 @@
     /* padding: 1%; */
     font-size: 18px;
 }
+
 .message>.main>.conversation>.toolbar {
-    height: 77px;
+    height: 68px;
 }
-.box-bottom {
-    border-bottom: 1px solid lightgray;
-}
-/* .message>.main>.conversation>.box-bottom {
-    border-bottom: 1px solid lightgray;
-} */
+
 .message>.main>.conversation>.center>.avatar {
     vertical-align: middle;
     border-radius: 50%;
@@ -141,30 +159,32 @@
     /* text-align: left; */
     display: flex;
     justify-content: flex-start;
-    margin: 0.5% 0%;
+    margin: 0.5% 0% 0.5% 0.5%;
 }
 
 .message>.main>.conversation>.talks>.my-dialog {
     /* text-align: right; */
     display: flex;
     justify-content: flex-end;
-    margin: 0.5% 0%;
+    margin: 0.5% 0.5% 0.5% 0%;
 }
 
 .message>.main>.conversation>.talks>.fri-dialog>div {
     width: 60%;
+    padding: 1% 2%;
     background-color: #ffd32a;
     border-radius: 20px;
     font-size: 16px;
-    padding: 1% 2%;
+  
 }
 
 .message>.main>.conversation>.talks>.my-dialog>div {
     width: 60%;
+    padding: 1% 2%;
     background-color: #f1f2f6;
     border-radius: 20px;
     font-size: 16px;
-    padding: 1% 2%;
+
 }
 
 .message>.main>.conversation>.input-box>form {
@@ -196,6 +216,10 @@
     height: auto;
 }
 
+.message>.main>.conversation>.center>.arrow-back {
+    display: none;
+}
+
 /* .message>.main>.pick-friend {
     padding: 1%; 
     width: 20%;
@@ -213,7 +237,7 @@
     width: 60px;
 } */
 
-@media (max-width: 500px) {
+@media (max-width: 650px) {
     .message>.main {
         width: 100%;
         display: block;
@@ -221,11 +245,19 @@
         align-items: center; */
     }
     .message>.main>.chat-room {
-        padding: 5%;
-        width: 90%;
+        padding: 2% 2% 0 2%;
+        width: 96%;
+        height: calc(100vh - 120px);
     }
     .message>.main>.conversation {
-        padding: 2%;
+        padding: 0 2% 2% 2%;
         width: 96%;
+        height: 100vh;
+    }
+    .message>.main>.headerDivider {
+        display: none;
+    }
+    .message>.main>.conversation>.center>.arrow-back {
+        display: block;
     }
 }

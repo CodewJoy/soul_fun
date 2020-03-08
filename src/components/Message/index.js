@@ -5,6 +5,7 @@ import './message.css';
 import Navbar from '../Header';
 import Loading from '../img/loading.gif';
 import SendMessage from '../img/send_message.svg';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 
 const Message = () => {
   return (
@@ -34,13 +35,15 @@ class MessageBase extends Component {
     }
     this.loadRoom = this.loadRoom.bind(this);
     this.loadMessage = this.loadMessage.bind(this);
+    this.scrollToAnchor = this.scrollToAnchor.bind(this);
+    this.backToRoom = this.backToRoom.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentDidMount() {
     const { firebase, userData } = this.props;
     const { isLoaded } = this.state;
-    
+
     if (userData.authUser) {
       if (!isLoaded) {
         this.loadRoom(firebase, userData, isLoaded);
@@ -59,11 +62,10 @@ class MessageBase extends Component {
     firebase.db.collection("Room").where("uid", "array-contains", `${userData.authUser.uid}`)
       .onSnapshot(
         (querySnapshot) => {
-          // console.log(doc.id, " => ", doc.data());
           // load chat room info
           let roomPool = [];
           querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             if (doc.data().user1.uid !== userData.authUser.uid) {
               roomPool.push({
                 roomDoc: doc.id,
@@ -82,7 +84,6 @@ class MessageBase extends Component {
           roomPool.sort(function (a, b) {
             return a.timestamp < b.timestamp ? 1 : -1;
           })
-          console.log('roomPool', roomPool);
           // load message
           let loaded = 0;
           for (let i = 0; i < roomPool.length; i++) {
@@ -91,7 +92,7 @@ class MessageBase extends Component {
               .onSnapshot(
                 (querySnapshot) => {
                   querySnapshot.forEach((doc) => {
-                    console.log(doc.id, " => ", doc.data());
+                    // console.log(doc.id, " => ", doc.data());
                     roomPool[i].friendInfo.chat = (doc.data());
                   })
                   loaded++;
@@ -123,7 +124,7 @@ class MessageBase extends Component {
         (querySnapshot) => {
           let chat = [];
           querySnapshot.forEach((doc) => {
-            console.log(doc.id, " => ", doc.data());
+            // console.log(doc.id, " => ", doc.data());
             chat.push(doc.data());
           })
           this.setState({ chat });
@@ -132,6 +133,13 @@ class MessageBase extends Component {
           console.log(error)
         }
       )
+  }
+  scrollToAnchor(propId) {
+    console.log(document.getElementById(propId));
+    document.getElementById(propId).scrollIntoView();
+  }
+  backToRoom() {
+    this.scrollToAnchor("root");
   }
   clickRoom(friendID, avatar, name) {
     const { firebase, userData } = this.props;
@@ -144,11 +152,10 @@ class MessageBase extends Component {
       }
     });
     this.loadMessage(friendID, firebase, userData);
+    this.scrollToAnchor("conversation");
   }
   handleChange(event) {
-    // this.setState({ inputMessage: event.target.value });
     let input = event.target.value;
-
     const { currentRoom } = this.state;
 
     this.setState(prevState => {
@@ -162,19 +169,7 @@ class MessageBase extends Component {
         }
       };
     });
-
-    // this.setState (prevState => {
-    //   if (!currentRoom) {
-    //     return prevState;
-    //   } 
-    //   return { 
-    //     currentRoom: { 
-    //       ...prevState.currentRoom,
-    //       input : input
-    //     }
-    //   };
-    // });
-
+    // this.setState({ inputMessage: event.target.value });
     // (() => this.setState({ inputMessage: event.target.value }))(console.log(this.state.inputMessage));
   }
   handleSubmit(event) {
@@ -226,18 +221,13 @@ class MessageBase extends Component {
     const { userData } = this.props;
     const { roomPool, currentRoom, inputMessage } = this.state;
 
-    // console.log("render", this.state.roomPool);
-    if (!this.state.isLoaded) {
-      return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    } else {
-      console.log("chat", this.state)
-      console.log("chat-check", this.state.chat)
-      console.log("currentRoom", currentRoom)
-      console.log("chat", this.props)
-      // console.log('friendID', this.props.userData.friendID)
-
-      // state 更新後 roomPool 有值再進來
-      if (roomPool.length > 0) {
+    console.log("chat", this.state)
+    console.log("chat", this.props)
+    // state 更新後 roomPool 有值再進來
+    if (roomPool.length > 0) {
+      if (!this.state.isLoaded) {
+        return <div className="loading"><img src={Loading} alt="Loading" /></div>
+      } else {
         // if (this.state.chat.length > 0) {
         return (
           <div className="message">
@@ -267,19 +257,27 @@ class MessageBase extends Component {
                 ))}
               </div>
               <div className="headerDivider"></div>
-              <div className='conversation'>
+              <div className='conversation' id='conversation'>
                 {/* {this.state.currentRoom ? .name || ""} */}
                 {currentRoom ?
                   (<div className="center box-bottom toolbar">
+                    <div className="arrow-back">
+                      &emsp;<ArrowBackSharpIcon style={{ fontSize: 40 }} onClick={this.backToRoom} />
+                    </div>
                     <img className="avatar" alt="friend-avatar" src={currentRoom.avatar} />
                     <b>{currentRoom.name}</b>
                   </div>) : (
-                    <div className="toolbar"></div>
+                    <div className="center box-bottom toolbar">
+                      <div className="arrow-back">
+                        &emsp;<ArrowBackSharpIcon style={{ fontSize: 40 }} onClick={this.backToRoom} />
+                      </div>
+                      <h3>&emsp;Click a room and start chatting</h3>
+                    </div>
                   )}
                 <Conversation chat={this.state.chat} currentRoom={currentRoom} />
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
-                    <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Choose a room and start chatting...")} 
+                    <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Click a room and start chatting...")}
                       value={currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : ""} onChange={this.handleChange} />
                     <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                   </form>
@@ -290,36 +288,61 @@ class MessageBase extends Component {
               {/* <friendProfile friendList={this.state.friendList}/> */}
             </div>
           </div>
-        );
+        )
         // } else {
         //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
         // }
-      } else {
-        // return <div className="loading"><img src={Loading} alt="Loading" /></div>
-        return (
-          <div className="message">
-            <Navbar />
-            <div className="main">
-              <div className='chat-room'>
-                <div className="my-chat">
-                  <h2>Chats</h2>
-                </div>
-              </div>
-              <div className="headerDivider"></div>
-              <div className='conversation'>
-                <div className="talks"></div>
-                <div className="input-box">
-                  <form>
-                    <input className='input-message' type="text" placeholder="Create a room and start chatting..." />
-                    <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
-                  </form>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        )
       }
+    } else {
+      // return <div className="loading"><img src={Loading} alt="Loading" /></div>
+      return (
+        <div className="message">
+          <Navbar />
+          <div className="main">
+            <div className='chat-room'>
+              <div className="my-chat center box-bottom">
+                {userData ?
+                  (<div className="center">
+                    <img className="avatar" alt="my-avatar" src={userData.userInfo.avatar} />
+                  </div>) : ""}
+                <h2>Chats</h2>
+              </div>
+              <div className="chat-box">
+                <label onClick={() => {this.scrollToAnchor("conversation")}}>
+                  <div className="fake-avatar">
+                  </div>
+                  <div className="fake-container">
+                  </div>
+                </label>
+                <label onClick={() => {this.scrollToAnchor("conversation")}}>
+                  <div className="fake-avatar">
+                  </div>
+                  <div className="fake-container">
+                  </div>
+                </label>
+              </div>
+            </div>
+            <div className="headerDivider"></div>
+            <div className='conversation' id='conversation' >
+              <div className="center box-bottom toolbar">
+                <div className="arrow-back">
+                  &emsp;<ArrowBackSharpIcon style={{ fontSize: 40 }} onClick={this.backToRoom} />
+                </div>
+                <h3>&emsp;Add a friend and start chatting</h3>
+              </div>
+              <div className="talks">
+              </div>
+              <div className="input-box">
+                <form>
+                  <input className='input-message' type="text" placeholder="Create a room and start chatting..." />
+                  <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      )
     }
   }
 }
@@ -331,30 +354,13 @@ function createRoomID(uid1, uid2) {
     return uid2 + uid1;
   }
 }
-// class ChatRoom extends Component {
-//   constructor(props) {
-//     super(props);
-//   }
-//   render() {
-//     // console.log('chat', this.props.friend);
-//     // const { friend } = ;
-//     return (
-//       <div className='chat-room'>
-//         {/* {this.props.friend.map(item => (
-//           <div className="chat-box" key={item.toString()+Date.now()}>
-//             <h3>{item}</h3>
-//           </div>
-//         ))} */}
-//       </div>
-//     )
-//   }
-// }
 
 class Conversation extends Component {
   render() {
     // console.log('conversation', this.props.currentRoom);
     // console.log('conversation', this.props.chat);
     // console.log('conversation', this.props.chat[0].sender);
+
     return (
       <div className="talks">
         {this.props.chat.map((item, index) => {
