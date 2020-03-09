@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import { createRoomID } from "./utils";
 import './message.css';
 import Navbar from '../Header';
+import ChatRoom from './chat_room';
 import Loading from '../img/loading.gif';
 import SendMessage from '../img/send_message.svg';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
@@ -43,10 +45,9 @@ class MessageBase extends Component {
   componentDidMount() {
     const { firebase, userData } = this.props;
     const { isLoaded } = this.state;
-
     if (userData.authUser) {
       if (!isLoaded) {
-        this.loadRoom(firebase, userData, isLoaded);
+        this.loadRoom(firebase, userData);
       }
     }
   }
@@ -54,13 +55,20 @@ class MessageBase extends Component {
     const { firebase, userData } = this.props;
     const { isLoaded } = this.state;
     if (!isLoaded) {
-      this.loadRoom(firebase, userData, isLoaded);
+      this.loadRoom(firebase, userData);
     }
   }
-  loadRoom(firebase, userData, isLoaded) {
+  componentWillUnmount() {
+    for (let i = 0; i < this.unsubscribes.length; i++) {
+      this.unsubscribes[i]();
+    }
+  }
+  loadRoom(firebase, userData) {
     // firebase.db.collection("Room").doc().collection("message").doc()
     firebase.db.collection("Room").where("uid", "array-contains", `${userData.authUser.uid}`)
-      .onSnapshot(
+      .get()
+      .then(
+        // .onSnapshot(
         (querySnapshot) => {
           // load chat room info
           let roomPool = [];
@@ -86,9 +94,11 @@ class MessageBase extends Component {
           })
           // load message
           let loaded = 0;
+          // 監聽為陣列，unsubscribes也要做陣列，用 this 指向 component
+          this.unsubscribes = [];
           for (let i = 0; i < roomPool.length; i++) {
             // 每個 message 都取最近的值
-            firebase.db.collection("Room").doc(roomPool[i].roomDoc).collection("message").orderBy("timestamp", "desc").limit(1)
+            this.unsubscribes[i] = firebase.db.collection("Room").doc(roomPool[i].roomDoc).collection("message").orderBy("timestamp", "desc").limit(1)
               .onSnapshot(
                 (querySnapshot) => {
                   querySnapshot.forEach((doc) => {
@@ -218,16 +228,17 @@ class MessageBase extends Component {
       )
   }
   render() {
+    // console.log("chat", this.state)
+    // console.log("chat", this.props)
     const { userData } = this.props;
     const { roomPool, currentRoom, inputMessage } = this.state;
 
-    console.log("chat", this.state)
-    console.log("chat", this.props)
     // state 更新後 roomPool 有值再進來
     if (roomPool.length > 0) {
       if (!this.state.isLoaded) {
         return <div className="loading"><img src={Loading} alt="Loading" /></div>
       } else {
+        console.log('peng', currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : "");
         // if (this.state.chat.length > 0) {
         return (
           <div className="message">
@@ -274,7 +285,7 @@ class MessageBase extends Component {
                       <h3>&emsp;Click a room and start chatting</h3>
                     </div>
                   )}
-                <Conversation chat={this.state.chat} currentRoom={currentRoom} />
+                <ChatRoom chat={this.state.chat} currentRoom={currentRoom} />
                 <div className="input-box" id="input-box" >
                   <form onSubmit={this.handleSubmit}>
                     <input className='input-message' type="text" placeholder={currentRoom ? ("Start chatting...") : ("Click a room and start chatting...")}
@@ -283,18 +294,11 @@ class MessageBase extends Component {
                   </form>
                 </div>
               </div>
-              {/* <div className="headerDivider"></div>  */}
-              {/* <ChatRoom friend={this.state.friend} /> */}
-              {/* <friendProfile friendList={this.state.friendList}/> */}
             </div>
           </div>
         )
-        // } else {
-        //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
-        // }
       }
     } else {
-      // return <div className="loading"><img src={Loading} alt="Loading" /></div>
       return (
         <div className="message">
           <Navbar />
@@ -308,13 +312,13 @@ class MessageBase extends Component {
                 <h2>Chats</h2>
               </div>
               <div className="chat-box">
-                <label onClick={() => {this.scrollToAnchor("conversation")}}>
+                <label onClick={() => { this.scrollToAnchor("conversation") }}>
                   <div className="fake-avatar">
                   </div>
                   <div className="fake-container">
                   </div>
                 </label>
-                <label onClick={() => {this.scrollToAnchor("conversation")}}>
+                <label onClick={() => { this.scrollToAnchor("conversation") }}>
                   <div className="fake-avatar">
                   </div>
                   <div className="fake-container">
@@ -334,81 +338,16 @@ class MessageBase extends Component {
               </div>
               <div className="input-box">
                 <form>
-                  <input className='input-message' type="text" placeholder="Create a room and start chatting..." />
+                  <input className='input-message' type="text" placeholder="Create a room and start chatting..." value={currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : ""} onChange={this.handleChange} />
                   <input className='input-click' type="image" src={SendMessage} alt="Submit Form" />
                 </form>
               </div>
             </div>
-
           </div>
         </div>
       )
     }
   }
 }
-function createRoomID(uid1, uid2) {
-  if (uid1 < uid2) {
-    return uid1 + uid2;
-  }
-  else {
-    return uid2 + uid1;
-  }
-}
-
-class Conversation extends Component {
-  render() {
-    // console.log('conversation', this.props.currentRoom);
-    // console.log('conversation', this.props.chat);
-    // console.log('conversation', this.props.chat[0].sender);
-
-    return (
-      <div className="talks">
-        {this.props.chat.map((item, index) => {
-          // console.log(item.sender);
-          if (item.sender === "admin") {
-            return (
-              <div className="adm-dialog" key={index}>
-                <p>{item.content}</p>
-                <div>{Date(item.timestamp).substring(0, 24)}</div>
-              </div>
-            )
-          } else if (item.sender === this.props.currentRoom.friendID) {
-            return (
-              <div className="fri-dialog" key={index}>
-                <div>{item.content}</div>
-              </div>
-            )
-          } else {
-            return (
-              <div className="my-dialog" key={index}>
-                <div>{item.content}</div>
-              </div>
-            )
-          }
-        }
-        )}
-      </div>
-    )
-  }
-}
-
-// class friendProfile extends Component {
-//   render() {
-//     console.log(this.props)
-//     const { friendList } = this.props
-//     return (
-//       <div className='pick-friend'>
-//         <p>Talk to your friend</p>
-//         <div className='pick-box'>
-//           {/* <img className="avatar" src='https://firebasestorage.googleapis.com/v0/b/personal-project-b5b0e.appspot.com/o/002-male.svg?alt=media&token=e78987fe-00b1-4848-aee7-dc621352875d' alt="avatar" /> */}
-//           <h4>name</h4>
-//         </div>
-//       </div>
-//     )
-//   }
-// }
-
-
-
 
 export default Message;
