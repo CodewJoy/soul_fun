@@ -5,16 +5,19 @@ import './home.css';
 import Navbar from '../Header';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
-import Loading from '../img/loading.gif';
+import { INTERESTS } from '../../constants/factor.js';
 import { Redirect } from 'react-router-dom';
+
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-import { INTERESTS } from '../../constants/factor.js';
+import { Badge } from '@material-ui/core';
+
+import Loading from '../img/loading.gif';
 import Discover from '../img/discover.svg';
 import Invitation from '../img/invitation.svg';
 import Myfriend from '../img/my_friend.svg';
-import { Badge } from '@material-ui/core';
+
 
 const Home = () => (
   <>
@@ -37,7 +40,6 @@ class HomeBase extends Component {
     }
     this.sideNav = this.sideNav.bind(this);
   }
-
   sideNav(name) {
     this.setState({ selected: name });
   }
@@ -182,20 +184,22 @@ class MyFriend extends Component {
             <div className="container">
               <div className="container-1">
                 <p>
+                  <b>Gender&ensp;</b>
+                  {clickWhom.gender}
+                </p>
+                <p>
                   <b>Age&ensp;</b>
                 </p>
                 <p>
                   <b>Star-Sign&ensp;</b>
                 </p>
-                <p>
-                  <b>Gender&ensp;</b>
-                  {clickWhom.gender}
-                </p>
               </div>
               {/* <div className="line"></div> */}
               <div className="container-2">
                 <p>
-                  <b>Last online&ensp;</b>
+                  <b>Language&ensp;</b>
+                  {clickWhom.language}
+                  {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
                 </p>
                 <p>
                   <b>Country&ensp;</b>
@@ -207,17 +211,15 @@ class MyFriend extends Component {
                 </p>
               </div>
             </div>
+            <p>
+              <b>Last online&ensp;</b>
+            </p>
             <div>
               <b>Interest&ensp;</b>
               <div className='interest-tag-wrapper'>
                 {clickWhom.interest.map(int => (<span className='interest-tag-home' key={int}>{int}</span>))}
               </div>
             </div>
-            <p>
-              <b>Language&ensp;</b>
-              {clickWhom.language}
-              {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
-            </p>
             <div className="container-button">
               <div className="go-back" onClick={this.closeCard}>
                 <ArrowBackSharpIcon style={{ fontSize: 40 }} />
@@ -391,20 +393,22 @@ class FriendRequests extends Component {
               <div className="container">
                 <div className="container-1">
                   <p>
+                    <b>Gender&ensp;</b>
+                    {clickWhom.gender}
+                  </p>
+                  <p>
                     <b>Age&ensp;</b>
                   </p>
                   <p>
                     <b>Star-Sign&ensp;</b>
                   </p>
-                  <p>
-                    <b>Gender&ensp;</b>
-                    {clickWhom.gender}
-                  </p>
                 </div>
                 {/* <div className="line"></div> */}
                 <div className="container-2">
                   <p>
-                    <b>Last online&ensp;</b>
+                    <b>Language&ensp;</b>
+                    {clickWhom.language}
+                    {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
                   </p>
                   <p>
                     <b>Country&ensp;</b>
@@ -416,17 +420,15 @@ class FriendRequests extends Component {
                   </p>
                 </div>
               </div>
+              <p>
+                <b>Last online&ensp;</b>
+              </p>
               <div>
                 <b>Interest&ensp;</b>
                 <div className='interest-tag-wrapper'>
                   {clickWhom.interest.map(int => (<span className='interest-tag-home' key={int}>{int}</span>))}
                 </div>
               </div>
-              <p>
-                <b>Language&ensp;</b>
-                {clickWhom.language}
-                {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
-              </p>
               <div className="container-button">
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />
@@ -638,12 +640,6 @@ class DiscoverFriend extends Component {
     this.setState({ showCard: !this.state.showCard })
   }
   getInterest(e) {
-    // console.log(e.target);
-    // console.log(e.target.value)
-    // console.log(e.target.id)
-    // console.log(e.target.textContent)
-    // console.log(e.target.label)
-    // console.log(e.target.name)
     const { userData, firebase } = this.props.props;
     this.referFriends(e.target.textContent, userData, firebase);
     // this.setState({ interest: e.target.textContent }, () => {
@@ -680,16 +676,13 @@ class DiscoverFriend extends Component {
           <div className="container">
             {referlist.map(item => (
               <div key={item.id} className="friend-box">
-                {/* <div key={item.id} className="friend-box"> */}
                 <img className="avatar" src={item.avatar} alt="avatar" />
                 <div className="friend-box-text">
                   <p>
                     <b>{item.username}</b>
                   </p>
                   <p>{item.country},&nbsp;{item.language}</p>
-                  {/* <p>Country: {item.country}</p> */}
                   <hr />
-                  {/* <p>Language: {item.language}</p> */}
                   <div className="interest-box">
                     <p className="interest-ellipsis">
                       {/* <b>{item.interest}</b> */}
@@ -717,20 +710,21 @@ class DiscoverFriend extends Component {
               <div className="container">
                 <div className="container-1">
                   <p>
+                    <b>Gender&ensp;</b>
+                    {clickWhom.gender}
+                  </p>
+                  <p>
                     <b>Age&ensp;</b>
                   </p>
                   <p>
                     <b>Star-Sign&ensp;</b>
                   </p>
-                  <p>
-                    <b>Gender&ensp;</b>
-                    {clickWhom.gender}
-                  </p>
                 </div>
                 {/* <div className="line"></div> */}
                 <div className="container-2">
                   <p>
-                    <b>Last online&ensp;</b>
+                    <b>Language&ensp;</b>
+                    {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
                   </p>
                   <p>
                     <b>Country&ensp;</b>
@@ -742,16 +736,15 @@ class DiscoverFriend extends Component {
                   </p>
                 </div>
               </div>
+              <p>
+                <b>Last online&ensp;</b>
+              </p>
               <div>
                 <b>Interest&ensp;</b>
                 <div className='interest-tag-wrapper'>
                   {clickWhom.interest.map(int => (<b key={int} className='interest-tag-home'>{int}</b>))}
                 </div>
               </div>
-              <p>
-                <b>Language&ensp;</b>
-                {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
-              </p>
               <div className="container-button">
                 <div className="go-back" onClick={this.closeCard}>
                   <ArrowBackSharpIcon style={{ fontSize: 40 }} />

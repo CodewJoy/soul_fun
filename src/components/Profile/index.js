@@ -1,12 +1,13 @@
 /* eslint-disable react/prop-types */
 import React, { Component } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 // import Select from 'react-select'
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import './profile.css';
 import Navbar from '../Header';
-import Loading from '../img/loading.gif';
 import SignOutButton from '../LogOut';
+import Loading from '../img/loading.gif';
 
 const Profile = () => (
   <>
@@ -25,117 +26,101 @@ class ProfileBase extends Component {
     super(props);
     console.log(props);
     this.state = {
-      // isLoaded: false,
-      isLoaded_friend: false,
-      confirmfriend: []
+      selected: 'show-profile'
     }
+    this.sideNav = this.sideNav.bind(this);
   }
-
+  sideNav(name) {
+    this.setState({ selected: name });
+  }
   render() {
-    // const { confirmfriend } = this.state
-    // const { isLoaded_friend, confirmfriend } = this.state
-    // if (!isLoaded_friend) {
-    //   return <div className="loading"><img src={Loading} alt="Loading" /></div>
-    // } else {
-    console.log(this.props);
+    // console.log(this.props);
     return (
       <div className="profile">
         <Navbar />
         <div className="main">
           <ul className="sideNav">
-            <li>
-              Setting
-            </li>
-            <li>
-              <SignOutButton />
-            </li>
-          </ul>
-
-          {/* <ul className="sideNav">
-            <li className={this.state.selected === 'discover' ? "active" : "none"} onClick={() => this.sideNav('discover')}>
-              <Link to='/home'>Discover Friends</Link>
-            </li>
-            <li className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
-              <Link to='/home/friend-requests'>Friend Requests</Link>
-            </li>
+            <Link to='/profile' className={this.state.selected === 'show-profile' ? "active" : "none"} onClick={() => this.sideNav('show-profile')}>
+              <li>
+                Profile
+              </li>
+            </Link>
+            <Link to='/profile/edit' className={this.state.selected === 'edit-profile' ? "active" : "none"} onClick={() => this.sideNav('edit-profile')}>
+              <li>
+                Edit
+              </li>
+            </Link>
+            <a className={this.state.selected === 'log-out' ? "active" : "none"} onClick={() => this.sideNav('log-out')}>
+              <li>
+                <SignOutButton />
+              </li>
+            </a>
           </ul>
           <Switch>
-            <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} referlist={referlist} addFriend={this.addFriend.bind(this)} />)} />
-            <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
-            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
-          </Switch> */}
-          <Display userInfo={this.props.userData.userInfo} />
-          <Setting userInfo={this.props.userData.userInfo} />
-          {/* <ConfirmFriend />
-            <ConfirmFriend confirmfriend={confirmfriend}
-              confirmFriend={this.confirmFriend.bind(this)}
-            /> */}
-        </div>
-        <div className="center-button">
-          <button>Edit</button>
+            <Route exact path='/profile' render={(props) => (<ShowProfile {...props} userInfo={this.props.userData.userInfo} />)} />
+            <Route path='/profile/edit' render={(props) => (<Edit {...props} props={this.props} />)} />
+          </Switch>
         </div>
       </div>
     );
   }
 }
 
-class Display extends Component {
-  constructor(props) {
-    super(props);
-    // this.onChange = this.onChange.bind(this);
-  }
-  // onChange(event) {
-  //   this.props.changeProfile({ [event.target.name]: event.target.value });
-  // }
+class Edit extends Component {
   render() {
+    console.log('edit', this.props);
     return (
-      <div className="display">
-        {/* <img className="avatar" src={AvatarImage} alt="avatar" /> */}
-        <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
-        <h4>Hey {this.props.userInfo.username}!</h4>
-        <p className="age">age</p>
-        <p className="star-sign">star-sign</p>
+      <div className="view">
+        Edit
       </div>
     )
   }
 }
 
-class Setting extends Component {
-  constructor(props) {
-    super(props);
-  }
+class ShowProfile extends Component {
   render() {
-    // console.log(this.props.userInfo.interest)
+    console.log(this.props);
     const { gender, birthday, country, location, language, interest, bio } = this.props.userInfo;
     return (
-      <div className="setting">
-        <h3>My profile</h3>
-        <p className="gender">
-          Gender: {gender}
-        </p>
-        <p className="birthday">
-          Birthday: {birthday}
-        </p>
-        <p className="country">
-          Country: {country}
-        </p>
-        <p className="location">
-          Location: {location}
-        </p>
-        <p className="language">
-          Language: {language}
-        </p>
-        <p className="interest">
-          Interest: {interest.map(int => (<span key={int}>{int}&ensp;</span>))}
-          {/* {this.props.userInfo.interest.map(item => (
-            // <div key={item.index} >
-              <p>{item.value}</p>
-            // </div>
-          ))} */}
-        </p>
-        <p className="bio">
-          Intro: {bio}
-        </p>
+      <div className="view">
+        <div className="display">
+          <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
+          <h3>Hey {this.props.userInfo.username}!</h3>
+        </div>
+        <div className="setting">
+          <h3>My profile</h3>
+          <p className="gender">
+            <b>Gender&ensp;</b>{gender}
+          </p>
+          <p className="birthday">
+            <b>Birthday&ensp;</b>{birthday}
+          </p>
+          <p className="age">
+            <b>Age&ensp;</b>
+          </p>
+          <p className="star-sign">
+            <b>Star-Sign&ensp;</b>
+          </p>
+          <p className="language">
+            <b>Language&ensp;</b>{language}
+          </p>
+          <p className="country">
+            <b>Country&ensp;</b>{country}
+          </p>
+          <p className="location">
+            <b>Location&ensp;</b>{location}
+          </p>
+          <p className="bio">
+            <b>Intro&ensp;</b>{bio}
+          </p>
+          <div className="interest">
+            <b>Interest&ensp;</b>
+            <br/>
+            <div className='interest-tag-wrapper'>
+              {interest.map(int => (<b className='interest-tag' key={int}>{int}</b>))}
+            </div>
+          </div>
+        </div>
       </div>
     )
   }
