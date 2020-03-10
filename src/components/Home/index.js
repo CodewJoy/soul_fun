@@ -52,7 +52,7 @@ class HomeBase extends Component {
             </Link>
             <Link to='/home/friend-requests' className={this.state.selected === 'requests' ? "active" : "none"} onClick={() => this.sideNav('requests')}>
               <li className="center">
-                <Badge badgeContent={this.props.userData.friendInvitation} color="secondary">
+                <Badge badgeContent={this.props.userData.friendInvitation} color="primary">
                   <img src={Invitation} alt="invitation" className="home-icon" />
                 </Badge>
                 <p className="home-sidenav">&emsp;Friend Requests</p>

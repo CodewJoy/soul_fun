@@ -7,11 +7,9 @@ import { LANGUAGES } from '../../constants/factor.js';
 import AddIcon from '@material-ui/icons/Add';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
-
 import DateFnsUtils from '@date-io/date-fns';
 import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
+  MuiPickersUtilsProvider, KeyboardDatePicker,
 } from '@material-ui/pickers';
 
 class Edit extends Component {

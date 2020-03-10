@@ -26,7 +26,7 @@ class NavigationAuth extends Component {
       <ul className="dropdown-content">
         <li>
           <Link to={ROUTES.HOME}>
-            <Badge badgeContent={this.props.userData.friendInvitation} color="secondary">
+            <Badge badgeContent={this.props.userData.friendInvitation} color="primary">
               <PeopleSharpIcon style={{ fontSize: 30 }} />
             </Badge>
           </Link>
