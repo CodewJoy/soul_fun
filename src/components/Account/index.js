@@ -3,21 +3,20 @@ import { Redirect } from 'react-router-dom';
 import './account.css';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import { convertTime } from './utils';
 import { INTERESTS } from '../../constants/factor.js';
 import { COUNTRIES } from '../../constants/factor.js';
 import { LANGUAGES } from '../../constants/factor.js';
 import { Navbar_Account } from '../Header';
 import AddIcon from '@material-ui/icons/Add';
-
-
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import TextField from '@material-ui/core/TextField';
 
-// import DateFnsUtils from '@date-io/date-fns';
-// import {
-//   MuiPickersUtilsProvider,
-//   KeyboardDatePicker,
-// } from '@material-ui/pickers';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 const Account = () => (
   <>
@@ -51,7 +50,7 @@ class AccountBase extends Component {
 const INITIAL_STATE = {
   // username: 
   gender: '',
-  birthday: '',
+  birthday: '01/01/1995',
   location: '',
   country: '',
   language: '',
@@ -78,6 +77,7 @@ class Setting extends Component {
     this.saveToDB = this.saveToDB.bind(this);
     this.getValue = this.getValue.bind(this);
     this.addInterest = this.addInterest.bind(this);
+    this.getBirthValue = this.getBirthValue.bind(this);
     this.getSelectValue = this.getSelectValue.bind(this);
     this.getLocationValue = this.getLocationValue.bind(this);
     this.getLanValue = this.getLanValue.bind(this);
@@ -86,7 +86,7 @@ class Setting extends Component {
   }
   saveToDB() {
     const { gender, birthday, location, country, language, avatar, bio, interest, hobby } = this.state;
-    if ( gender==='' || birthday === '' || location === ''|| country === '' || language === '' || avatar === '' || bio === '' || interest === []) {
+    if (gender === '' || birthday === '' || location === '' || country === '' || language === '' || avatar === '' || bio === '' || interest === []) {
       alert('You have not finished the form.');
     } else {
       this.props.firebase.db.collection("Users").doc(`${this.props.userInfo.id}`).update(
@@ -113,15 +113,16 @@ class Setting extends Component {
       console.log(this.state)
     });
   }
+  getBirthValue(e) {
+    // console.log(convertTime(String(e)));
+    let birthday = convertTime(String(e));
+    this.setState({ birthday: birthday }, () => {
+      console.log(this.state)
+    });
+  }
   // used for autocomplete
   getSelectValue(e) {
-    // console.log(e.target);
-    // console.log(e.target.value)
-    // console.log(e.target.id)
     // console.log(e.target.textContent)
-    // console.log(e.target.label)
-    // console.log(e.target.label)
-    // console.log(e.target.name)
     this.setState({ country: e.target.textContent }, () => {
       console.log(this.state)
     });
@@ -132,12 +133,7 @@ class Setting extends Component {
     });
   }
   getLanValue(e) {
-    // console.log(e.target);
-    // console.log(e.target.value)
-    // console.log(e.target.id)
     // console.log(e.target.textContent)
-    // console.log(e.target.label)
-    // console.log(e.target.name)
     this.setState({ language: e.target.textContent }, () => {
       console.log(this.state)
     });
@@ -176,41 +172,29 @@ class Setting extends Component {
       // Get file
       const image = e.target.files[0];
       // Create a storage ref
-      let storageRef = firebase.storage.ref('avatar_'+ image.name);
+      let storageRef = firebase.storage.ref('avatar_' + image.name);
       // Upload file
       let task = storageRef.put(image);
 
-      task.on('state_changed', function(snapshot){
+      task.on('state_changed', function (snapshot) {
         // Observe state change events such as progress, pause, and resume
         // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
         var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
         console.log('Upload is ' + progress + '% done');
-        // switch (snapshot.state) {
-        //   case firebase.storage.TaskState.PAUSED: // or 'paused'
-        //     console.log('Upload is paused');
-        //     break;
-        //   case firebase.storage.TaskState.RUNNING: // or 'running'
-        //     console.log('Upload is running');
-        //     break;
-        // }
-      }, function(error) {
+      }, function (error) {
         console.log(error);
       }, () => {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         task.snapshot.ref.getDownloadURL().then((downloadURL) => {
           console.log('File available at', downloadURL);
-          this.setState({ image: image, avatar:downloadURL}, () => {
+          this.setState({ image: image, avatar: downloadURL }, () => {
             console.log(this.state)
           });
         });
       });
     }
   }
-  // handleUpload() {
-  //   const { image } = this.state;
-  //   const uploadTask = this.props.firebase.ref(`images/${image.name}`).put(image);
-  // }
   render() {
     console.log(this.props)
     console.log(this.state)
@@ -227,15 +211,15 @@ class Setting extends Component {
               <h4>Hey {this.props.userInfo.username}! Share more about you :)</h4>
               <div className="border">
                 <input type="file"
-                  id="avatar" name="avatar" onChange={this.handleChange}/>
+                  id="avatar" name="avatar" onChange={this.handleChange} />
                 <label htmlFor='avatar'>
-                  {this.state.avatar=== "" ? (
-                  <div className="avatar">
-                    <AddIcon style={{ size: 60 }} />
-                  </div>) :
-                  (<div className="avatar">
-                    <img src={this.state.avatar} alt="avatar"/>
-                  </div>)}
+                  {this.state.avatar === "" ? (
+                    <div className="avatar">
+                      <AddIcon style={{ size: 60 }} />
+                    </div>) :
+                    (<div className="avatar">
+                      <img src={this.state.avatar} alt="avatar" />
+                    </div>)}
                 </label>
               </div>
               {/* <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" /> */}
@@ -243,7 +227,7 @@ class Setting extends Component {
                 <sub>
                   *Upload a picture that represents you as your avatar.
                 </sub>
-                <br/>
+                <br />
                 <sub>
                   *The ideal image shape should be square look.
                 </sub>
@@ -255,12 +239,11 @@ class Setting extends Component {
               <input type="radio" name="gender" value="male" checked={this.state.gender === "male"} onChange={this.getValue} />Male&emsp;<br />
               <input type="radio" name="gender" value="female" checked={this.state.gender === "female"} onChange={this.getValue} /> Female&emsp;<br />
               <input type="radio" name="gender" value="non-binary" checked={this.state.gender === "non-binary"} onChange={this.getValue} /> Non-binary&emsp;<br />
-              {/* <input type="submit" value="Save" /> */}
             </form>
             <br />
             <form className="birthday" >
               <p><b>When is your birthday?</b></p>
-              {/* <MuiPickersUtilsProvider utils={DateFnsUtils}>
+              <MuiPickersUtilsProvider utils={DateFnsUtils}>
                 <KeyboardDatePicker
                   disableToolbar
                   variant="inline"
@@ -268,19 +251,19 @@ class Setting extends Component {
                   margin="normal"
                   id="date-picker-inline"
                   label="Date picker inline"
-                  // value={selectedDate}
-                  // onChange={handleDateChange}
+                  value={this.state.birthday}
+                  onChange={this.getBirthValue}
                   KeyboardButtonProps={{
                     'aria-label': 'change date',
                   }}
                 />
-              </MuiPickersUtilsProvider> */}
-
-              <input type="date" name="birthday" value={this.state.birthday} onChange={this.getValue} required />
+              </MuiPickersUtilsProvider>
+              {/* <input type="date" name="birthday" value={this.state.birthday} onChange={this.getValue} required /> */}
               <p>
                 <sub>*You must be at least 18 years old to use SOULFUN.</sub>
               </p>
             </form>
+            <br />
             <div className="language">
               <p><b>what kind of language do you speak?</b></p>
               <Autocomplete
@@ -295,26 +278,7 @@ class Setting extends Component {
                 style={{ width: 300 }}
                 renderInput={params => <TextField {...params} label="Language" variant="outlined" />}
               />
-              {/* <Autocomplete
-                multiple
-                onChange={this.getLanValue}
-                id="tags-outlined"
-                options={LANGUAGES}
-                getOptionLabel={option => option}
-                // defaultValue={this.state.birthday}
-                filterSelectedOptions
-                renderInput={params => (
-                  <TextField
-                    {...params}
-                    variant="outlined"
-                    label="Languages"
-                    // placeholder="Favorites"
-                  />
-                )}
-              /> */}
-              {/* <input className="key-in" type="text" placeholder="language" name="language" onChange={this.getValue} /> */}
             </div>
-            <br />
           </div>
           <div className="setting-2">
             <div className="country">
@@ -331,14 +295,6 @@ class Setting extends Component {
                 style={{ width: 300 }}
                 renderInput={params => <TextField {...params} label="Country" variant="outlined" />}
               />
-              {/* <form>
-                <select value={this.state.country} name="country" onChange={this.getValue}>
-                  <option value="Taiwan">Taiwan</option>
-                  <option value="U.S.">U.S.</option>
-                  <option value="France">France</option>
-                  <option value="Japan">Japan</option>
-                </select>
-              </form> */}
             </div>
             <div className="location">
               <p><b>Where do you primarily live?</b></p>
@@ -354,16 +310,12 @@ class Setting extends Component {
                 style={{ width: 300 }}
                 renderInput={params => <TextField {...params} label="Location" variant="outlined" />}
               />
-              {/* <form>
-                <select value={this.state.location} name="location" onChange={this.getValue}>
-                  <option value="Taiwan">Taiwan</option>
-                  <option value="U.S.">U.S.</option>
-                  <option value="France">France</option>
-                  <option value="Japan">Japan</option>
-                </select>
-              </form> */}
-              {/* <input className="key-in" type="text" placeholder="location" name="location" onChange={this.getValue}/> */}
             </div>
+            <form className='bio'>
+              <p><b>About Me</b></p>
+              <textarea name="bio" value={this.state.bio} rows="8" cols="80" onChange={this.getValue}></textarea>
+              <br />
+            </form>
             <br />
             <p><b>Pick some topics you are interested in.</b></p>
             <p>
@@ -380,12 +332,6 @@ class Setting extends Component {
                   </label>
                 </div>
               ))}
-            </form>
-            <form className='bio'>
-              <p><b>About Me</b></p>
-              <textarea name="bio" value={this.state.bio} rows="8" cols="80" onChange={this.getValue}></textarea>
-              <br />
-              {/* <input type="submit" value="Save" /> */}
             </form>
           </div>
         </div>

@@ -104,15 +104,17 @@
     border: lightgray 1px solid;
     width: 100%;
 }
-
-@media (max-width: 500px) {
+.account>.main>.center-button {
+    width: 100%;
+}
+@media (max-width: 750px) {
     .account>.main>.view {
         display: flex;
         flex-wrap: wrap;
     }
 
     .account>.main>.view>.setting-1 {
-        padding: 0 7.5% 7.5% 7.5%; 
+        padding: 0 7.5%; 
         width: 85%;
     }
     
