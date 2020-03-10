@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
-import { createRoomID } from "./utils";
+import { createRoomID, getDistanceSpecifiedTime, getAge } from "./utils";
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 
 class MyFriend extends Component {
@@ -112,9 +112,11 @@ class MyFriend extends Component {
                                 </p>
                                 <p>
                                     <b>Age&ensp;</b>
+                                    {getAge(clickWhom.birthday)}
                                 </p>
                                 <p>
-                                    <b>Star-Sign&ensp;</b>
+                                    <b>Last online&ensp;</b>
+                                    {getDistanceSpecifiedTime(clickWhom.timestamp)}
                                 </p>
                             </div>
                             {/* <div className="line"></div> */}
@@ -134,13 +136,10 @@ class MyFriend extends Component {
                                 </p>
                             </div>
                         </div>
-                        <p>
-                            <b>Last online&ensp;</b>
-                        </p>
                         <div>
                             <b>Interest&ensp;</b>
                             <div className='interest-tag-wrapper'>
-                                {clickWhom.interest.map(int => (<span className='interest-tag-home' key={int}>{int}</span>))}
+                                {clickWhom.interest.map(int => (<b className='interest-tag-home' key={int}>{int}</b>))}
                             </div>
                         </div>
                         <div className="container-button">

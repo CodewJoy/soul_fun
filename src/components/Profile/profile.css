@@ -75,6 +75,120 @@
     margin: 5px 5px 5px 0;
 }
 
+/* edit */
+.profile>.main>.view>.main-edit>.view-edit {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    /* flex-wrap: wrap; */
+    justify-content: center
+
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-1 {
+    padding: 2%; 
+    width: 38%;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-2 {
+    padding: 2%; 
+    width: 38%;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.upload {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.upload>.border {
+    width: 220px;
+    height: 220px;
+    border-radius: 10px;
+    border: 1px lightgray solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.upload>.border>input[type="file"] {
+    display: none;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.upload>.border>label>.avatar {
+    width: 200px;
+    height: 200px;
+    background-color: #f1f2f6;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.upload>.border>label>.avatar>img {
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-1>.line {
+    display: inline-flex;
+    align-items: center;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-2>.interest {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-2>.interest>div>input[type="checkbox"] {
+    display: none;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-2>.interest>div>input[type="checkbox"]+label {
+    display: inline-block;
+    background-color: #f1f2f6;
+    border-radius: 25px;
+    cursor: pointer;
+    padding: 7px 11px;
+    margin: 5px 5px 5px 0;
+}
+
+.profile>.main>.view>.main-edit>.view-edit>.setting-2>.interest>div>input[type="checkbox"]:checked+label {
+    background-color: #ffd32a;
+}
+.profile>.main>.view>.main-edit>.view-edit>.setting-2>.bio>textarea {
+    size: 18px;
+    resize: none;
+    border-radius: 3px;
+    border: lightgray 1px solid;
+    width: 100%;
+}
+.profile>.main>.view>.main-edit>.center-button {
+    width: 100%;
+}
+/* edit */
+@media (max-width: 900px) {
+    .profile>.main>.view>.main-edit>.view-edit {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .profile>.main>.view>.main-edit>.view-edit>.setting-1 {
+        padding: 0 7.5%; 
+        width: 85%;
+    }
+    
+    .profile>.main>.view>.main-edit>.view-edit>.setting-2 {
+        padding: 0 7.5%; 
+        width: 85%;
+    }
+}
+
 @media (max-width: 650px) {
     .profile>.main>.view {
         width: 100%;
@@ -109,4 +223,9 @@
         width: 100％;
         font-size: 16px;
     }
+    /* edit */
+    .profile>.main>.view>.main-edit>.bottom-box {
+        margin-bottom: 50px;
+    }
+   
 }

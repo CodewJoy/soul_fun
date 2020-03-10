@@ -4,6 +4,8 @@ import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 // import Select from 'react-select'
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import ShowProfile from './show_profile';
+import Edit from './edit';
 import './profile.css';
 import Navbar from '../Header';
 import SignOutButton from '../LogOut';
@@ -63,66 +65,6 @@ class ProfileBase extends Component {
         </div>
       </div>
     );
-  }
-}
-
-class Edit extends Component {
-  render() {
-    console.log('edit', this.props);
-    return (
-      <div className="view">
-        Edit
-      </div>
-    )
-  }
-}
-
-class ShowProfile extends Component {
-  render() {
-    console.log(this.props);
-    const { gender, birthday, country, location, language, interest, bio } = this.props.userInfo;
-    return (
-      <div className="view">
-        <div className="display">
-          <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" />
-          <h3>Hey {this.props.userInfo.username}!</h3>
-        </div>
-        <div className="setting">
-          <h3>My profile</h3>
-          <p className="gender">
-            <b>Gender&ensp;</b>{gender}
-          </p>
-          <p className="birthday">
-            <b>Birthday&ensp;</b>{birthday}
-          </p>
-          <p className="age">
-            <b>Age&ensp;</b>
-          </p>
-          <p className="star-sign">
-            <b>Star-Sign&ensp;</b>
-          </p>
-          <p className="language">
-            <b>Language&ensp;</b>{language}
-          </p>
-          <p className="country">
-            <b>Country&ensp;</b>{country}
-          </p>
-          <p className="location">
-            <b>Location&ensp;</b>{location}
-          </p>
-          <p className="bio">
-            <b>Intro&ensp;</b>{bio}
-          </p>
-          <div className="interest">
-            <b>Interest&ensp;</b>
-            <br/>
-            <div className='interest-tag-wrapper'>
-              {interest.map(int => (<b className='interest-tag' key={int}>{int}</b>))}
-            </div>
-          </div>
-        </div>
-      </div>
-    )
   }
 }
 

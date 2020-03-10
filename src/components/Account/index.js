@@ -275,7 +275,7 @@ class Setting extends Component {
                 id="language"
                 options={LANGUAGES}
                 getOptionLabel={LANGUAGES => LANGUAGES}
-                style={{ width: 300 }}
+                width="100%"
                 renderInput={params => <TextField {...params} label="Language" variant="outlined" />}
               />
             </div>
@@ -292,7 +292,7 @@ class Setting extends Component {
                 id="country"
                 options={COUNTRIES}
                 getOptionLabel={COUNTRIES => COUNTRIES}
-                style={{ width: 300 }}
+                width="100%"
                 renderInput={params => <TextField {...params} label="Country" variant="outlined" />}
               />
             </div>
@@ -307,7 +307,7 @@ class Setting extends Component {
                 id="location"
                 options={COUNTRIES}
                 getOptionLabel={COUNTRIES => COUNTRIES}
-                style={{ width: 300 }}
+                width="100%"
                 renderInput={params => <TextField {...params} label="Location" variant="outlined" />}
               />
             </div>
@@ -344,3 +344,4 @@ class Setting extends Component {
 }
 
 export default Account;
+export { Setting };

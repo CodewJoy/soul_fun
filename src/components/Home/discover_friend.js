@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { deleteIntersection } from "./utils";
+import { deleteIntersection, getDistanceSpecifiedTime, getAge } from "./utils";
 import { INTERESTS } from '../../constants/factor.js';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import TextField from '@material-ui/core/TextField';
@@ -255,9 +255,11 @@ class DiscoverFriend extends Component {
                                     </p>
                                     <p>
                                         <b>Age&ensp;</b>
+                                        {getAge(clickWhom.birthday)}
                                     </p>
                                     <p>
-                                        <b>Star-Sign&ensp;</b>
+                                        <b>Last online&ensp;</b>
+                                        {getDistanceSpecifiedTime(clickWhom.timestamp)}
                                     </p>
                                 </div>
                                 {/* <div className="line"></div> */}
@@ -276,9 +278,6 @@ class DiscoverFriend extends Component {
                                     </p>
                                 </div>
                             </div>
-                            <p>
-                                <b>Last online&ensp;</b>
-                            </p>
                             <div>
                                 <b>Interest&ensp;</b>
                                 <div className='interest-tag-wrapper'>
