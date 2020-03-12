@@ -32,7 +32,7 @@ Tools
 * Unit Testing - Jest
 
 ## Features and Demo
-#### Firebase Authentication to Log in, Sign up and Log out
+#### Use Firebase Authentication to Log in, Sign up and Log out
 
 | ![](https://i.imgur.com/IYTjOu6.png) | ![](https://i.imgur.com/S6iteDb.png)|
 | -------- | -------- |
