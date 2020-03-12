@@ -6,8 +6,8 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ## Table of Contents
 - [Technology](#Technology)
-- [Features and Demo](#Features and Demo)
-- [React Router Pages](#React Router Pages)
+- [Features and Demo](#Features-and-Demo)
+- [React Router Pages](#React-Router-Pages)
 
 ## Technology
 Library and Framework
