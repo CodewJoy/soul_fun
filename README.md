@@ -4,7 +4,12 @@ SouLFun is a social Web application help you make friends with same interests. C
 
 Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
-## Technologies
+## Table of Contents
+- [Technology](#Technology)
+- [Features and Demo](#Features and Demo)
+- [React Router Pages](#React Router Pages)
+
+## Technology
 Library and Framework
 * React 
 * Reac Context API
@@ -32,19 +37,19 @@ Tools
 * Unit Testing - Jest
 
 ## Features and Demo
-#### Use Firebase Authentication to Log in, Sign up and Log out
+### Use Firebase Authentication to Log in, Sign up and Log out
 
 | ![](https://i.imgur.com/IYTjOu6.png) | ![](https://i.imgur.com/S6iteDb.png)|
 | -------- | -------- |
 
-#### Enter Account page
+### Enter Account page
 * Upload photo and save by Firestore Storage
 * Deat with React Forms and use Autocomplete and Datepicker of Material-UI
 
 | ![](https://i.imgur.com/SIXmbWX.png) | ![](https://i.imgur.com/UZwj1ZA.png) |
 | -------- | -------- |
 
-#### Match friends with Interst Tags - use Nesting Router here
+### Match friends with Interst Tags - use Nesting Router here
 
 * Discover friends
 -Select Friends by Interest. Refer friends and **sort by friend's last online time**.
@@ -59,7 +64,7 @@ Tools
 | ![](https://i.imgur.com/aqYuUap.png)| ![](https://i.imgur.com/4Jg99oK.png)|
 | -------- | -------- |
 
-#### Instant Chat with friends
+### Instant Chat with friends
 - Sort chat room by time.
 - Click room and talk.
 - Send Message. Use Firestore onSnapshot to get the instant messages.
@@ -68,15 +73,15 @@ Tools
 | ![](https://i.imgur.com/p5m58yy.png)| ![](https://i.imgur.com/ZBNOYVF.png) |
 | -------- | -------- |
 
-### React Router Pages
-#### Landing/index.js
+## React Router Pages
+### Landing/index.js
 ![](https://i.imgur.com/yDasNNM.png)
-#### Profile/index.js
+### Profile/index.js
 ![](https://i.imgur.com/XcFd4yz.png)
-#### Home/index.js
+### Home/index.js
 ![](https://i.imgur.com/CAWQd7R.png)
-#### Message/index.js
+### Message/index.js
 ![](https://i.imgur.com/UGpl5lf.png)
 
-### Contact
+## Contact
 Email: yichen.hung6699@gmail.com
