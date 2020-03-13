@@ -17,17 +17,9 @@
     "jest": "jest",
     "test-update-snapshot": "jest --updateSnapshot"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/CodewJoy/personal_project.git"
-  },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/CodewJoy/personal_project/issues"
-  },
-  "homepage": "https://github.com/CodewJoy/personal_project#readme",
   "devDependencies": {
     "@babel/core": "^7.8.3",
     "@babel/plugin-proposal-class-properties": "^7.8.3",
