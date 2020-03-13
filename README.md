@@ -41,19 +41,19 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ### Enter Account page
 * Upload photo and save by Firestore Storage
-* Deat with React Forms and use Autocomplete and Datepicker of Material-UI
+* Deat with React Forms and use Autocomplete component of Material-UI
 
 ![](https://i.imgur.com/XcFd4yz.png)
 
-### Match friends with Interst Tags - use Nesting Router here
+### Match friends with Interest Tags - use Nesting Router here
 
 * Discover friends
 -Select Friends by Interest. Refer friends and **sort by friend's last online time**.
--See the basic info of person you interested in, including their interests tags.
+-See the basic info of the one you are interested in, including their interests tags.
 -Add friends here.
 * Friend Requests
--See the **friend invitation alert** and their basic info here.
--If accept friend invitation, redirect to message page and chat with friend.
+-See the **friend invitation alerts** and their basic info here.
+-If you accept friend invitation, redirect to message page and chat with friend.
 * My friend
 -See your all friends here. Click and chat with them.
 
@@ -63,7 +63,8 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 ### Instant Chat with friends
 - Sort chat room by time.
 - Click room and talk.
-- Send Message. Use Firestore onSnapshot to get the instant messages.
+- Send Message. 
+- Use Firestore onSnapshot function to get instant messages.
 - Save the message unsent of different rooms.
 
 ![](https://i.imgur.com/V05D92U.gif)
