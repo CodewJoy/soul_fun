@@ -6,7 +6,7 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ## Table of Contents
 - [Technology](#Technology)
-- [Features and Demo](#Features-and-Demo)
+- [Demo](#Demo)
 - [RWD on mobile device](#RWD-on-mobile-device)
 
 ## Technology
