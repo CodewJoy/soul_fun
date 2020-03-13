@@ -1,19 +1,11 @@
 import React, { Component } from 'react';
 import SignUp from './SignUp';
 import LogIn from './LogIn';
-// import { LogInForm, LogInFormBase } from './LogIn';
 import '../../common.css';
 import './landing.css';
 import { NavLogo_Landing } from '../Header';
 import Soulfun from '../img/group-of-people-having-fun-together-under-the-sun-708392.jpg';
-// import Soulfun from '../img/backlit-dawn-foggy-friendship-697243.jpg';
 import { INTERESTS } from '../../constants/factor.js';
-
-const LandingPage = () => (
-  <>
-    <Landing />
-  </>
-);
 
 class Landing extends Component {
   constructor(props) {
@@ -99,4 +91,4 @@ class Landing extends Component {
   }
 }
 
-export default LandingPage;
+export default Landing;

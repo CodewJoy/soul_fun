@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../constants/routes';
 import Logo from '../img/logo_3.svg';
 import Navigation from '../App/navigation.js';
 import './header.css';
@@ -8,10 +10,12 @@ class Navbar extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="logo">
-                    <img className="logo-img" src={Logo} alt="Logo" />
-                    <h3>&nbsp;SouLFun</h3>
-                </div>
+                <Link to={ROUTES.HOME}>
+                    <div className="logo">
+                        <img className="logo-img" src={Logo} alt="Logo" />
+                        <h3>&nbsp;SouLFun</h3>
+                    </div>
+                </Link>
                 <div className="dropdown">
                     <Navigation />
                 </div>

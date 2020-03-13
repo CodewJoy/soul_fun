@@ -79,33 +79,34 @@ class FriendRequests extends Component {
         console.log(roomID);
         let timestamp = Date.now();
         // 同時設定文件欄位又設定他的子集合兩件事並不衝突
-        firebase.db.collection("Room").doc(roomID)
-            .set(
-                {
-                    uid: [userData.authUser.uid, id],
-                    user1: { uid: userData.authUser.uid, avatar: userData.userInfo.avatar, name: userData.userInfo.username },
-                    user2: { uid: id, avatar: avatar, name: name },
-                    timestamp: timestamp
-                }
-            )
-            .then(
-                // 這段是要設給已經收到邀請後 confirm to chat 的頁面
-                firebase.db.collection("Room").doc(roomID).collection("message").doc()
-                    .set(
-                        {
-                            sender: "admin",
-                            content: "You both are friends now. Let's message your friend.",
-                            timestamp: timestamp
-                        }
-                    )
-                    .then(
-                        this.setState({ goToChat: true })
-                    )
-            )
-        // update context
-        // this.setState({ goToChat: true, friendID: id });
-        // () => {this.setState({ goToChat: true })};
-
+        if (roomID) {
+            firebase.db.collection("Room").doc(roomID)
+                .set(
+                    {
+                        uid: [userData.authUser.uid, id],
+                        user1: { uid: userData.authUser.uid, avatar: userData.userInfo.avatar, name: userData.userInfo.username },
+                        user2: { uid: id, avatar: avatar, name: name },
+                        timestamp: timestamp
+                    }
+                )
+                .then(
+                    // 這段是要設給已經收到邀請後 confirm to chat 的頁面
+                    firebase.db.collection("Room").doc(roomID).collection("message").doc()
+                        .set(
+                            {
+                                sender: "admin",
+                                content: "You both are friends now. Let's message your friend.",
+                                timestamp: timestamp
+                            }
+                        )
+                        .then(
+                            this.setState({ goToChat: true })
+                        )
+                )
+            // update context
+            // this.setState({ goToChat: true, friendID: id });
+            // () => {this.setState({ goToChat: true })};
+        }
     }
     showCard(id) {
         console.log('personinfo', id);

@@ -3,8 +3,6 @@ import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { Link, Redirect, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
-// import { compose } from 'recompose';
-// import { withFirebase } from '../../index.js';
 import Close from '../img/close.svg';
 
 const INITIAL_STATE = {

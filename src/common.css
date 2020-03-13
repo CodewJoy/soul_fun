@@ -60,13 +60,16 @@ button:hover {
 }
 
 .loading {
+  background-color: white;
+  width: 100vw;
+  height: 100vh;
+}
+
+.loading>img {
   position: fixed;
   top: calc(50% - 150px);
   left: calc(50% - 75px);
   text-align: center;
-}
-
-.loading>img {
   width: 150px;
   height: auto;
 }

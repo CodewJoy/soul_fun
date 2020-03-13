@@ -26,7 +26,6 @@ const Message = () => {
 class MessageBase extends Component {
   constructor(props) {
     super(props);
-    console.log(props);
     this.state = {
       isLoaded: false,
       currentRoom: null,
@@ -128,21 +127,23 @@ class MessageBase extends Component {
     console.log('dialogue', this.state.roomPool);
     console.log('dialogue', userData.userInfo);
     let roomID = createRoomID(userData.authUser.uid, friendID)
-    firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
-      .limit(100)
-      .onSnapshot(
-        (querySnapshot) => {
-          let chat = [];
-          querySnapshot.forEach((doc) => {
-            // console.log(doc.id, " => ", doc.data());
-            chat.push(doc.data());
-          })
-          this.setState({ chat });
-        },
-        (error) => {
-          console.log(error)
-        }
-      )
+    if (roomID) {
+      firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
+        .limit(100)
+        .onSnapshot(
+          (querySnapshot) => {
+            let chat = [];
+            querySnapshot.forEach((doc) => {
+              // console.log(doc.id, " => ", doc.data());
+              chat.push(doc.data());
+            })
+            this.setState({ chat });
+          },
+          (error) => {
+            console.log(error)
+          }
+        )
+    }
   }
   scrollToAnchor(propId) {
     console.log(document.getElementById(propId));
@@ -197,35 +198,37 @@ class MessageBase extends Component {
     let time = Date.now();
     // let roomID = createRoomID(userData.authUser.uid, this.state.roomPool[0].friendInfo.uid)
     // send room's message > clean room's message > update room's timestamp
-    firebase.db.collection("Room").doc(roomID).collection("message").doc()
-      .set(
-        {
-          sender: userData.userInfo.id,
-          content: inputMessage[currentRoom.friendID],
-          timestamp: time
-        }
-      )
-      .then(
-        () => {
-          this.setState(prevState => {
-            return {
-              inputMessage: {
-                ...prevState.inputMessage,
-                [currentRoom.friendID]: ""
+    if (roomID) {
+      firebase.db.collection("Room").doc(roomID).collection("message").doc()
+        .set(
+          {
+            sender: userData.userInfo.id,
+            content: inputMessage[currentRoom.friendID],
+            timestamp: time
+          }
+        )
+        .then(
+          () => {
+            this.setState(prevState => {
+              return {
+                inputMessage: {
+                  ...prevState.inputMessage,
+                  [currentRoom.friendID]: ""
+                }
               }
-            }
-          },
-            () => {
-              firebase.db.collection("Room").doc(roomID)
-                .update(
-                  {
-                    timestamp: time
-                  }
-                );
-            }
-          );
-        }
-      )
+            },
+              () => {
+                firebase.db.collection("Room").doc(roomID)
+                  .update(
+                    {
+                      timestamp: time
+                    }
+                  );
+              }
+            );
+          }
+        )
+    }
   }
   render() {
     // console.log("chat", this.state)
@@ -238,7 +241,7 @@ class MessageBase extends Component {
       if (!this.state.isLoaded) {
         return <div className="loading"><img src={Loading} alt="Loading" /></div>
       } else {
-        console.log('peng', currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : "");
+        // console.log('test-memory-leak', currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : "");
         // if (this.state.chat.length > 0) {
         return (
           <div className="message">

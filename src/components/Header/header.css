@@ -6,14 +6,13 @@
     background-color: #ffdd59;
     /* box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19); */
 }
-
-.navbar>.logo {
+.navbar>a>.logo {
     margin: 3px 25px;
     display: inline-flex;
     align-items: center;
 }
 
-.navbar>.logo>.logo-img {
+.navbar>a>.logo>.logo-img {
     height: 35px;
     width: 35px;
 }
