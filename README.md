@@ -69,7 +69,7 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ![](https://i.imgur.com/V05D92U.gif)
 
-### RWD on mobile device
+## RWD on mobile device
 
 
 | ![](https://i.imgur.com/FXSsv7W.png)| ![](https://i.imgur.com/EaWU9Hl.png) | 
