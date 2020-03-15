@@ -28,10 +28,12 @@ class Navbar_Account extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="logo">
-                    <img className="logo-img" src={Logo} alt="Logo" />
-                    <h3>&nbsp;SouLFun</h3>
-                </div>
+                <a>
+                    <div className="logo">
+                        <img className="logo-img" src={Logo} alt="Logo" />
+                        <h3>&nbsp;SouLFun</h3>
+                    </div>
+                </a>
             </div>
         )
     }

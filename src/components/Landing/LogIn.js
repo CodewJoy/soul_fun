@@ -15,8 +15,8 @@ const LogIn = (props) => {
 };
 
 const INITIAL_STATE = {
-    email: '',
-    pwd: '',
+    email: 'test@gmail.com',
+    pwd: '123456',
     error: null,
     logedIn: false
 };

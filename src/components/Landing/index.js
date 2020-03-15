@@ -44,8 +44,8 @@ class Landing extends Component {
         <div className="main">
           <div className="container">
             <div className="web-intro">
-              <h2>SOULFUN - Meet fun souls here!</h2>
-              <p>SOULFUN lets you meet friends with common interests and exchange thoughts on the same passion.</p>
+              <h2>SouLFun - Meet fun souls here!</h2>
+              <p>SouLFun lets you meet friends with common interests and exchange thoughts on the same passion.</p>
               <sub>*By clicking Sign Up, you agree to our Terms, including our Privacy Policy and Cookie Policy.</sub>
               <div className="center-button">
                 <button onClick={this.ShowSignUp}>SIGN UP</button>
