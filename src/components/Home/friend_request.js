@@ -45,7 +45,7 @@ class FriendRequests extends Component {
                     querySnapshot.forEach((doc) => {
                         // doc.data() is never undefined for query doc snapshots
                         if (doc.data().status === "askUrConfirm") {
-                            console.log(doc.id, " => ", doc.data());
+                            // console.log(doc.id, " => ", doc.data());
                             confirmfriend.push(doc.data());
                         }
                     })
@@ -58,7 +58,7 @@ class FriendRequests extends Component {
     }
     confirmFriend(id, name, avatar) {
         const { firebase, userData } = this.props.props;
-        console.log(userData);
+        // console.log(userData);
         // modify my list
         firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends").doc(id)
             .update(
@@ -109,12 +109,12 @@ class FriendRequests extends Component {
         }
     }
     showCard(id) {
-        console.log('personinfo', id);
+        // console.log('personinfo', id);
         this.props.props.firebase.db.collection("Users").doc(id)
             .get()
             .then(
                 (doc) => {
-                    console.log("Document data:", doc.data());
+                    // console.log("Document data:", doc.data());
                     this.setState({ clickWhom: doc.data(), showCard: !this.state.showCard });
                 }
             )
@@ -126,9 +126,9 @@ class FriendRequests extends Component {
         this.setState({ showCard: !this.state.showCard })
     }
     render() {
-        console.log('confirmfriend', this.state.confirmfriend);
-        console.log('clickWhom', this.state.clickWhom);
-        console.log('confirmfriend', this.props);
+        // console.log('confirmfriend', this.state.confirmfriend);
+        // console.log('clickWhom', this.state.clickWhom);
+        // console.log('confirmfriend', this.props);
         const { confirmfriend, showCard, clickWhom } = this.state;
 
         if (this.state.goToChat) {

@@ -21,7 +21,6 @@ const Navigation = () => (
 
 class NavigationAuth extends Component {
   render() {
-    console.log('yoyoyo', this.props);
     return (
       <ul className="dropdown-content">
         <li>

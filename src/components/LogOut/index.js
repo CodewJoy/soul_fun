@@ -26,7 +26,7 @@ class SignOutButtonBase extends Component {
         });
     }
     render() {
-        console.log("Test", this.state.signedOut);
+        // console.log("Test", this.state.signedOut);
         if(this.state.signedOut){
             return <Redirect to="/" />;
         }

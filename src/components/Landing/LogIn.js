@@ -42,11 +42,10 @@ class LogInFormBase extends Component {
     onSubmit(event) {
         const { email, pwd } = this.state;
         // const { firebase } = this.props;
-        console.log(email);
+        // console.log(email);
         this.props.firebase.doSignInWithEmailAndPassword(email, pwd)
             .then(() => {
-                console.log('YA');
-                console.log(this.props);
+                // console.log(this.props);
                 this.setState({
                     logedIn: true
                 });
@@ -60,12 +59,11 @@ class LogInFormBase extends Component {
     }
 
     changeToClose() {
-        console.log(this.props);
         this.props.closeLogin(false);
     }
 
     render() {
-        console.log("Test", this.state.logedIn);
+        // console.log("Test", this.state.logedIn);
         if (this.state.logedIn) {
             return <Redirect to="/home" />;
         }

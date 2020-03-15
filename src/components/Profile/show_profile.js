@@ -3,7 +3,6 @@ import { getDistanceSpecifiedTime, getAge } from './utils';
 
 class ShowProfile extends Component {
     render() {
-      console.log(this.props);
       const { avatar, username, gender, birthday, timestamp, country, location, language, interest, bio } = this.props.userInfo;
       let timeDistance = getDistanceSpecifiedTime(timestamp);
       let age = getAge(birthday);

@@ -47,25 +47,8 @@ class SignUpFormBase extends Component {
     onSubmit(event) {
         const { username, email, pwd } = this.state;
         // const { firebase } = this.props;
-        console.log(email);
+        // console.log(email);
         // console.log(username, email, pwd);
-        // if (username === '') {
-        //     alert("You haven't entered your username.");
-        //     return
-        // } else {
-        //     if (email === '') {
-        //         alert("You haven't entered your username.");
-        //         return
-        //     }
-        // } 
-        // if (username === '') {
-        //     alert("You haven't entered your username.");
-        //     return
-        // } else if (email === '') {
-        //     alert("You haven't entered your email.");
-        // } else if (pwd === '') {
-        //     alert("You haven't entered your password.");
-        // }
         this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
             .then((authUser) => {
                 console.log(authUser);
@@ -77,7 +60,6 @@ class SignUpFormBase extends Component {
                 })
             })
             .then(() => {
-                console.log('YA');
                 this.setState({
                     signedUP:true
                 });

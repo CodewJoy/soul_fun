@@ -30,7 +30,7 @@ class MyFriend extends Component {
                     querySnapshot.forEach((doc) => {
                         // doc.data() is never undefined for query doc snapshots
                         if (doc.data().status === "confirm") {
-                            console.log(doc.id, " => ", doc.data());
+                            // console.log(doc.id, " => ", doc.data());
                             myfriend.push(doc.data());
                         }
                     })
@@ -58,12 +58,12 @@ class MyFriend extends Component {
         }
     }
     showCard(id) {
-        console.log('personinfo', id);
+        // console.log('personinfo', id);
         this.props.props.firebase.db.collection("Users").doc(id)
             .get()
             .then(
                 (doc) => {
-                    console.log("Document data:", doc.data());
+                    // console.log("Document data:", doc.data());
                     this.setState({ clickWhom: doc.data(), showCard: !this.state.showCard });
                 }
             )
@@ -76,7 +76,7 @@ class MyFriend extends Component {
     }
     render() {
         const { showCard, clickWhom } = this.state;
-        console.log('myfriend', this.state);
+        // console.log('myfriend', this.state);
         if (this.state.goToChat) {
             return <Redirect to="/message" />
         }

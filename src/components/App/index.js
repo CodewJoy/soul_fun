@@ -6,6 +6,7 @@ import HomePage from '../Home';
 import AccountPage from '../Account';
 import MessagePage from '../Message';
 import ProfilePage from '../Profile';
+import NotFoundPage from '../NotFound';
 import Loading from '../img/loading.gif';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
@@ -63,7 +64,7 @@ class AppBase extends Component {
                     count += 1;
                   }
                 });
-                console.log(count);
+                // console.log(count);
                 this.setState({ friendInvitation: count });
               }
             )
@@ -119,6 +120,7 @@ class AppBase extends Component {
                 return (<ProfilePage />)
               }
             }} />
+            <Route path="*" component={NotFoundPage} />
           </Switch>
         </Router>
       </AuthUserContext.Provider>
