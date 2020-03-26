@@ -4,6 +4,15 @@ SouLFun is a social Web application help you make friends with same interests. C
 
 Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
+
+**Test account 1**
+* Account: test@gmail.com
+* Password: 123456
+
+**Test account 2 (for instant chat feature testing)**
+* Account: codingCat@gmail.com
+* Password: aaaaaa
+
 ## Table of Contents
 - [Technology](#Technology)
 - [Demo](#Demo)

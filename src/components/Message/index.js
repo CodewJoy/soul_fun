@@ -61,13 +61,14 @@ class MessageBase extends Component {
     for (let i = 0; i < this.unsubscribes.length; i++) {
       this.unsubscribes[i]();
     }
+    this.unsubscribes2();
   }
   loadRoom(firebase, userData) {
     // firebase.db.collection("Room").doc().collection("message").doc()
-    firebase.db.collection("Room").where("uid", "array-contains", `${userData.authUser.uid}`)
-      .get()
-      .then(
-        // .onSnapshot(
+    this.unsubscribes2 = firebase.db.collection("Room").where("uid", "array-contains", `${userData.authUser.uid}`)
+      // .get()
+      // .then(
+        .onSnapshot(
         (querySnapshot) => {
           // load chat room info
           let roomPool = [];

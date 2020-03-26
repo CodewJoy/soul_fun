@@ -220,27 +220,11 @@
     display: none;
 }
 
-/* .message>.main>.pick-friend {
-    padding: 1%; 
-    width: 20%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    border: 1px solid gray;
-    height: 100%;
-}
-.message>.main>.pick-friend>.pick-box {
-    display: inline-flex;  
-    height: 80px;
-}
-.message>.main>.pick-friend>.pick-box>.avatar {
-    width: 60px;
-} */
-
 @media (max-width: 650px) {
     .message>.main {
         width: 100%;
         display: block;
+        /* display: flex; */
         /* justify-content: center;
         align-items: center; */
     }
