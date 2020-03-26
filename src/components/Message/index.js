@@ -61,7 +61,6 @@ class MessageBase extends Component {
     for (let i = 0; i < this.unsubscribes.length; i++) {
       this.unsubscribes[i]();
     }
-    this.unsubscribe2();
   }
   loadRoom(firebase, userData) {
     // firebase.db.collection("Room").doc().collection("message").doc()
@@ -127,7 +126,7 @@ class MessageBase extends Component {
     // 需要兩個人的 uid 找到檔案名 再往下找 message 的檔案名稱
     let roomID = createRoomID(userData.authUser.uid, friendID)
     if (roomID) {
-      this.unsubscribe2 = firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
+      firebase.db.collection("Room").doc(roomID).collection("message").orderBy("timestamp", "desc")
         .limit(100)
         .onSnapshot(
           (querySnapshot) => {

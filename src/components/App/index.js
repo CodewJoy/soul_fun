@@ -81,42 +81,43 @@ class AppBase extends Component {
     this.listener();
   }
   render() {
+    const { authUser } = this.state;
     return (
       <AuthUserContext.Provider value={this.state}>
         <Router>
           <Switch>
             <Route exact path={ROUTES.LANDING} component={LandingPage} />
             <Route path={ROUTES.ACCOUNT} render={() => {
-              if (this.state.authUser === "") {
+              if (authUser === "") {
                 return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
+              } else if (authUser === null) {
                 return (<LandingPage />)
               } else {
                 return (<AccountPage />)
               }
             }} />
             <Route path={ROUTES.HOME} render={() => {
-              if (this.state.authUser === "") {
+              if (authUser === "") {
                 return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
+              } else if (authUser === null) {
                 return (<LandingPage />)
               } else {
                 return (<HomePage />)
               }
             }} />
             <Route path={ROUTES.MESSAGE} render={() => {
-              if (this.state.authUser === "") {
+              if (authUser === "") {
                 return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
+              } else if (authUser === null) {
                 return (<LandingPage />)
               } else {
                 return (<MessagePage />)
               }
             }} />
             <Route path={ROUTES.PROFILE} render={() => {
-              if (this.state.authUser === "") {
+              if (authUser === "") {
                 return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (this.state.authUser === null) {
+              } else if (authUser === null) {
                 return (<LandingPage />)
               } else {
                 return (<ProfilePage />)
@@ -129,4 +130,6 @@ class AppBase extends Component {
     )
   }
 }
+
+
 export default App;
