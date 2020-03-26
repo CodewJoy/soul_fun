@@ -56,7 +56,7 @@ class DiscoverFriend extends Component {
         if (interest === '') {
             firebase.db.collection("Users")
                 .orderBy("timestamp", "desc")
-                .limit(20)
+                .limit(30)
                 .get()
                 .then(
                     (querySnapshot) => {
@@ -80,7 +80,7 @@ class DiscoverFriend extends Component {
         } else {
             firebase.db.collection("Users").where('interest', "array-contains", interest)
                 // .orderBy("timestamp","desc")
-                .limit(20)
+                .limit(80)
                 .get()
                 .then(
                     (querySnapshot) => {
@@ -115,7 +115,7 @@ class DiscoverFriend extends Component {
                     })
                     // console.log('myfriend', myfriend);
                     // console.log('friendlist', friendlist);
-                    console.log(deleteIntersection(friendlist, myfriend));
+                    // console.log(deleteIntersection(friendlist, myfriend));
                     let loaded = 0;
                     let refer = deleteIntersection(friendlist, myfriend);
                     let referlist = [];
@@ -124,7 +124,6 @@ class DiscoverFriend extends Component {
                         this.unsubscribe2[i] = firebase.db.collection("Users").doc(refer[i])
                             .onSnapshot(
                                 (doc) => {
-                                    // console.log("Document data:", doc.data());
                                     referlist.push(doc.data());
                                     loaded++;
                                     if (loaded === refer.length) {
@@ -189,13 +188,8 @@ class DiscoverFriend extends Component {
     getInterest(e) {
         const { userData, firebase } = this.props.props;
         this.referFriends(e.target.textContent, userData, firebase);
-        // this.setState({ interest: e.target.textContent }, () => {
-        //   console.log(this.state)
-        // });
     }
     render() {
-        // console.log('discover', this.props);
-        // console.log('discover', this.state);
         const { showCard, clickWhom, isLoaded, referlist } = this.state;
         if (!isLoaded) {
             return <div className="loading"><img src={Loading} alt="Loading" /></div>

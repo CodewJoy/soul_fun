@@ -36,9 +36,6 @@ class FriendRequests extends Component {
     friendInvite() {
         const { firebase, userData } = this.props.props;
         this.unsubscribes = firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends")
-            // .get()
-            // .then(
-            // use .onSnapshot() instead of .get() to get notice immediately
             .onSnapshot(
                 (querySnapshot) => {
                     let confirmfriend = [];
@@ -50,15 +47,14 @@ class FriendRequests extends Component {
                         }
                     })
                     this.setState({ confirmfriend });
-                },
-                (error) => {
+                }
+                ,(error) => {
                     console.log(error)
                 }
             )
     }
     confirmFriend(id, name, avatar) {
         const { firebase, userData } = this.props.props;
-        // console.log(userData);
         // modify my list
         firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends").doc(id)
             .update(
@@ -76,7 +72,6 @@ class FriendRequests extends Component {
         // 建立聊天室
         // createRoomID(uid1, uid2)
         let roomID = createRoomID(id, userData.authUser.uid);
-        console.log(roomID);
         let timestamp = Date.now();
         // 同時設定文件欄位又設定他的子集合兩件事並不衝突
         if (roomID) {

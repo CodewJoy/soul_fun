@@ -32,29 +32,32 @@ class AppBase extends Component {
     };
   }
   componentDidMount() {
-    this.listener = this.props.firebase.auth.onAuthStateChanged(
+    const { firebase } = this.props;
+    this.listener = firebase.auth.onAuthStateChanged(
       authUser => {
-        console.log(authUser);
         if (authUser) {
           // snpashot method
-          this.props.firebase.db.collection("Users").doc(authUser.uid)
+          firebase.db.collection("Users").doc(authUser.uid)
             .onSnapshot(
               (doc) => {
                 if (doc.exists) {
                   this.setState({ authUser: authUser, userInfo: doc.data() });
-                } else {
+                } 
+                else {
                   console.log("No such document!");
                 }
-              },
-              (error) => {
+              }
+              ,(error) => {
                 console.log(error)
               }
             )
-          this.props.firebase.db.collection("Users").doc(authUser.uid)
+          // update login timestamp
+          firebase.db.collection("Users").doc(authUser.uid)
             .update(
               { timestamp: Date.now() }
             )
-          this.props.firebase.db.collection("Users").doc(authUser.uid).collection("friends")
+          // update friend invitation
+          firebase.db.collection("Users").doc(authUser.uid).collection("friends")
             .where("status", "==", "askUrConfirm")
             .onSnapshot(
               (querySnapshot) => {
@@ -68,11 +71,10 @@ class AppBase extends Component {
                 this.setState({ friendInvitation: count });
               }
             )
-        }
-        else {
+        } else {
           this.setState({ authUser: null });
         }
-      },
+      }
     );
   }
   componentWillUnmount() {

@@ -51,7 +51,6 @@ class SignUpFormBase extends Component {
         // console.log(username, email, pwd);
         this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
             .then((authUser) => {
-                console.log(authUser);
                 this.props.firebase.db.collection("Users").doc(`${authUser.user.uid}`).set({
                     username: username,
                     id: authUser.user.uid,
@@ -73,11 +72,9 @@ class SignUpFormBase extends Component {
 
     changeToClose() {
         this.props.closeSignup(false);
-        console.log(this.props);
     }
 
     render() {
-        console.log("Test", this.state.signedUP);
         if(this.state.signedUP){
             return <Redirect to="/account" />;
         }

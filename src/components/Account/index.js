@@ -37,7 +37,6 @@ class AccountBase extends Component {
     super(props);
   }
   render() {
-    console.log(this.props);
     return (
       <div className="account">
         <Navbar_Account />
@@ -97,7 +96,6 @@ class Setting extends Component {
         }
       )
         .then(() => {
-          console.log('fin_acc');
           this.setState({
             fin_acc: true
           });
@@ -109,39 +107,27 @@ class Setting extends Component {
   getValue(event) {
     // console.log(event.target.name);
     // console.log(event.target.value);
-    this.setState({ [event.target.name]: event.target.value }, () => {
-      console.log(this.state)
-    });
+    this.setState({ [event.target.name]: event.target.value });
   }
   getBirthValue(e) {
     // console.log(convertTime(String(e)));
     let birthday = convertTime(String(e));
-    this.setState({ birthday: birthday }, () => {
-      console.log(this.state)
-    });
+    this.setState({ birthday: birthday });
   }
   // used for autocomplete
   getSelectValue(e) {
     // console.log(e.target.textContent)
-    this.setState({ country: e.target.textContent }, () => {
-      console.log(this.state)
-    });
+    this.setState({ country: e.target.textContent });
   }
   getLocationValue(e) {
-    this.setState({ location: e.target.textContent }, () => {
-      console.log(this.state)
-    });
+    this.setState({ location: e.target.textContent });
   }
   getLanValue(e) {
     // console.log(e.target.textContent)
-    this.setState({ language: e.target.textContent }, () => {
-      console.log(this.state)
-    });
+    this.setState({ language: e.target.textContent });
   }
   addInterest(e) {
     const key = e.target.value;
-    console.log('hobby', key);
-    console.log('hobby', this.state);
     // console.log('hobby',this.state.hobby);
     // console.log('hobby',this.state.hobby[key]);
     this.setState(state => ({
@@ -158,15 +144,12 @@ class Setting extends Component {
           interest.push(key);
         }
       }
-      console.log(interest)
+      // console.log(interest)
       this.setState({ interest: interest })
     })
   }
   handleChange(e) {
     const { firebase } = this.props;
-    console.log(e.target)
-    console.log(e.target.files)
-    console.log(this.props)
     // console.log(e.target.files[0])
     if (e.target.files[0]) {
       // Get file
@@ -187,22 +170,16 @@ class Setting extends Component {
         // Handle successful uploads on complete
         // For instance, get the download URL: https://firebasestorage.googleapis.com/...
         task.snapshot.ref.getDownloadURL().then((downloadURL) => {
-          console.log('File available at', downloadURL);
-          this.setState({ image: image, avatar: downloadURL }, () => {
-            console.log(this.state)
-          });
+          // console.log('File available at', downloadURL);
+          this.setState({ image: image, avatar: downloadURL });
         });
       });
     }
   }
   render() {
-    console.log(this.props)
-    console.log(this.state)
-    console.log("fin_acc", this.state.fin_acc);
     if (this.state.fin_acc) {
       return <Redirect to="/home" />;
     }
-    console.log('account:', this.props);
     return (
       <div className="main">
         <div className="view">
@@ -222,7 +199,6 @@ class Setting extends Component {
                     </div>)}
                 </label>
               </div>
-              {/* <img className="avatar" src={this.props.userInfo.avatar} alt="avatar" /> */}
               <p>
                 <sub>
                   *Upload a picture that represents you as your avatar.
@@ -232,7 +208,6 @@ class Setting extends Component {
                   *The ideal image shape should be square look.
                 </sub>
               </p>
-              {/* <button onClick={this.handleUpload}>Save Picture</button> */}
             </div>
             <p><b>Gender</b></p>
             <form className="gender line">

@@ -21,9 +21,12 @@ class MyFriend extends Component {
             this.myFriend();
         }
     }
+    componentWillUnmount() {
+        this.unsubscribes();
+    }
     myFriend() {
         const { firebase, userData } = this.props.props;
-        firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends")
+        this.unsubscribes = firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends")
             .onSnapshot(
                 (querySnapshot) => {
                     let myfriend = [];
@@ -58,8 +61,8 @@ class MyFriend extends Component {
         }
     }
     showCard(id) {
-        // console.log('personinfo', id);
-        this.props.props.firebase.db.collection("Users").doc(id)
+        const { firebase } = this.props.props;
+        firebase.db.collection("Users").doc(id)
             .get()
             .then(
                 (doc) => {
@@ -76,7 +79,6 @@ class MyFriend extends Component {
     }
     render() {
         const { showCard, clickWhom } = this.state;
-        // console.log('myfriend', this.state);
         if (this.state.goToChat) {
             return <Redirect to="/message" />
         }
@@ -148,7 +150,7 @@ class MyFriend extends Component {
                             <div className="go-back" onClick={this.closeCard}>
                                 <ArrowBackSharpIcon style={{ fontSize: 40 }} />
                                 Go Back
-                    </div>
+                            </div>
                             <button onClick={this.handleSubmit.bind(this, clickWhom.id, clickWhom.username, clickWhom.avatar)}>Chat</button>
                         </div>
                     </div>

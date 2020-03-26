@@ -43,7 +43,6 @@ class Firebase {
         return this.auth.currentUser.updatePassword(password);
     }
 }
-// console.log(Firebase);
 
 const FirebaseContext = React.createContext(null);
 
