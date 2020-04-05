@@ -64,7 +64,7 @@ class Landing extends Component {
               <form className='interest line'>
                 {INTERESTS.map(item => (
                   <div key={item}>
-                    <input type="checkbox" name={item} id={item} value={item} checked={this.state.hobby[item]} />
+                    <input readOnly type="checkbox" name={item} id={item} value={item} checked={this.state.hobby[item]} />
                     <label htmlFor={item}>
                       <div className='interest-tag'>
                         <b>{item}</b>

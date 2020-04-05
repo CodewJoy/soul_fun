@@ -1,5 +1,9 @@
  /* global */
-
+ .language-ellipsis {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
  .interest-tag-wrapper {
      display: flex;
      flex-wrap: wrap;

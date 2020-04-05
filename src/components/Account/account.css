@@ -98,7 +98,7 @@
 }
 
 .account>.main>.view>.setting-2>.bio>textarea {
-    size: 18px;
+    font-size: 18px;
     resize: none;
     border-radius: 3px;
     border: lightgray 1px solid;

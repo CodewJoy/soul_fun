@@ -14,11 +14,9 @@ class DiscoverFriend extends Component {
             error: null,
             isLoaded: false,
             isLoaded_friend: false,
-            // friendlist: [],
             referlist: [],
             showCard: false,
-            clickWhom: '',
-            // interest: ''
+            clickWhom: ''
         }
         this.addFriend = this.addFriend.bind(this);
         this.referFriends = this.referFriends.bind(this);
@@ -113,9 +111,6 @@ class DiscoverFriend extends Component {
                         // console.log('myfriend', doc.id, " => ", doc.data());
                         myfriend.push(doc.data().id);
                     })
-                    // console.log('myfriend', myfriend);
-                    // console.log('friendlist', friendlist);
-                    // console.log(deleteIntersection(friendlist, myfriend));
                     let loaded = 0;
                     let refer = deleteIntersection(friendlist, myfriend);
                     let referlist = [];
@@ -215,7 +210,7 @@ class DiscoverFriend extends Component {
                                     <p>
                                         <b>{item.username}</b>
                                     </p>
-                                    <p>{item.country},&nbsp;{item.language}</p>
+                                    <p className="language-ellipsis">{item.country},&nbsp;{item.language}</p>
                                     <hr />
                                     <div className="interest-box">
                                         <p className="interest-ellipsis">
