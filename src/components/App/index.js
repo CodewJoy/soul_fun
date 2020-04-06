@@ -42,12 +42,12 @@ class AppBase extends Component {
               (doc) => {
                 if (doc.exists) {
                   this.setState({ authUser: authUser, userInfo: doc.data() });
-                } 
+                }
                 else {
                   console.log("No such document!");
                 }
               }
-              ,(error) => {
+              , (error) => {
                 console.log(error)
               }
             )
@@ -88,46 +88,38 @@ class AppBase extends Component {
           <Switch>
             <Route exact path={ROUTES.LANDING} component={LandingPage} />
             <Route path={ROUTES.ACCOUNT} render={() => {
-              if (authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<AccountPage />)
-              }
+              const account = HOC(AccountPage, authUser)
+              return(account)
             }} />
             <Route path={ROUTES.HOME} render={() => {
-              if (authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<HomePage />)
-              }
+              const home = HOC(HomePage, authUser)
+              return(home)
             }} />
             <Route path={ROUTES.MESSAGE} render={() => {
-              if (authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<MessagePage />)
-              }
+              const message = HOC(MessagePage, authUser)
+              return(message)
             }} />
             <Route path={ROUTES.PROFILE} render={() => {
-              if (authUser === "") {
-                return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-              } else if (authUser === null) {
-                return (<LandingPage />)
-              } else {
-                return (<ProfilePage />)
-              }
+              const profile = HOC(ProfilePage, authUser)
+              return(profile)
             }} />
             <Route path="*" component={NotFoundPage} />
           </Switch>
         </Router>
       </AuthUserContext.Provider>
     )
+  }
+}
+
+
+function HOC(WrappedComponent, authUser) {
+  // let WrappedComponent=props.WrappedComponent;
+  if (authUser === "") {
+    return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
+  } else if (authUser === null) {
+    return (<LandingPage />)
+  } else {
+    return (<WrappedComponent />)
   }
 }
 
