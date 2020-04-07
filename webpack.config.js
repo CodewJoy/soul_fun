@@ -1,6 +1,5 @@
 /* eslint-disable no-undef */
-const path = require('path');
-// const TerserPlugin = require('terser-webpack-plugin');
+var path = require('path');
 
 module.exports = {
   entry: {
@@ -14,9 +13,6 @@ module.exports = {
   },
   mode: 'development',
   // mode: 'production',
-  // optimization: {
-  //   minimizer: [new TerserPlugin({ /* additional options here */ })],
-  // },
   module: {
     // 當 webpack 包裝 js 檔案，採用 babel-loader 來做編譯
     rules: [

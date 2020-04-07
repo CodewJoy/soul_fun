@@ -2,13 +2,9 @@ import React, { Component } from 'react';
 
 class ChatRoom extends Component {
     render() {
-        // console.log('conversation', this.props.currentRoom);
-        // console.log('conversation', this.props.chat);
-        // console.log('conversation', this.props.chat[0].sender);
         return (
             <div className="talks">
                 {this.props.chat.map((item, index) => {
-                    // console.log(item.sender);
                     if (item.sender === "admin") {
                         return (
                             <div className="adm-dialog" key={index}>

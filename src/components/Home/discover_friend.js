@@ -122,7 +122,6 @@ class DiscoverFriend extends Component {
                                     referlist.push(doc.data());
                                     loaded++;
                                     if (loaded === refer.length) {
-                                        // console.log("document_try", document);
                                         this.setState({
                                             referlist: referlist,
                                             isLoaded: true
@@ -146,7 +145,6 @@ class DiscoverFriend extends Component {
     }
     addFriend(id, name, avatar) {
         const { firebase, userData } = this.props.props;
-        // console.log(userData);
         // modify my list
         firebase.db.collection("Users").doc(userData.authUser.uid).collection("friends").doc(id)
             .set(
@@ -169,12 +167,10 @@ class DiscoverFriend extends Component {
             )
     }
     handleSubmit(id, name, avatar) {
-        // console.log(id, name, avatar);
         this.addFriend(id, name, avatar);
         this.setState({ showCard: !this.state.showCard })
     }
     showCard(item) {
-        // console.log('personinfo', item);
         this.setState({ clickWhom: item, showCard: !this.state.showCard });
     }
     closeCard() {
@@ -194,7 +190,6 @@ class DiscoverFriend extends Component {
                     <h3>Discover new friends here!</h3>
                     <Autocomplete
                         value={this.state.interest}
-                        // name="location"
                         onChange={this.getInterest}
                         options={INTERESTS}
                         id="select-by-interest"
@@ -214,7 +209,6 @@ class DiscoverFriend extends Component {
                                     <hr />
                                     <div className="interest-box">
                                         <p className="interest-ellipsis">
-                                            {/* <b>{item.interest}</b> */}
                                             {item.interest.map(int => (<b key={int}>{int}&ensp;</b>))}
                                         </p>
                                     </div>
@@ -255,7 +249,6 @@ class DiscoverFriend extends Component {
                                 <div className="container-2">
                                     <p>
                                         <b>Language&ensp;</b>
-                                        {/* {clickWhom.language.map(int => (<b key={int}>{int}&ensp;</b>))} */}
                                     </p>
                                     <p>
                                         <b>Country&ensp;</b>

@@ -46,12 +46,10 @@ class SignUpFormBase extends Component {
 
     onSubmit(event) {
         const { username, email, pwd } = this.state;
-        // const { firebase } = this.props;
-        // console.log(email);
-        // console.log(username, email, pwd);
-        this.props.firebase.doCreateUserWithEmailAndPassword(email, pwd)
+        const { firebase } = this.props;
+        firebase.doCreateUserWithEmailAndPassword(email, pwd)
             .then((authUser) => {
-                this.props.firebase.db.collection("Users").doc(`${authUser.user.uid}`).set({
+                firebase.db.collection("Users").doc(`${authUser.user.uid}`).set({
                     username: username,
                     id: authUser.user.uid,
                     email: email,
@@ -60,7 +58,7 @@ class SignUpFormBase extends Component {
             })
             .then(() => {
                 this.setState({
-                    signedUP:true
+                    signedUP: true
                 });
                 //this.props.history.push(ROUTES.ACCOUNT);
             })
@@ -75,34 +73,23 @@ class SignUpFormBase extends Component {
     }
 
     render() {
-        if(this.state.signedUP){
+        const { username, email, pwd, error } = this.state;
+        const isInvalid = pwd === '' || email === '' || username === '';
+        if (this.state.signedUP) {
             return <Redirect to="/account" />;
         }
-        const {
-            username,
-            email,
-            pwd,
-            error
-        } = this.state;
-
-        const isInvalid =
-            pwd === '' ||
-            email === '' ||
-            username === '';
-
         return (
             <form onSubmit={this.onSubmit} className="sign-up">
                 <div className="line">
                     <h3>Sign up</h3>
-                    <img className="close-button"  src={Close} alt="closebutton" 
-                        onClick={this.changeToClose} 
+                    <img className="close-button" src={Close} alt="closebutton"
+                        onClick={this.changeToClose}
                     />
                 </div>
                 <br />
                 Username
                 <br />
                 <input className="key-in"
-                    // name="username"
                     value={this.state.username}
                     onChange={this.usernameChange}
                     type="text"
@@ -112,7 +99,6 @@ class SignUpFormBase extends Component {
                 Email
                 <br />
                 <input className="key-in"
-                    // name="email"
                     value={this.state.email}
                     onChange={this.emailChange}
                     type="text"
@@ -122,7 +108,6 @@ class SignUpFormBase extends Component {
                 Password
                 <br />
                 <input className="key-in"
-                    // name="password"
                     value={this.state.pwd}
                     onChange={this.pwdChange}
                     type="password"
@@ -134,25 +119,12 @@ class SignUpFormBase extends Component {
                         SUBMIT
                     </button>
                 </div>
-                {/* <br />
-                or
-                <button>SIGN UP WITH FACEBOOK</button> */}
-
                 {error && <p>{error.message}</p>}
             </form>
         )
     }
 }
 
-// const SignUpLink = () => (
-//     <p>
-//         Don not have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
-//     </p>
-// );
-
 const SignUpForm = withRouter(SignUpFormBase);
-// const SignUpForm = withRouter(SignUp);
-
 export default SignUp;
 export { SignUpForm };
-// export { SignUpLink };

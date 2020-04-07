@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
-import { createRoomID } from "./utils";
+import { createRoomID } from './utils';
 import './message.css';
 import Navbar from '../Header';
 import ChatRoom from './chat_room';
@@ -145,7 +145,6 @@ class MessageBase extends Component {
     }
   }
   scrollToAnchor(propId) {
-    // console.log(document.getElementById(propId));
     document.getElementById(propId).scrollIntoView();
   }
   backToRoom() {
@@ -234,8 +233,6 @@ class MessageBase extends Component {
       if (!this.state.isLoaded) {
         return <div className="loading"><img src={Loading} alt="Loading" /></div>
       } else {
-        // console.log('test-memory-leak', currentRoom ? (inputMessage[currentRoom.friendID] ? (inputMessage[currentRoom.friendID]) : "") : "");
-        // if (this.state.chat.length > 0) {
         return (
           <div className="message">
             <Navbar />
@@ -245,7 +242,6 @@ class MessageBase extends Component {
                   {userData ?
                     (<div className="center">
                       <img className="avatar" alt="my-avatar" src={userData.userInfo.avatar} />
-                      {/* <b>{this.props.userData.userInfo.username}</b> */}
                     </div>) : ""}
                   <h2>Chats</h2>
                 </div>

@@ -49,7 +49,6 @@ class MyFriend extends Component {
         // 找到聊天室
         // createRoomID(uid1, uid2)
         let roomID = createRoomID(id, userData.authUser.uid);
-        // console.log(roomID);
         if (roomID) {
             firebase.db.collection("Room").doc(roomID)
                 .update(

@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route, Link, useRouteMatch } from 'react-router-dom';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
 import './home.css';
@@ -67,6 +67,9 @@ class HomeBase extends Component {
           </ul>
           <Switch>
             <Route exact path='/home' render={(props) => (<DiscoverFriend {...props} props={this.props} />)} />
+            {/* <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
+            <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} /> */}
+
             <Route path='/home/friend-requests' render={(props) => (<FriendRequests {...props} props={this.props} />)} />
             <Route path='/home/my-friend' render={(props) => (<MyFriend {...props} props={this.props} />)} />
           </Switch>

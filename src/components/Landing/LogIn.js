@@ -2,10 +2,8 @@
 import React, { Component } from 'react';
 import { FirebaseContext } from '../../index.js';
 import { Redirect, withRouter } from 'react-router-dom';
-// import { SignUpLink } from './SignUp';
 import Close from '../img/close.svg';
 
-// console.log(withFirebase);
 const LogIn = (props) => {
     return (
         <FirebaseContext.Consumer>
@@ -41,15 +39,12 @@ class LogInFormBase extends Component {
 
     onSubmit(event) {
         const { email, pwd } = this.state;
-        // const { firebase } = this.props;
-        // console.log(email);
-        this.props.firebase.doSignInWithEmailAndPassword(email, pwd)
+        const { firebase } = this.props;
+        firebase.doSignInWithEmailAndPassword(email, pwd)
             .then(() => {
-                // console.log(this.props);
                 this.setState({
                     logedIn: true
                 });
-
                 // this.props.history.push(ROUTES.ACCOUNT);
             })
             .catch(error => {
@@ -63,20 +58,12 @@ class LogInFormBase extends Component {
     }
 
     render() {
-        // console.log("Test", this.state.logedIn);
+        const { email, pwd, error } = this.state;
+        const isInvalid =
+            pwd === '' || email === '';
         if (this.state.logedIn) {
             return <Redirect to="/home" />;
         }
-        const {
-            email,
-            pwd,
-            error,
-        } = this.state;
-
-        const isInvalid =
-            pwd === '' ||
-            email === '';
-
         return (
             <form onSubmit={this.onSubmit} className="log-in">
                 <div className="line">
@@ -111,12 +98,7 @@ class LogInFormBase extends Component {
                         SUBMIT
                     </button>
                 </div>
-                {/* <br />
-                or
-                <button>SIGN UP WITH FACEBOOK</button> */}
-
                 {error && <p>{error.message}</p>}
-                {/* <SignUpLink /> */}
             </form>
         )
     }

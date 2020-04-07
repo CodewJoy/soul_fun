@@ -104,7 +104,6 @@ class FriendRequests extends Component {
         }
     }
     showCard(id) {
-        // console.log('personinfo', id);
         this.props.props.firebase.db.collection("Users").doc(id)
             .get()
             .then(
@@ -121,11 +120,7 @@ class FriendRequests extends Component {
         this.setState({ showCard: !this.state.showCard })
     }
     render() {
-        // console.log('confirmfriend', this.state.confirmfriend);
-        // console.log('clickWhom', this.state.clickWhom);
-        // console.log('confirmfriend', this.props);
         const { confirmfriend, showCard, clickWhom } = this.state;
-
         if (this.state.goToChat) {
             return <Redirect to="/message" />
         }
@@ -178,7 +173,6 @@ class FriendRequests extends Component {
                                     <p>
                                         <b>Language&ensp;</b>
                                         {clickWhom.language}
-                                        {/* {clickWhom.language.map(int => (<span key={int}>{int}&ensp;</span>))} */}
                                     </p>
                                     <p>
                                         <b>Country&ensp;</b>

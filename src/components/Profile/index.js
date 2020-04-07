@@ -35,7 +35,6 @@ class ProfileBase extends Component {
     this.setState({ selected: name });
   }
   render() {
-    // console.log(this.props);
     return (
       <div className="profile">
         <Navbar />

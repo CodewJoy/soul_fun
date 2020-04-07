@@ -11,13 +11,10 @@ const SignOutButton = () => (
 class SignOutButtonBase extends Component {
     constructor(props) {
         super(props);
-        // console.log(props);
         this.state = { signedOut: false };
         this.signOut = this.signOut.bind(this);
     }
     signOut() {
-        // console.log(this.props);
-        // console.log(this.props.firebase);
         this.props.firebase.doSignOut()
         .then(()=>{
             this.setState({
@@ -26,7 +23,6 @@ class SignOutButtonBase extends Component {
         });
     }
     render() {
-        // console.log("Test", this.state.signedOut);
         if(this.state.signedOut){
             return <Redirect to="/" />;
         }
@@ -40,4 +36,3 @@ class SignOutButtonBase extends Component {
 }
 
 export default SignOutButton;
-// export default withFirebase(SignOutButton);

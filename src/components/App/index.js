@@ -7,9 +7,10 @@ import AccountPage from '../Account';
 import MessagePage from '../Message';
 import ProfilePage from '../Profile';
 import NotFoundPage from '../NotFound';
-import Loading from '../img/loading.gif';
 import { FirebaseContext } from '../../index.js';
 import { AuthUserContext } from '../Session';
+import { HOC } from './utils';
+
 
 const App = () => (
   <FirebaseContext.Consumer>
@@ -67,7 +68,6 @@ class AppBase extends Component {
                     count += 1;
                   }
                 });
-                // console.log(count);
                 this.setState({ friendInvitation: count });
               }
             )
@@ -108,18 +108,6 @@ class AppBase extends Component {
         </Router>
       </AuthUserContext.Provider>
     )
-  }
-}
-
-
-function HOC(WrappedComponent, authUser) {
-  // let WrappedComponent=props.WrappedComponent;
-  if (authUser === "") {
-    return (<div className="loading"><img src={Loading} alt="Loading" /></div>)
-  } else if (authUser === null) {
-    return (<LandingPage />)
-  } else {
-    return (<WrappedComponent />)
   }
 }
 

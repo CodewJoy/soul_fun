@@ -105,31 +105,24 @@ class Setting extends Component {
   }
 
   getValue(event) {
-    // console.log(event.target.name);
-    // console.log(event.target.value);
     this.setState({ [event.target.name]: event.target.value });
   }
   getBirthValue(e) {
-    // console.log(convertTime(String(e)));
     let birthday = convertTime(String(e));
     this.setState({ birthday: birthday });
   }
   // used for autocomplete
   getSelectValue(e) {
-    // console.log(e.target.textContent)
     this.setState({ country: e.target.textContent });
   }
   getLocationValue(e) {
     this.setState({ location: e.target.textContent });
   }
   getLanValue(e) {
-    // console.log(e.target.textContent)
     this.setState({ language: e.target.textContent });
   }
   addInterest(e) {
     const key = e.target.value;
-    // console.log('hobby',this.state.hobby);
-    // console.log('hobby',this.state.hobby[key]);
     this.setState(state => ({
       hobby: {
         ...state.hobby,
@@ -140,11 +133,9 @@ class Setting extends Component {
       let hobby = this.state.hobby;
       for (const key in hobby) {
         if (hobby[key]) {
-          // console.log(key)
           interest.push(key);
         }
       }
-      // console.log(interest)
       this.setState({ interest: interest })
     })
   }
@@ -242,10 +233,7 @@ class Setting extends Component {
             <div className="language">
               <p><b>what kind of language do you speak?</b></p>
               <Autocomplete
-                // is value here meaningful?
-                // value='Taiwan'
                 value={this.state.language}
-                // name="location"
                 onChange={this.getLanValue}
                 id="language"
                 options={LANGUAGES}
@@ -259,8 +247,6 @@ class Setting extends Component {
             <div className="country">
               <p><b>Where are you from?</b></p>
               <Autocomplete
-                // is value here meaningful?
-                // value='Taiwan'
                 value={this.state.country}
                 name="country"
                 onChange={this.getSelectValue}
@@ -274,10 +260,7 @@ class Setting extends Component {
             <div className="location">
               <p><b>Where do you primarily live?</b></p>
               <Autocomplete
-                // is value here meaningful?
-                // value='Taiwan'
                 value={this.state.location}
-                // name="location"
                 onChange={this.getLocationValue}
                 id="location"
                 options={COUNTRIES}
