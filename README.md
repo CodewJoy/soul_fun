@@ -15,6 +15,7 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ## Table of Contents
 - [Technology](#Technology)
+- [Data Structure](#Data Structure)
 - [Demo](#Demo)
 - [RWD on mobile device](#RWD-on-mobile-device)
 
@@ -43,6 +44,9 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 * Git, GitHub
 * Lint Tool - ESLint
 * Unit Testing - Jest
+
+## Data Structure
+![](https://i.imgur.com/E3vULMx.png)
 
 ## Demo
 ### Use Firebase Authentication to Log in, Sign up and Log out
