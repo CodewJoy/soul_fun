@@ -15,7 +15,7 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 
 ## Table of Contents
 - [Technology](#Technology)
-- [Data Structure](#DataStructure)
+- [Data Structure](#Data_Structure)
 - [Demo](#Demo)
 - [RWD on mobile device](#RWD-on-mobile-device)
 
@@ -45,7 +45,7 @@ Demo: [https://soul-fun.firebaseapp.com/](https://soul-fun.firebaseapp.com/)
 * Lint Tool - ESLint
 * Unit Testing - Jest
 
-## Data Structure
+## Data_Structure
 ![](https://i.imgur.com/E3vULMx.png)
 
 ## Demo
